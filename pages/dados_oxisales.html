@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador 3D: Iones y Oxisales</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+        :root {
+            --bg-color: #2c3e50;
+            --cation-color: #3498db;
+            --anion-color: #e74c3c;
+            --text-main: #ecf0f1;
+            --btn-color: #f1c40f;
+            --btn-hover: #f39c12;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Evita scroll durante la animación */
+        }
+
+        h1 {
+            font-weight: 900;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: #bdc3c7;
+            margin-bottom: 50px;
+        }
+
+        /* --- FÍSICAS Y ENTORNO 3D --- */
+        .table-area {
+            display: flex;
+            gap: 60px;
+            margin-bottom: 50px;
+            perspective: 1200px; /* Profundidad de la cámara */
+        }
+
+        .scene {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transform: translateZ(-60px) rotateX(15deg) rotateY(15deg);
+            /* Transición con efecto de desaceleración (fricción) */
+            transition: transform 2.5s cubic-bezier(0.17, 0.89, 0.32, 1.15); 
+        }
+
+        /* Animación de salto vertical al lanzar */
+        .jumping {
+            animation: jump 2.5s cubic-bezier(0.17, 0.89, 0.32, 1) forwards;
+        }
+
+        @keyframes jump {
+            0% { top: 0; transform: scale(1); }
+            30% { top: -150px; transform: scale(1.2); }
+            100% { top: 0; transform: scale(1); }
+        }
+
+        .face {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: white;
+            border: 4px solid #333;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #2c3e50;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            /* Anti-aliasing para los bordes 3D */
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* Caras del Catión (Azules) */
+        .cube-cation .face { border-color: var(--cation-color); color: var(--cation-color); }
+        
+        /* Caras del Anión (Rojas) */
+        .cube-anion .face { border-color: var(--anion-color); color: var(--anion-color); }
+
+        /* Posicionamiento espacial de las caras del cubo */
+        .front  { transform: rotateY(  0deg) translateZ(60px); }
+        .back   { transform: rotateY(180deg) translateZ(60px); }
+        .right  { transform: rotateY( 90deg) translateZ(60px); }
+        .left   { transform: rotateY(-90deg) translateZ(60px); }
+        .top    { transform: rotateX( 90deg) translateZ(60px); }
+        .bottom { transform: rotateX(-90deg) translateZ(60px); }
+
+        /* --- CONTROLES Y RESULTADOS --- */
+        .roll-btn {
+            background-color: var(--btn-color);
+            color: #2c3e50;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .roll-btn:hover {
+            background-color: var(--btn-hover);
+            transform: translateY(-3px);
+        }
+
+        .result-container {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 40px;
+            border-radius: 15px;
+            border: 2px dashed #bdc3c7;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .compound-formula {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* --- FORMATO DE QUÍMICA --- */
+        /* Ajuste fino para índices, evitando superposición */
+        sub {
+            font-size: 0.55em;
+            vertical-align: baseline;
+            position: relative;
+            top: 0.4em;
+        }
+
+        sup {
+            font-size: 0.55em;
+            vertical-align: baseline;
+            position: relative;
+            top: -0.6em;
+            margin-left: 2px;
+        }
+
+        /* Alineación especial cuando un elemento tiene sub y sup a la vez */
+        .chem-group {
+            display: inline-block;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Simulador dados para oxisales</h1>
+    <p class="subtitle">Lanza los dados y observa los datos obtenidos</p>
+
+    <div class="table-area">
+        <div class="scene" id="sceneCation">
+            <div class="cube cube-cation" id="cubeCation">
+                <div class="face front">Ni<sup>+2</sup></div>
+                <div class="face right">K<sup>+</sup></div>
+                <div class="face back">Fe<sup>+3</sup></div>
+                <div class="face left">Ca<sup>+2</sup></div>
+                <div class="face top">Pb<sup>+4</sup></div>
+                <div class="face bottom">Al<sup>+3</sup></div>
+            </div>
+        </div>
+
+        <div class="scene" id="sceneAnion">
+            <div class="cube cube-anion" id="cubeAnion">
+                <div class="face front">SO<sub>3</sub><sup>-2</sup></div>
+                <div class="face right">ClO<sub>3</sub><sup>-</sup></div>
+                <div class="face back">PO<sub>4</sub><sup>-3</sup></div>
+                <div class="face left">ClO<sub>4</sub><sup>-</sup></div>
+                <div class="face top">NO<sub>3</sub><sup>-</sup></div>
+                <div class="face bottom">CO<sub>3</sub><sup>-2</sup></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="roll-btn" onclick="lanzarDados()" id="btnLanzar">Lanzar Dados</button>
+
+    <div class="result-container" id="resultContainer">
+        <div style="font-size: 0.9rem; color: #bdc3c7; margin-bottom: 10px;">Iones Seleccionados:</div>
+        <div class="compound-formula" id="compoundResult"></div>
+    </div>
+
+    <script>
+        // Configuración de los ángulos para cada cara (X, Y)
+        const facesAngles = [
+            { id: 0, x: 0, y: 0 },      // Front
+            { id: 1, x: 0, y: -90 },    // Right
+            { id: 2, x: 0, y: -180 },   // Back
+            { id: 3, x: 0, y: 90 },     // Left
+            { id: 4, x: -90, y: 0 },    // Top
+            { id: 5, x: 90, y: 0 }      // Bottom
+        ];
+
+        // Textos exactos que están en cada cara de los cubos (para imprimir el resultado)
+        const cationTexts = [
+            "Ni<sup>+2</sup>", 
+            "K<sup>+</sup>", 
+            "Fe<sup>+3</sup>", 
+            "Ca<sup>+2</sup>", 
+            "Pb<sup>+4</sup>", 
+            "Al<sup>+3</sup>"
+        ];
+
+        const anionTexts = [
+            "SO<sub>3</sub><sup>-2</sup>", 
+            "ClO<sub>3</sub><sup>-</sup>", 
+            "PO<sub>4</sub><sup>-3</sup>", 
+            "ClO<sub>4</sub><sup>-</sup>", 
+            "NO<sub>3</sub><sup>-</sup>", 
+            "CO<sub>3</sub><sup>-2</sup>"
+        ];
+
+        let isRolling = false;
+
+        function lanzarDados() {
+            if (isRolling) return; // Evita múltiples clics
+            isRolling = true;
+
+            const cubeCat = document.getElementById('cubeCation');
+            const cubeAni = document.getElementById('cubeAnion');
+            const sceneCat = document.getElementById('sceneCation');
+            const sceneAni = document.getElementById('sceneAnion');
+            const resultBox = document.getElementById('resultContainer');
+            const btn = document.getElementById('btnLanzar');
+
+            // Ocultar resultado anterior y desactivar botón
+            resultBox.style.opacity = '0';
+            btn.style.opacity = '0.5';
+            btn.innerText = "Rodando...";
+
+            // Activar animación de salto (física vertical)
+            sceneCat.classList.remove('jumping');
+            sceneAni.classList.remove('jumping');
+            void sceneCat.offsetWidth; // Reflow
+            sceneCat.classList.add('jumping');
+            sceneAni.classList.add('jumping');
+
+            // Elegir caras aleatorias (0 a 5)
+            const catFace = Math.floor(Math.random() * 6);
+            const aniFace = Math.floor(Math.random() * 6);
+
+            // Generar giros adicionales aleatorios (entre 3 y 6 vueltas completas)
+            const extraSpinsCatX = (Math.floor(Math.random() * 4) + 3) * 360;
+            const extraSpinsCatY = (Math.floor(Math.random() * 4) + 3) * 360;
+            const extraSpinsAniX = (Math.floor(Math.random() * 4) + 3) * 360;
+            const extraSpinsAniY = (Math.floor(Math.random() * 4) + 3) * 360;
+
+            // Calcular ángulos finales
+            const finalCatX = facesAngles[catFace].x + extraSpinsCatX;
+            const finalCatY = facesAngles[catFace].y + extraSpinsCatY;
+            
+            const finalAniX = facesAngles[aniFace].x + extraSpinsAniX;
+            const finalAniY = facesAngles[aniFace].y + extraSpinsAniY;
+
+            // Aplicar rotación (física rotacional)
+            cubeCat.style.transform = `translateZ(-60px) rotateX(${finalCatX}deg) rotateY(${finalCatY}deg)`;
+            cubeAni.style.transform = `translateZ(-60px) rotateX(${finalAniX}deg) rotateY(${finalAniY}deg)`;
+
+            // Esperar a que la física termine (2.5 segundos)
+            setTimeout(() => {
+                isRolling = false;
+                btn.style.opacity = '1';
+                btn.innerText = "Lanzar Dados";
+
+                // Mostrar el resultado como Cation + Anion
+                const resText = document.getElementById('compoundResult');
+                resText.innerHTML = `<span style="color: var(--cation-color)">${cationTexts[catFace]}</span> <span style="color: white; font-size: 2rem;">+</span> <span style="color: var(--anion-color)">${anionTexts[aniFace]}</span>`;
+                
+                resultBox.style.opacity = '1';
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
