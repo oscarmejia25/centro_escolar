@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rompecabezas de Oxisales</title>
+    <style>
+        /* Variables dinámicas para escalar a cualquier pantalla sin scroll */
+        :root {
+            --bg-color: #f4f7f6;
+            --cation-color: #3498db;
+            --anion-color: #95a5a6;
+            --workspace-bg: #ffffff;
+            --border-color: #bdc3c7;
+            
+            /* Tamaño base de las piezas ajustado para encajar en pantalla */
+            --u: min(38px, 4.5vh); 
+            --w: min(100px, 12vw); 
+            --depth: 20px;         
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ----- CABECERA ----- */
+        header {
+            flex: 0 0 auto;
+            text-align: center;
+            padding: 10px 20px 0;
+        }
+        h1 { margin: 0 0 5px 0; color: #2c3e50; font-size: 1.5rem; }
+        p { margin: 0 auto 10px; color: #555; max-width: 800px; font-size: 0.9rem; }
+
+        /* ----- CONTENEDOR PRINCIPAL ----- */
+        .container {
+            flex: 1 1 auto;
+            display: flex;
+            gap: 20px;
+            padding: 0 20px 20px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            min-height: 0; 
+        }
+
+        /* ----- PANELES LATERALES ----- */
+        .panel {
+            flex: 0 0 180px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        h2 { text-align: center; font-size: 1.1rem; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 0; }
+        
+        .ion-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            justify-content: flex-start;
+        }
+
+        /* ----- MESA DE TRABAJO ----- */
+        .workspace-panel {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+        }
+
+        #workbench {
+            flex: 1 1 auto;
+            border: 3px dashed var(--border-color);
+            border-radius: 10px;
+            background-color: var(--workspace-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            transition: background-color 0.2s;
+            min-height: 0;
+        }
+        #workbench.dragover { background-color: #e8f4f8; border-color: var(--cation-color); }
+
+        .compound-area { display: flex; align-items: flex-start; }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            min-width: var(--w);
+            min-height: var(--u);
+        }
+        
+        #col-cation { z-index: 1; }
+        #col-anion { 
+            margin-left: calc(-1 * var(--depth)); 
+            z-index: 2; 
+        }
+
+        /* ----- GEOMETRÍA ZIGZAG PERFECTA ----- */
+        .piece {
+            width: var(--w);
+            height: calc(var(--charge) * var(--u));
+            clip-path: var(--clip);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: grab;
+            user-select: none;
+            box-sizing: border-box;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .piece:active { cursor: grabbing; transform: scale(0.98); }
+        .column .piece:active { transform: none; }
+        
+        /* Cationes (Huecos a la derecha) */
+        .cation { background-color: var(--cation-color); padding-right: var(--depth); }
+        .cat-1 { --charge: 1; --clip: polygon(0 0, 100% 0, calc(100% - var(--depth)) 50%, 100% 100%, 0 100%); }
+        .cat-2 { --charge: 2; --clip: polygon(0 0, 100% 0, calc(100% - var(--depth)) 25%, 100% 50%, calc(100% - var(--depth)) 75%, 100% 100%, 0 100%); }
+        .cat-3 { --charge: 3; --clip: polygon(0 0, 100% 0, calc(100% - var(--depth)) 16.666%, 100% 33.333%, calc(100% - var(--depth)) 50%, 100% 66.666%, calc(100% - var(--depth)) 83.333%, 100% 100%, 0 100%); }
+
+        /* Aniones (Puntas a la izquierda) */
+        .anion { background-color: var(--anion-color); padding-left: var(--depth); }
+        .ani-1 { --charge: 1; --clip: polygon(var(--depth) 0, 100% 0, 100% 100%, var(--depth) 100%, 0 50%); }
+        .ani-2 { --charge: 2; --clip: polygon(var(--depth) 0, 100% 0, 100% 100%, var(--depth) 100%, 0 75%, var(--depth) 50%, 0 25%); }
+        .ani-3 { --charge: 3; --clip: polygon(var(--depth) 0, 100% 0, 100% 100%, var(--depth) 100%, 0 83.333%, var(--depth) 66.666%, 0 50%, var(--depth) 33.333%, 0 16.666%); }
+
+        /* Efectos visuales */
+        .dragging { opacity: 0.5; }
+        .column .piece { cursor: pointer; }
+        .column .piece:hover { opacity: 0.85; filter: brightness(1.1); }
+        .column .piece::after {
+            content: '×';
+            position: absolute;
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            margin-left: 5px;
+            display: none;
+        }
+        .column .piece:hover::after { display: inline; }
+
+        /* ----- CONTROLES Y FEEDBACK ----- */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #btn-check { background-color: #5cb85c; color: white; }
+        #btn-check:hover { background-color: #4cae4c; }
+        #btn-clear { background-color: #e74c3c; color: white; }
+        #btn-clear:hover { background-color: #c0392b; }
+
+        .feedback {
+            margin-top: 15px;
+            text-align: center;
+            flex-shrink: 0;
+            min-height: 60px;
+        }
+        .formula { font-size: 1.8rem; font-weight: bold; color: #2c3e50; line-height: 1.2; }
+        .status { font-size: 1rem; margin-top: 5px; font-weight: bold; }
+        .success { color: #5cb85c; }
+        .error { color: #c0392b; }
+        
+        sup { font-size: 0.7em; }
+        sub { font-size: 0.7em; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Formación de Oxisales (Inventario Físico)</h1>
+        <p>Arrastra las piezas de los paneles. <strong>Para formar una oxisal válida, usa solo un tipo de metal y un tipo de oxianión</strong>. Haz clic en una pieza de la mesa para devolverla.</p>
+    </header>
+
+    <div class="container">
+        <div class="panel">
+            <h2>Cationes (+)</h2>
+            <div class="ion-container" id="source-cations">
+                <div class="piece cation cat-1" draggable="true" data-sym="Na" data-charge="1">Na<sup>+</sup></div>
+                <div class="piece cation cat-1" draggable="true" data-sym="Cu" data-charge="1">Cu<sup>+</sup></div>
+                <div class="piece cation cat-1" draggable="true" data-sym="Ag" data-charge="1">Ag<sup>+</sup></div>
+                <div class="piece cation cat-2" draggable="true" data-sym="Mg" data-charge="2">Mg<sup>+2</sup></div>
+                <div class="piece cation cat-2" draggable="true" data-sym="Cu" data-charge="2">Cu<sup>+2</sup></div>
+                <div class="piece cation cat-3" draggable="true" data-sym="Al" data-charge="3">Al<sup>+3</sup></div>
+                <div class="piece cation cat-3" draggable="true" data-sym="Fe" data-charge="3">Fe<sup>+3</sup></div>
+            </div>
+        </div>
+
+        <div class="workspace-panel">
+            <div id="workbench">
+                <div class="compound-area">
+                    <div class="column" id="col-cation"></div>
+                    <div class="column" id="col-anion"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="btn-check">Verificar Equilibrio</button>
+                <button id="btn-clear">Devolver Piezas</button>
+            </div>
+
+            <div class="feedback">
+                <div class="formula" id="formula-display"></div>
+                <div class="status" id="status-display"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Oxianiones (-)</h2>
+            <div class="ion-container" id="source-anions">
+                <div class="piece anion ani-1" draggable="true" data-sym="NO<sub>3</sub>" data-charge="1">NO<sub>3</sub><sup>-</sup></div>
+                <div class="piece anion ani-1" draggable="true" data-sym="ClO" data-charge="1">ClO<sup>-</sup></div>
+                <div class="piece anion ani-1" draggable="true" data-sym="ClO<sub>3</sub>" data-charge="1">ClO<sub>3</sub><sup>-</sup></div>
+                <div class="piece anion ani-2" draggable="true" data-sym="CO<sub>3</sub>" data-charge="2">CO<sub>3</sub><sup>-2</sup></div>
+                <div class="piece anion ani-2" draggable="true" data-sym="SO<sub>4</sub>" data-charge="2">SO<sub>4</sub><sup>-2</sup></div>
+                <div class="piece anion ani-3" draggable="true" data-sym="PO<sub>4</sub>" data-charge="3">PO<sub>4</sub><sup>-3</sup></div>
+                <div class="piece anion ani-3" draggable="true" data-sym="PO<sub>4</sub>" data-charge="3">PO<sub>4</sub><sup>-3</sup></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const pieces = document.querySelectorAll('.piece');
+        const workbench = document.getElementById('workbench');
+        const colAnion = document.getElementById('col-anion');
+        const colCation = document.getElementById('col-cation');
+        const sourceAnions = document.getElementById('source-anions');
+        const sourceCations = document.getElementById('source-cations');
+        const formulaDisplay = document.getElementById('formula-display');
+        const statusDisplay = document.getElementById('status-display');
+        
+        let draggedPiece = null;
+
+        pieces.forEach(piece => {
+            piece.addEventListener('dragstart', () => {
+                draggedPiece = piece;
+                piece.classList.add('dragging');
+            });
+
+            piece.addEventListener('dragend', () => {
+                piece.classList.remove('dragging');
+                draggedPiece = null;
+            });
+
+            // Devolver la pieza a su panel original
+            piece.addEventListener('click', function() {
+                if (this.parentElement.classList.contains('column')) {
+                    if (this.classList.contains('anion')) {
+                        sourceAnions.appendChild(this);
+                    } else {
+                        sourceCations.appendChild(this);
+                    }
+                    clearFeedback();
+                }
+            });
+        });
+
+        workbench.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            workbench.classList.add('dragover');
+        });
+
+        workbench.addEventListener('dragleave', () => {
+            workbench.classList.remove('dragover');
+        });
+
+        workbench.addEventListener('drop', (e) => {
+            e.preventDefault();
+            workbench.classList.remove('dragover');
+            
+            if (draggedPiece) {
+                const isAnion = draggedPiece.classList.contains('anion');
+                const targetCol = isAnion ? colAnion : colCation;
+                
+                targetCol.appendChild(draggedPiece);
+                clearFeedback();
+            }
+        });
+
+        // Verificación de Errores Químicos y de Equilibrio
+        document.getElementById('btn-check').addEventListener('click', () => {
+            const anions = Array.from(colAnion.querySelectorAll('.piece'));
+            const cations = Array.from(colCation.querySelectorAll('.piece'));
+
+            // 1. Verificar si hay piezas de ambos lados
+            if (anions.length === 0 || cations.length === 0) {
+                showFeedback("", "Debes colocar al menos un metal y un oxianión en la mesa.", "error");
+                return;
+            }
+
+            // 2. VALIDACIÓN QUÍMICA ESTRICTA (La solicitada)
+            const catSyms = new Set(cations.map(p => p.getAttribute('data-sym')));
+            const aniSyms = new Set(anions.map(p => p.getAttribute('data-sym')));
+
+            if (catSyms.size > 1) {
+                showFeedback("", "¡Error Químico! Una oxisal no se forma mezclando diferentes metales.", "error");
+                return;
+            }
+
+            if (aniSyms.size > 1) {
+                showFeedback("", "¡Error Químico! Eso no es una oxisal. No puedes mezclar oxianiones diferentes.", "error");
+                return;
+            }
+
+            // 3. Validación Matemática de Equilibrio
+            let totalNegative = 0;
+            let totalPositive = 0;
+
+            anions.forEach(p => totalNegative += parseInt(p.getAttribute('data-charge')));
+            cations.forEach(p => totalPositive += parseInt(p.getAttribute('data-charge')));
+
+            if (totalNegative === totalPositive) {
+                let formulaHtml = generarFormula(cations, anions);
+                showFeedback(formulaHtml, "¡Equilibrio perfecto! Compuesto neutralizado correctamente.", "success");
+            } else if (totalPositive > totalNegative) {
+                showFeedback("", `Te faltan oxianiones (puntas). Tienes carga de +${totalPositive} y solo -${totalNegative}.`, "error");
+            } else {
+                showFeedback("", `Te faltan metales (huecos). Tienes carga de -${totalNegative} y solo +${totalPositive}.`, "error");
+            }
+        });
+
+        function generarFormula(cations, anions) {
+            // Como ya validamos que no hay mezclas, tomamos el símbolo del primero
+            const symCat = cations[0].getAttribute('data-sym');
+            const symAni = anions[0].getAttribute('data-sym');
+            
+            const countCat = cations.length;
+            const countAni = anions.length;
+
+            let formula = symCat + (countCat > 1 ? `<sub>${countCat}</sub>` : "");
+
+            // Paréntesis químicos: Solo si se usa el mismo oxianión más de una vez
+            if (countAni > 1) {
+                formula += `(${symAni})<sub>${countAni}</sub>`;
+            } else {
+                formula += symAni;
+            }
+
+            return formula;
+        }
+
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            colAnion.querySelectorAll('.piece').forEach(p => sourceAnions.appendChild(p));
+            colCation.querySelectorAll('.piece').forEach(p => sourceCations.appendChild(p));
+            clearFeedback();
+        });
+
+        function showFeedback(formula, message, type) {
+            formulaDisplay.innerHTML = formula;
+            statusDisplay.innerHTML = message;
+            statusDisplay.className = `status ${type}`;
+        }
+
+        function clearFeedback() {
+            formulaDisplay.innerHTML = '';
+            statusDisplay.innerHTML = '';
+            statusDisplay.className = 'status';
+        }
+    </script>
+</body>
+</html>
