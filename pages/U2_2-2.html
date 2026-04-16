@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚲 Misterio de la Ruta Escolar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'fredoka': ['Fredoka', 'sans-serif'],
+                        'nunito': ['Nunito', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #ECFDF5 0%, #F0FDF4 30%, #DCFCE7 100%);
+            min-height: 100vh;
+        }
+        h1, h2, h3, h4 { font-family: 'Fredoka', sans-serif; }
+
+        .float-symbol {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.06;
+            animation: floatAround 22s infinite ease-in-out;
+            pointer-events: none;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+        }
+        @keyframes floatAround {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-35px) rotate(12deg); }
+            50% { transform: translateY(-15px) rotate(-8deg); }
+            75% { transform: translateY(-45px) rotate(6deg); }
+        }
+
+        .answer-reveal {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .sparkle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkleAnim 0.9s ease-out forwards;
+        }
+        @keyframes sparkleAnim {
+            0% { transform: scale(0) translate(0, 0); opacity: 1; }
+            100% { transform: scale(1.2) translate(var(--tx), var(--ty)); opacity: 0; }
+        }
+
+        .confetti-piece {
+            position: absolute;
+            pointer-events: none;
+            animation: confettiFall 1.2s ease-out forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translateY(120px) rotate(720deg) scale(0); opacity: 0; }
+        }
+
+        .step-card { transition: all 0.3s ease; }
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -8px rgba(0,0,0,0.12);
+        }
+
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .bounce-1 { animation: bounce-slow 3s ease-in-out infinite; }
+        .bounce-2 { animation: bounce-slow 3s ease-in-out infinite 0.4s; }
+        .bounce-3 { animation: bounce-slow 3s ease-in-out infinite 0.8s; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #059669, #0D9488, #0891B2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gradient-text-warm {
+            background: linear-gradient(135deg, #D97706, #EA580C, #DC2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .magic-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.25);
+            border-color: #059669;
+        }
+
+        .magic-btn {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .magic-btn:hover { transform: scale(1.05); }
+        .magic-btn:active { transform: scale(0.95); }
+
+        .symbol-btn {
+            transition: all 0.2s ease;
+        }
+        .symbol-btn:hover {
+            transform: scale(1.15);
+            background: #059669;
+            color: white;
+        }
+        .symbol-btn:active { transform: scale(0.9); }
+
+        .section-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .section-fade.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-indicator {
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateY(0); opacity: 0.4; }
+            50% { transform: translateY(10px); opacity: 1; }
+        }
+
+        .road-dash {
+            stroke-dasharray: 12 8;
+            animation: roadMove 1s linear infinite;
+        }
+        @keyframes roadMove {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -20; }
+        }
+
+        @keyframes bikeRide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(10px); }
+        }
+        .bike-ride {
+            animation: bikeRide 0.8s ease-in-out infinite alternate;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .clue-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .clue-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="no-scrollbar">
+
+    <!-- ====== HERO ====== -->
+    <header class="relative overflow-hidden pt-12 pb-16 px-6">
+        <span class="float-symbol top-10 left-[5%]" style="animation-delay:0s;">x</span>
+        <span class="float-symbol top-20 right-[8%]" style="animation-delay:3s;">y</span>
+        <span class="float-symbol top-40 left-[15%]" style="animation-delay:6s;">=</span>
+        <span class="float-symbol top-16 right-[20%]" style="animation-delay:2s;">+</span>
+        <span class="float-symbol bottom-10 left-[30%]" style="animation-delay:8s;">12</span>
+        <span class="float-symbol bottom-20 right-[12%]" style="animation-delay:4s;">km</span>
+        <span class="float-symbol top-32 left-[60%]" style="animation-delay:10s;">?</span>
+        <span class="float-symbol bottom-8 left-[70%]" style="animation-delay:5s;">h</span>
+
+        <div class="max-w-3xl mx-auto text-center relative z-10">
+            <div class="flex justify-center gap-4 mb-6">
+                <span class="text-5xl md:text-6xl bounce-1 inline-block">🚲</span>
+                <span class="text-5xl md:text-6xl bounce-2 inline-block">🔍</span>
+                <span class="text-5xl md:text-6xl bounce-3 inline-block">🧩</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold gradient-text leading-tight mb-4">
+                Sistemas de Ecuaciones
+            </h1>
+            <p class="text-lg md:text-xl text-emerald-800/80 font-semibold max-w-xl mx-auto leading-relaxed">
+                Resolvamos misterios con dos pistas<br class="hidden md:block"> ¡como un verdadero detective! 🕵️
+            </p>
+            <div class="mt-8 scroll-indicator text-emerald-600/50">
+                <span class="iconify inline-block text-2xl" data-icon="lucide:chevrons-down"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-5 pb-24 space-y-16">
+
+        <!-- ====== SECCIÓN 1: ¿Qué es un sistema de ecuaciones? ====== -->
+        <section class="section-fade">
+            <div class="flex items-center gap-3 mb-5">
+                <span class="text-3xl">🧩</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-emerald-700">¿Qué es un Sistema de Ecuaciones?</h2>
+            </div>
+            <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-emerald-200 shadow-sm">
+                <p class="text-lg text-gray-700 leading-relaxed mb-5">
+                    Imagina que eres un <strong class="text-emerald-600">detective</strong> y tienes un misterio que resolver. Un sistema de ecuaciones es tener <strong class="text-emerald-600">dos pistas</strong> para encontrar <strong class="text-emerald-600">dos respuestas</strong>.
+                </p>
+                <div class="bg-emerald-50 rounded-2xl p-5 mb-5">
+                    <p class="text-base text-emerald-800 font-semibold mb-3">Ejemplo fácil:</p>
+                    <div class="space-y-2">
+                        <div class="flex items-start gap-2">
+                            <span class="bg-blue-500 text-white text-xs font-bold rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center mt-0.5">1</span>
+                            <p class="text-base text-gray-700"><strong>Pista 1:</strong> Si sumas dos números, da <strong class="text-blue-600">10</strong></p>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="bg-orange-500 text-white text-xs font-bold rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center mt-0.5">2</span>
+                            <p class="text-base text-gray-700"><strong>Pista 2:</strong> Si los restas, da <strong class="text-orange-600">4</strong></p>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-emerald-200 text-center">
+                        <p class="text-sm text-emerald-600 font-semibold">¿Cuáles son los números?</p>
+                        <p class="text-3xl font-fredoka font-bold text-emerald-700 mt-1">7 y 3</p>
+                        <p class="text-sm text-gray-500 mt-1">¡Porque 7 + 3 = 10 y 7 − 3 = 4! 🎉</p>
+                    </div>
+                </div>
+                <p class="text-base text-gray-600">
+                    ¡Cada ecuación es como una <strong>pista</strong>! Con una sola pista no puedes saber cuáles son, pero con <strong>dos pistas</strong> sí. 💡
+                </p>
+            </div>
+        </section>
+
+        <!-- ====== SECCIÓN 2: El caso de Antonio ====== -->
+        <section class="section-fade">
+            <div class="flex items-center gap-3 mb-5">
+                <span class="text-3xl">🏠</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-teal-700">El Caso de Antonio</h2>
+            </div>
+            <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-teal-200 shadow-sm">
+                <p class="text-lg text-gray-700 leading-relaxed mb-5">
+                    Antonio va en <strong class="text-teal-600">bicicleta</strong> a la escuela. Su camino tiene dos partes:
+                </p>
+
+                <!-- Route illustration -->
+                <div class="bg-gradient-to-r from-amber-50 via-green-50 to-blue-50 rounded-2xl p-5 mb-6 relative overflow-hidden">
+                    <svg viewBox="0 0 600 100" class="w-full" style="max-height:110px;">
+                        <!-- Road -->
+                        <rect x="60" y="58" width="480" height="16" rx="8" fill="#D1D5DB"/>
+                        <line x1="80" y1="66" x2="520" y2="66" stroke="#9CA3AF" stroke-width="3" class="road-dash"/>
+
+                        <!-- Home -->
+                        <text x="30" y="52" font-size="32" text-anchor="middle">🏠</text>
+                        <text x="30" y="90" font-size="13" fill="#92400E" font-weight="700" text-anchor="middle" font-family="Fredoka">Casa</text>
+
+                        <!-- Market -->
+                        <text x="300" y="48" font-size="32" text-anchor="middle">🏪</text>
+                        <text x="300" y="90" font-size="13" fill="#92400E" font-weight="700" text-anchor="middle" font-family="Fredoka">Mercado</text>
+
+                        <!-- School -->
+                        <text x="560" y="48" font-size="32" text-anchor="middle">🏫</text>
+                        <text x="560" y="90" font-size="13" fill="#1E3A5F" font-weight="700" text-anchor="middle" font-family="Fredoka">Escuela</text>
+
+                        <!-- Distance labels -->
+                        <text x="165" y="44" font-size="15" fill="#059669" font-weight="700" text-anchor="middle" font-family="Fredoka">x km</text>
+                        <path d="M 85 50 Q 165 28 245 50" fill="none" stroke="#059669" stroke-width="2"/>
+
+                        <text x="432" y="44" font-size="15" fill="#DC2626" font-weight="700" text-anchor="middle" font-family="Fredoka">y km</text>
+                        <path d="M 345 50 Q 432 28 525 50" fill="none" stroke="#DC2626" stroke-width="2"/>
+
+                        <!-- Bike -->
+                        <text x="150" y="55" font-size="20" class="bike-ride">🚲</text>
+
+                        <!-- Speed labels -->
+                        <rect x="100" y="12" width="130" height="22" rx="11" fill="#059669" opacity="0.9"/>
+                        <text x="165" y="27" font-size="11" fill="white" font-weight="700" text-anchor="middle" font-family="Fredoka">20 km/h → rápido</text>
+
+                        <rect x="365" y="12" width="130" height="22" rx="11" fill="#DC2626" opacity="0.9"/>
+                        <text x="430" y="27" font-size="11" fill="white" font-weight="700" text-anchor="middle" font-family="Fredoka">4 km/h → lento</text>
+                    </svg>
+                </div>
+
+                <!-- Data table -->
+                <div class="overflow-x-auto mb-5">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-teal-600 text-white">
+                                <th class="py-3 px-4 rounded-tl-xl font-fredoka text-sm">Tramo</th>
+                                <th class="py-3 px-4 font-fredoka text-sm">Distancia</th>
+                                <th class="py-3 px-4 font-fredoka text-sm">Velocidad</th>
+                                <th class="py-3 px-4 rounded-tr-xl font-fredoka text-sm">Tiempo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-green-50 border-b border-green-100">
+                                <td class="py-3 px-4 font-semibold text-green-700 text-sm">🏠 → 🏪</td>
+                                <td class="py-3 px-4 font-bold text-green-600 font-fredoka text-base">x</td>
+                                <td class="py-3 px-4 text-gray-600 text-sm">20 km/h</td>
+                                <td class="py-3 px-4 text-gray-600 text-sm">x ÷ 20</td>
+                            </tr>
+                            <tr class="bg-red-50">
+                                <td class="py-3 px-4 font-semibold text-red-700 text-sm">🏪 → 🏫</td>
+                                <td class="py-3 px-4 font-bold text-red-500 font-fredoka text-base">y</td>
+                                <td class="py-3 px-4 text-gray-600 text-sm">4 km/h</td>
+                                <td class="py-3 px-4 text-gray-600 text-sm">y ÷ 4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Clues -->
+                <div class="space-y-3">
+                    <div class="clue-card bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-4 text-white">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xl">🔍</span>
+                            <span class="font-fredoka font-bold text-sm uppercase tracking-wider opacity-90">Pista 1</span>
+                        </div>
+                        <p class="text-lg font-fredoka font-bold">La distancia total es 12 km</p>
+                        <p class="text-sm opacity-90 mt-1">x + y = 12</p>
+                    </div>
+                    <div class="clue-card bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl p-4 text-white">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xl">🔍</span>
+                            <span class="font-fredoka font-bold text-sm uppercase tracking-wider opacity-90">Pista 2</span>
+                        </div>
+                        <p class="text-lg font-fredoka font-bold">Todo el viaje toma 1 hora</p>
+                        <p class="text-sm opacity-90 mt-1">x ÷ 20 + y ÷ 4 = 1</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SECCIÓN 3: ¿Cómo se resuelve? ====== -->
+        <section class="section-fade">
+            <div class="flex items-center gap-3 mb-5">
+                <span class="text-3xl">⚙️</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-indigo-700">¿Cómo se Resuelve?</h2>
+            </div>
+            <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-indigo-200 shadow-sm">
+                <p class="text-lg text-gray-700 leading-relaxed mb-5">
+                    Vamos a usar un método llamado <strong class="text-indigo-600">sustitución</strong>. Es como un juego de intercambio: ¡descubres un valor y lo cambias por su número!
+                </p>
+
+                <div class="bg-indigo-50 rounded-2xl p-5 mb-6 text-center">
+                    <p class="text-xl md:text-2xl font-fredoka font-bold text-indigo-800">
+                        <span class="text-blue-600">x + y = 12</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <span class="text-orange-600">x÷20 + y÷4 = 1</span>
+                    </p>
+                </div>
+
+                <!-- Steps -->
+                <div class="space-y-4">
+                    <div class="step-card bg-blue-50 rounded-2xl p-5 border-l-4 border-blue-400">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-blue-400 text-white text-sm font-bold rounded-full w-7 h-7 flex items-center justify-center">1</span>
+                            <h4 class="font-fredoka font-bold text-blue-700">Despeja una letra</h4>
+                        </div>
+                        <p class="text-base text-gray-700">De la Pista 1, sacamos <strong>x</strong> solito:</p>
+                        <p class="mt-2 text-xl font-fredoka font-bold text-blue-600">x = 12 − y</p>
+                        <p class="text-sm text-gray-500 mt-1">Ahora sabemos que x es lo que le falta a 12 para llegar a y</p>
+                    </div>
+
+                    <div class="step-card bg-orange-50 rounded-2xl p-5 border-l-4 border-orange-400">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-orange-400 text-white text-sm font-bold rounded-full w-7 h-7 flex items-center justify-center">2</span>
+                            <h4 class="font-fredoka font-bold text-orange-700">¡Intercambia!</h4>
+                        </div>
+                        <p class="text-base text-gray-700">Donde veas <strong>x</strong> en la Pista 2, pon <strong>(12 − y)</strong>:</p>
+                        <div class="mt-2 bg-white rounded-xl p-3 border border-orange-200">
+                            <p class="text-base text-gray-400 line-through">(x ÷ 20) + (y ÷ 4) = 1</p>
+                            <p class="text-lg font-fredoka font-bold text-orange-600 mt-1">(12 − y) ÷ 20 + y ÷ 4 = 1</p>
+                        </div>
+                    </div>
+
+                    <div class="step-card bg-purple-50 rounded-2xl p-5 border-l-4 border-purple-400">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-purple-400 text-white text-sm font-bold rounded-full w-7 h-7 flex items-center justify-center">3</span>
+                            <h4 class="font-fredoka font-bold text-purple-700">Resuelve la ecuación</h4>
+                        </div>
+                        <div class="space-y-2 text-base text-gray-700">
+                            <p>(12 − y) ÷ 20 + y ÷ 4 = 1</p>
+                            <p>Multiplicamos todo por <strong class="text-purple-600">20</strong> para quitar denominadores:</p>
+                            <p class="font-fredoka font-bold text-purple-600 pl-4">12 − y + 5y = 20</p>
+                            <p>Juntamos las <strong>y</strong>: −y + 5y = <strong class="text-purple-600">4y</strong></p>
+                            <p class="font-fredoka font-bold text-purple-600 pl-4">12 + 4y = 20</p>
+                            <p>4y = 20 − 12 = <strong class="text-purple-600">8</strong></p>
+                            <p class="font-fredoka font-bold text-purple-600 pl-4">y = 8 ÷ 4 = <span class="text-2xl">2</span></p>
+                        </div>
+                    </div>
+
+                    <div class="step-card bg-teal-50 rounded-2xl p-5 border-l-4 border-teal-400">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-teal-400 text-white text-sm font-bold rounded-full w-7 h-7 flex items-center justify-center">4</span>
+                            <h4 class="font-fredoka font-bold text-teal-700">Encuentra la otra letra</h4>
+                        </div>
+                        <p class="text-base text-gray-700">Regresamos al paso 1:</p>
+                        <p class="mt-2 text-xl font-fredoka font-bold text-teal-600">x = 12 − 2 = <span class="text-2xl">10</span></p>
+                    </div>
+                </div>
+
+                <!-- Result -->
+                <div class="mt-6 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl p-6 text-center shadow-lg">
+                    <p class="text-sm font-bold text-emerald-100 uppercase tracking-wider mb-1">¡Misterio resuelto!</p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mt-2">
+                        <div>
+                            <p class="text-sm text-emerald-100">Casa → Mercado</p>
+                            <p class="text-4xl md:text-5xl font-fredoka font-bold text-white">10 km</p>
+                        </div>
+                        <span class="text-2xl text-emerald-200">|</span>
+                        <div>
+                            <p class="text-sm text-emerald-100">Mercado → Escuela</p>
+                            <p class="text-4xl md:text-5xl font-fredoka font-bold text-white">2 km</p>
+                        </div>
+                    </div>
+                    <p class="text-emerald-100 mt-3 text-lg">🎉 ¡Excelente trabajo, detective! 🎉</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SECCIÓN 4: Comprobación ====== -->
+        <section class="section-fade">
+            <div class="flex items-center gap-3 mb-5">
+                <span class="text-3xl">✅</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-green-700">Comprobación</h2>
+            </div>
+            <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-green-200 shadow-sm">
+                <p class="text-lg text-gray-700 mb-5">Un buen detective <strong class="text-green-600">siempre verifica</strong> su respuesta:</p>
+                <div class="space-y-4">
+                    <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                        <p class="font-fredoka font-bold text-blue-700 mb-1">Pista 1: x + y = 12</p>
+                        <p class="text-base text-gray-700">10 + 2 = <strong class="text-green-600">12</strong> ✅</p>
+                    </div>
+                    <div class="bg-orange-50 rounded-xl p-4 border border-orange-200">
+                        <p class="font-fredoka font-bold text-orange-700 mb-1">Pista 2: x÷20 + y÷4 = 1</p>
+                        <div class="text-base text-gray-700 space-y-1">
+                            <p>Casa → Mercado: 10 ÷ 20 = <strong>0.5 horas</strong> (30 min)</p>
+                            <p>Mercado → Escuela: 2 ÷ 4 = <strong>0.5 horas</strong> (30 min)</p>
+                            <p>Total: 0.5 + 0.5 = <strong class="text-green-600">1 hora</strong> ✅</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 bg-green-100 rounded-xl p-3 text-center">
+                    <p class="text-green-700 font-fredoka font-bold">¡Ambas pistas coinciden! La respuesta es correcta 💯</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SECCIÓN 5: Trucos para recordar ====== -->
+        <section class="section-fade">
+            <div class="flex items-center gap-3 mb-5">
+                <span class="text-3xl">🧠</span>
+                <h2 class="text-2xl md:text-3xl font-bold text-amber-700">Trucos de Detective</h2>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div class="bg-white/70 rounded-2xl p-5 border-2 border-amber-200 step-card">
+                    <p class="text-2xl mb-2">🎯</p>
+                    <h4 class="font-fredoka font-bold text-amber-700 mb-1">Identifica las incógnitas</h4>
+                    <p class="text-sm text-gray-600">Primero pregúntate: ¿qué quiero encontrar? Ponle una letra (x, y) a cada cosa desconocida.</p>
+                </div>
+                <div class="bg-white/70 rounded-2xl p-5 border-2 border-blue-200 step-card">
+                    <p class="text-2xl mb-2">📝</p>
+                    <h4 class="font-fredoka font-bold text-blue-700 mb-1">Escribe las dos pistas</h4>
+                    <p class="text-sm text-gray-600">Cada dato importante del problema se convierte en una ecuación. ¡Busca los números clave!</p>
+                </div>
+                <div class="bg-white/70 rounded-2xl p-5 border-2 border-purple-200 step-card">
+                    <p class="text-2xl mb-2">🔄</p>
+                    <h4 class="font-fredoka font-bold text-purple-700 mb-1">Sustituye e intercambia</h4>
+                    <p class="text-sm text-gray-600">Despeja una letra y cámbiala en la otra ecuación. ¡Es como un juego de reemplazo!</p>
+                </div>
+                <div class="bg-white/70 rounded-2xl p-5 border-2 border-green-200 step-card">
+                    <p class="text-2xl mb-2">✅</p>
+                    <h4 class="font-fredoka font-bold text-green-700 mb-1">¡Siempre verifica!</h4>
+                    <p class="text-sm text-gray-600">Sustituye tus respuestas en las dos ecuaciones originales. Si ambas dan correcto, ¡ganaste!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== SECCIÓN 6: Probador Mágico ====== -->
+        <section class="section-fade" id="solver-section">
+            <div class="flex items-center gap-3 mb-5">
+                <span class="text-3xl">🪄</span>
+                <h2 class="text-2xl md:text-3xl font-bold gradient-text">Tu Probador Mágico</h2>
+            </div>
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-emerald-300 shadow-lg relative overflow-hidden">
+                <div class="absolute -top-20 -right-20 w-40 h-40 bg-emerald-300/30 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-teal-300/30 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10">
+                    <p class="text-lg text-gray-700 mb-2 text-center font-semibold">
+                        Escribe tus dos ecuaciones y descubre <strong class="text-emerald-600">solo la respuesta</strong>
+                    </p>
+                    <p class="text-sm text-gray-400 text-center mb-5">
+                        Formato: ax + by = c &nbsp;|&nbsp; dx + ey = f
+                    </p>
+
+                    <!-- Equation inputs -->
+                    <div class="space-y-4 mb-5">
+                        <div>
+                            <label class="block text-sm font-bold text-blue-600 mb-1.5 font-fredoka">
+                                <span class="bg-blue-500 text-white text-xs rounded-full w-5 h-5 inline-flex items-center justify-center mr-1">1</span>
+                                Primera ecuación
+                            </label>
+                            <input
+                                id="eq1-input"
+                                type="text"
+                                placeholder="Ejemplo: x + y = 12"
+                                class="magic-input w-full text-lg md:text-xl font-fredoka font-semibold py-3.5 px-5 rounded-2xl border-2 border-blue-200 bg-blue-50/50 text-gray-800 placeholder:text-blue-300 placeholder:font-nunito placeholder:font-normal placeholder:text-sm"
+                                autocomplete="off"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-orange-600 mb-1.5 font-fredoka">
+                                <span class="bg-orange-500 text-white text-xs rounded-full w-5 h-5 inline-flex items-center justify-center mr-1">2</span>
+                                Segunda ecuación
+                            </label>
+                            <input
+                                id="eq2-input"
+                                type="text"
+                                placeholder="Ejemplo: x/20 + y/4 = 1"
+                                class="magic-input w-full text-lg md:text-xl font-fredoka font-semibold py-3.5 px-5 rounded-2xl border-2 border-orange-200 bg-orange-50/50 text-gray-800 placeholder:text-orange-300 placeholder:font-nunito placeholder:font-normal placeholder:text-sm"
+                                autocomplete="off"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Symbol buttons -->
+                    <div class="flex flex-wrap justify-center gap-2 mb-5">
+                        <button onclick="insertInto('eq1-input','x')" class="symbol-btn w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-fredoka font-bold text-base border border-emerald-200 flex items-center justify-center">x</button>
+                        <button onclick="insertInto('eq1-input','y')" class="symbol-btn w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-fredoka font-bold text-base border border-emerald-200 flex items-center justify-center">y</button>
+                        <button onclick="insertInto('eq1-input',' + ')" class="symbol-btn w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-fredoka font-bold text-base border border-emerald-200 flex items-center justify-center">+</button>
+                        <button onclick="insertInto('eq1-input',' − ')" class="symbol-btn w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-fredoka font-bold text-base border border-emerald-200 flex items-center justify-center">−</button>
+                        <button onclick="insertInto('eq1-input',' = ')" class="symbol-btn w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-fredoka font-bold text-base border border-emerald-200 flex items-center justify-center">=</button>
+                        <button onclick="insertInto('eq1-input','/')" class="symbol-btn w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-fredoka font-bold text-base border border-emerald-200 flex items-center justify-center">/</button>
+                        <button onclick="insertInto('eq1-input','(')" class="symbol-btn w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-fredoka font-bold text-base border border-emerald-200 flex items-center justify-center">(</button>
+                        <button onclick="insertInto('eq1-input',')')" class="symbol-btn w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 font-fredoka font-bold text-base border border-emerald-200 flex items-center justify-center">)</button>
+                        <span class="w-px h-8 bg-gray-300 self-center mx-1"></span>
+                        <button onclick="insertInto('eq2-input','x')" class="symbol-btn w-10 h-10 rounded-xl bg-orange-100 text-orange-600 font-fredoka font-bold text-base border border-orange-200 flex items-center justify-center">x</button>
+                        <button onclick="insertInto('eq2-input','y')" class="symbol-btn w-10 h-10 rounded-xl bg-orange-100 text-orange-600 font-fredoka font-bold text-base border border-orange-200 flex items-center justify-center">y</button>
+                        <button onclick="insertInto('eq2-input',' + ')" class="symbol-btn w-10 h-10 rounded-xl bg-orange-100 text-orange-600 font-fredoka font-bold text-base border border-orange-200 flex items-center justify-center">+</button>
+                        <button onclick="insertInto('eq2-input',' − ')" class="symbol-btn w-10 h-10 rounded-xl bg-orange-100 text-orange-600 font-fredoka font-bold text-base border border-orange-200 flex items-center justify-center">−</button>
+                        <button onclick="insertInto('eq2-input',' = ')" class="symbol-btn w-10 h-10 rounded-xl bg-orange-100 text-orange-600 font-fredoka font-bold text-base border border-orange-200 flex items-center justify-center">=</button>
+                        <button onclick="insertInto('eq2-input','/')" class="symbol-btn w-10 h-10 rounded-xl bg-orange-100 text-orange-600 font-fredoka font-bold text-base border border-orange-200 flex items-center justify-center">/</button>
+                        <button onclick="insertInto('eq2-input','(')" class="symbol-btn w-10 h-10 rounded-xl bg-orange-100 text-orange-600 font-fredoka font-bold text-base border border-orange-200 flex items-center justify-center">(</button>
+                        <button onclick="insertInto('eq2-input',')')" class="symbol-btn w-10 h-10 rounded-xl bg-orange-100 text-orange-600 font-fredoka font-bold text-base border border-orange-200 flex items-center justify-center">)</button>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="flex gap-3 justify-center mb-6">
+                        <button onclick="handleSolveSystem()" class="magic-btn bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-fredoka font-bold text-lg px-8 py-3.5 rounded-2xl shadow-lg shadow-emerald-300/40 flex items-center gap-2">
+                            <span class="text-xl">✨</span> Descubrir
+                        </button>
+                        <button onclick="handleClearSystem()" class="magic-btn bg-gray-100 text-gray-500 font-fredoka font-bold text-lg px-5 py-3.5 rounded-2xl border-2 border-gray-200 flex items-center gap-2 hover:bg-gray-200">
+                            <span class="iconify text-lg" data-icon="lucide:eraser"></span> Limpiar
+                        </button>
+                    </div>
+
+                    <!-- Answer container -->
+                    <div id="answer-container" class="min-h-[120px] flex items-center justify-center rounded-2xl">
+                        <p class="text-gray-300 text-base text-center font-semibold" id="answer-placeholder">
+                            x y y aparecerán aquí 🌟
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="mt-4 bg-amber-50 rounded-2xl p-4 border border-amber-200">
+                <p class="text-sm text-amber-700 font-semibold mb-2">💡 Cómo escribir las ecuaciones:</p>
+                <ul class="text-sm text-amber-600 space-y-1">
+                    <li>• Usa <strong>x</strong> e <strong>y</strong> para las incógnitas</li>
+                    <li>• Para fracciones usa <strong>/</strong>: <code class="bg-amber-100 px-1 rounded">x/20</code> significa x÷20</li>
+                    <li>• Para multiplicar un número por x: <code class="bg-amber-100 px-1 rounded">3x</code> o <code class="bg-amber-100 px-1 rounded">3*x</code></li>
+                    <li>• Usa paréntesis si hace falta: <code class="bg-amber-100 px-1 rounded">(x+2)/3</code></li>
+                    <li>• Ejemplo completo: <code class="bg-amber-100 px-1 rounded">x + y = 12</code> y <code class="bg-amber-100 px-1 rounded">x/20 + y/4 = 1</code></li>
+                </ul>
+            </div>
+
+            <!-- Quick examples -->
+            <div class="mt-4 bg-emerald-50 rounded-2xl p-4 border border-emerald-200">
+                <p class="text-sm text-emerald-700 font-semibold mb-3">⚡ Ejemplos rápidos (clic para cargar):</p>
+                <div class="space-y-2">
+                    <button onclick="loadExample('x + y = 12', 'x/20 + y/4 = 1')" class="w-full text-left bg-white rounded-xl p-3 border border-emerald-200 hover:border-emerald-400 hover:shadow-sm transition-all text-sm">
+                        <span class="text-emerald-600 font-bold">🚲 El de Antonio:</span>
+                        <span class="text-gray-500 ml-2">x + y = 12 &nbsp;|&nbsp; x/20 + y/4 = 1</span>
+                    </button>
+                    <button onclick="loadExample('x + y = 10', 'x - y = 4')" class="w-full text-left bg-white rounded-xl p-3 border border-emerald-200 hover:border-emerald-400 hover:shadow-sm transition-all text-sm">
+                        <span class="text-emerald-600 font-bold">🔢 Suma y resta:</span>
+                        <span class="text-gray-500 ml-2">x + y = 10 &nbsp;|&nbsp; x − y = 4</span>
+                    </button>
+                    <button onclick="loadExample('2x + 3y = 12', 'x - y = 1')" class="w-full text-left bg-white rounded-xl p-3 border border-emerald-200 hover:border-emerald-400 hover:shadow-sm transition-all text-sm">
+                        <span class="text-emerald-600 font-bold">📐 Con coeficientes:</span>
+                        <span class="text-gray-500 ml-2">2x + 3y = 12 &nbsp;|&nbsp; x − y = 1</span>
+                    </button>
+                    <button onclick="loadExample('3x + 2y = 16', 'x + y = 6')" class="w-full text-left bg-white rounded-xl p-3 border border-emerald-200 hover:border-emerald-400 hover:shadow-sm transition-all text-sm">
+                        <span class="text-emerald-600 font-bold">🧩 Otro misterio:</span>
+                        <span class="text-gray-500 ml-2">3x + 2y = 16 &nbsp;|&nbsp; x + y = 6</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-10 px-6 border-t border-emerald-200/50">
+        <p class="text-emerald-500 font-semibold text-sm">
+            🕵️ Hecho con cariño para los pequeños detectives 🧩
+        </p>
+    </footer>
+
+
+    <script>
+        // ====== EQUATION PARSER ======
+        // Parses linear equation in x, y into {a, b, c} where ax + by = c
+        function parseEquation(input) {
+            let expr = input.trim();
+            expr = expr.replace(/−/g, '-').replace(/\s+/g, '');
+
+            // Must have exactly one '='
+            const parts = expr.split('=');
+            if (parts.length !== 2) return null;
+            let [leftStr, rightStr] = parts;
+
+            if (!leftStr || !rightStr) return null;
+
+            // Parse each side into coefficients of x, y, and constant
+            function parseSide(s) {
+                let a = 0, b = 0, c = 0;
+
+                // Normalize: add '+' at start if needed, split into terms
+                s = s.replace(/-/g, '+-');
+                if (s.startsWith('+')) s = s.substring(1);
+                let terms = s.split('+').filter(t => t.length > 0);
+
+                for (let term of terms) {
+                    term = term.trim();
+                    if (!term) continue;
+
+                    if (term.includes('x') && !term.includes('y')) {
+                        let coef = term.replace('x', '');
+                        if (coef === '' || coef === '+') coef = '1';
+                        else if (coef === '-') coef = '-1';
+                        a = parseFloat(coef);
+                        if (isNaN(a)) return null;
+                    } else if (term.includes('y') && !term.includes('x')) {
+                        let coef = term.replace('y', '');
+                        if (coef === '' || coef === '+') coef = '1';
+                        else if (coef === '-') coef = '-1';
+                        b = parseFloat(coef);
+                        if (isNaN(b)) return null;
+                    } else if (!term.includes('x') && !term.includes('y')) {
+                        // It's a number, but might contain division
+                        // Evaluate safely
+                        let val = safeEval(term);
+                        if (val === null) return null;
+                        c = val;
+                    } else {
+                        // Contains both x and y in one term, or invalid
+                        return null;
+                    }
+                }
+                return { a, b, c };
+            }
+
+            let left = parseSide(leftStr);
+            let right = parseSide(rightStr);
+            if (!left || !right) return null;
+
+            // Move everything to left side: (aL-aR)x + (bL-bR)y = (cR-cL)
+            return {
+                a: left.a - right.a,
+                b: left.b - right.b,
+                c: right.c - left.c
+            };
+        }
+
+        function safeEval(expr) {
+            // Only allow digits, decimal point, /, *, parentheses
+            if (!/^[\d.\/\*\(\)\-]+$/.test(expr)) return null;
+            try {
+                let result = new Function('return (' + expr + ')')();
+                if (typeof result !== 'number' || !isFinite(result)) return null;
+                return Math.round(result * 1e12) / 1e12;
+            } catch {
+                return null;
+            }
+        }
+
+        // ====== SOLVE 2x2 SYSTEM ======
+        function solveSystem(eq1, eq2) {
+            let a1 = eq1.a, b1 = eq1.b, c1 = eq1.c;
+            let a2 = eq2.a, b2 = eq2.b, c2 = eq2.c;
+
+            let det = a1 * b2 - a2 * b1;
+
+            if (Math.abs(det) < 1e-10) {
+                return { error: true, message: '¡Las ecuaciones son iguales o no tienen solución única! 🤔' };
+            }
+
+            let x = (c1 * b2 - c2 * b1) / det;
+            let y = (a1 * c2 - a2 * c1) / det;
+
+            // Round to avoid floating point errors
+            x = Math.round(x * 1e10) / 1e10;
+            y = Math.round(y * 1e10) / 1e10;
+
+            // Clean up near-integers
+            if (Math.abs(x - Math.round(x)) < 1e-8) x = Math.round(x);
+            if (Math.abs(y - Math.round(y)) < 1e-8) y = Math.round(y);
+
+            return { error: false, x, y };
+        }
+
+        // ====== FORMAT NUMBER ======
+        function formatNumber(n) {
+            if (Number.isInteger(n)) return { type: 'integer', value: n };
+
+            let sign = n < 0 ? -1 : 1;
+            let absVal = Math.abs(n);
+
+            for (let d = 2; d <= 10000; d++) {
+                let num = Math.round(absVal * d);
+                if (num === 0) continue;
+                if (Math.abs(absVal - num / d) < 1e-9) {
+                    let g = gcd(Math.abs(num), d);
+                    num = num / g;
+                    d = d / g;
+                    if (d === 1) return { type: 'integer', value: sign * num };
+                    return { type: 'fraction', sign, numerator: num, denominator: d };
+                }
+            }
+            return { type: 'decimal', value: parseFloat(absVal.toFixed(4)), sign };
+        }
+
+        function gcd(a, b) {
+            a = Math.abs(Math.round(a));
+            b = Math.abs(Math.round(b));
+            while (b) { [a, b] = [b, a % b]; }
+            return a;
+        }
+
+        function renderNumber(n) {
+            let f = formatNumber(n);
+            if (f.type === 'integer') return `<span class="text-4xl md:text-5xl font-fredoka font-bold gradient-text">${f.value}</span>`;
+
+            if (f.type === 'fraction') {
+                let signHtml = f.sign < 0
+                    ? '<span class="text-3xl md:text-4xl font-fredoka font-bold text-red-400 mr-1">−</span>'
+                    : '';
+                return `${signHtml}<span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;">
+                    <span style="padding:2px 10px 4px;border-bottom:4px solid currentColor;" class="text-4xl md:text-5xl font-fredoka font-bold gradient-text">${f.numerator}</span>
+                    <span style="padding:4px 10px 2px;" class="text-4xl md:text-5xl font-fredoka font-bold gradient-text">${f.denominator}</span>
+                </span>`;
+            }
+
+            return `<span class="text-4xl md:text-5xl font-fredoka font-bold gradient-text">${n}</span>`;
+        }
+
+        // ====== UI FUNCTIONS ======
+
+        function insertInto(inputId, sym) {
+            const input = document.getElementById(inputId);
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const text = input.value;
+            input.value = text.substring(0, start) + sym + text.substring(end);
+            input.focus();
+            const newPos = start + sym.length;
+            input.setSelectionRange(newPos, newPos);
+        }
+
+        function loadExample(eq1, eq2) {
+            document.getElementById('eq1-input').value = eq1;
+            document.getElementById('eq2-input').value = eq2;
+            // Clear previous answer
+            const container = document.getElementById('answer-container');
+            container.innerHTML = '<p class="text-gray-300 text-base text-center font-semibold" id="answer-placeholder">x y y aparecerán aquí 🌟</p>';
+            document.getElementById('eq1-input').focus();
+        }
+
+        function handleSolveSystem() {
+            const eq1Str = document.getElementById('eq1-input').value;
+            const eq2Str = document.getElementById('eq2-input').value;
+            const container = document.getElementById('answer-container');
+            const placeholder = document.getElementById('answer-placeholder');
+
+            if (placeholder) placeholder.remove();
+
+            if (!eq1Str.trim() || !eq2Str.trim()) {
+                container.innerHTML = `<div class="answer-reveal text-center px-4"><p class="text-lg font-nunito font-bold text-red-400">¡Escribe las dos ecuaciones primero! ✏️</p></div>`;
+                return;
+            }
+
+            let eq1 = parseEquation(eq1Str);
+            let eq2 = parseEquation(eq2Str);
+
+            if (!eq1) {
+                container.innerHTML = `<div class="answer-reveal text-center px-4"><p class="text-lg font-nunito font-bold text-red-400">¡No pude leer la primera ecuación! Revisa el formato 🔍</p></div>`;
+                return;
+            }
+            if (!eq2) {
+                container.innerHTML = `<div class="answer-reveal text-center px-4"><p class="text-lg font-nunito font-bold text-red-400">¡No pude leer la segunda ecuación! Revisa el formato 🔍</p></div>`;
+                return;
+            }
+
+            if (eq1.a === 0 && eq1.b === 0) {
+                container.innerHTML = `<div class="answer-reveal text-center px-4"><p class="text-lg font-nunito font-bold text-red-400">¡La primera ecuación no tiene x ni y! 🤔</p></div>`;
+                return;
+            }
+            if (eq2.a === 0 && eq2.b === 0) {
+                container.innerHTML = `<div class="answer-reveal text-center px-4"><p class="text-lg font-nunito font-bold text-red-400">¡La segunda ecuación no tiene x ni y! 🤔</p></div>`;
+                return;
+            }
+
+            let result = solveSystem(eq1, eq2);
+
+            if (result.error) {
+                container.innerHTML = `<div class="answer-reveal text-center px-4"><p class="text-lg font-nunito font-bold text-red-400">${result.message}</p></div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="answer-reveal w-full px-4">
+                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 border-2 border-emerald-200">
+                        <p class="text-sm font-bold text-emerald-600 uppercase tracking-wider mb-4 text-center">¡Misterio resuelto!</p>
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+                            <div class="text-center">
+                                <p class="text-sm text-blue-500 font-bold font-fredoka mb-1">x =</p>
+                                ${renderNumber(result.x)}
+                            </div>
+                            <div class="hidden sm:block w-px h-16 bg-emerald-200"></div>
+                            <div class="block sm:hidden h-px w-16 bg-emerald-200"></div>
+                            <div class="text-center">
+                                <p class="text-sm text-orange-500 font-bold font-fredoka mb-1">y =</p>
+                                ${renderNumber(result.y)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            addSparkles(container);
+            addConfetti(container);
+        }
+
+        function handleClearSystem() {
+            document.getElementById('eq1-input').value = '';
+            document.getElementById('eq2-input').value = '';
+            const container = document.getElementById('answer-container');
+            container.innerHTML = '<p class="text-gray-300 text-base text-center font-semibold" id="answer-placeholder">x y y aparecerán aquí 🌟</p>';
+            document.getElementById('eq1-input').focus();
+        }
+
+        function addSparkles(parent) {
+            const colors = ['#059669', '#0D9488', '#0891B2', '#D97706', '#EC4899', '#8B5CF6'];
+            for (let i = 0; i < 16; i++) {
+                let sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                let angle = (i / 16) * Math.PI * 2;
+                let dist = 50 + Math.random() * 60;
+                sparkle.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+                sparkle.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+                sparkle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                sparkle.style.left = '50%';
+                sparkle.style.top = '50%';
+                let size = (6 + Math.random() * 8) + 'px';
+                sparkle.style.width = size;
+                sparkle.style.height = size;
+                parent.style.position = 'relative';
+                parent.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 900);
+            }
+        }
+
+        function addConfetti(parent) {
+            const colors = ['#059669', '#0D9488', '#0891B2', '#D97706', '#EC4899', '#8B5CF6', '#22C55E'];
+            for (let i = 0; i < 20; i++) {
+                let piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.left = (20 + Math.random() * 60) + '%';
+                piece.style.top = '30%';
+                piece.style.animationDelay = (Math.random() * 0.4) + 's';
+                piece.style.animationDuration = (0.8 + Math.random() * 0.8) + 's';
+                let size = (5 + Math.random() * 8) + 'px';
+                piece.style.width = size;
+                piece.style.height = size;
+                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                parent.appendChild(piece);
+                setTimeout(() => piece.remove(), 2000);
+            }
+        }
+
+        // ====== ENTER KEY ======
+        document.addEventListener('DOMContentLoaded', () => {
+            ['eq1-input', 'eq2-input'].forEach(id => {
+                document.getElementById(id).addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        // If on first input, jump to second; if on second, solve
+                        if (id === 'eq1-input') {
+                            document.getElementById('eq2-input').focus();
+                        } else {
+                            handleSolveSystem();
+                        }
+                    }
+                });
+            });
+        });
+
+        // ====== SCROLL ANIMATIONS ======
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.section-fade').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
