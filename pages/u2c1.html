@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎒 What's in My Bag?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <script>
+        tailwind.config={theme:{extend:{fontFamily:{'fredoka':['Fredoka','sans-serif'],'nunito':['Nunito','sans-serif']}}}}
+    </script>
+    <style>
+        body{font-family:'Nunito',sans-serif;background:linear-gradient(180deg,#EEF2FF 0%,#F5F3FF 25%,#FDF4FF 50%,#FFF1F2 75%,#FFF7ED 100%);min-height:100vh}
+        h1,h2,h3,h4{font-family:'Fredoka',sans-serif}
+        .float-item{position:absolute;font-size:1.6rem;opacity:.07;animation:floatItem 18s infinite ease-in-out;pointer-events:none}
+        @keyframes floatItem{0%,100%{transform:translateY(0) rotate(0deg)}33%{transform:translateY(-25px) rotate(8deg)}66%{transform:translateY(-10px) rotate(-5deg)}}
+        @keyframes bounce-slow{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+        .bounce-1{animation:bounce-slow 3s ease-in-out infinite}.bounce-2{animation:bounce-slow 3s ease-in-out infinite .4s}.bounce-3{animation:bounce-slow 3s ease-in-out infinite .8s}
+        .gradient-text{background:linear-gradient(135deg,#6366F1,#A855F7,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .section-fade{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.25,.46,.45,.94)}
+        .section-fade.visible{opacity:1;transform:translateY(0)}
+        .scroll-indicator{animation:scrollBounce 2s ease-in-out infinite}
+        @keyframes scrollBounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(10px);opacity:1}}
+        .bag-body{transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+        .bag-body.opened{transform:scaleY(1.15) scaleX(1.05)}
+        .dialogue-line{opacity:0;transform:translateX(-20px);transition:all .4s ease}
+        .dialogue-line.show{opacity:1;transform:translateX(0)}
+        .chat-bubble{position:relative}
+        .chat-bubble.left::before{content:'';position:absolute;left:-8px;top:12px;border-width:8px;border-style:solid;border-color:transparent #818CF8 transparent transparent}
+        .chat-bubble.right::before{content:'';position:absolute;right:-8px;top:12px;border-width:8px;border-style:solid;border-color:transparent transparent transparent #F472B6}
+        .sort-card{cursor:grab;transition:all .2s ease;user-select:none}
+        .sort-card:active{cursor:grabbing;transform:scale(1.08)}
+        .sort-card:hover{transform:translateY(-3px);box-shadow:0 8px 25px -5px rgba(0,0,0,.15)}
+        .sort-card.correct{animation:correctPulse .5s ease;pointer-events:none;opacity:.4}
+        @keyframes correctPulse{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+        .sort-card.wrong{animation:wrongShake .4s ease}
+        @keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+        .drop-zone{transition:all .3s ease;min-height:140px}
+        .drop-zone.highlight{background:#EEF2FF;border-color:#6366F1;transform:scale(1.02)}
+        .type-input{transition:all .3s ease}
+        .type-input:focus{outline:none;box-shadow:0 0 0 3px rgba(99,102,241,.3);border-color:#6366F1}
+        .type-input.correct-input{border-color:#22C55E!important;background:#F0FDF4!important;box-shadow:0 0 0 3px rgba(34,197,94,.2)!important}
+        .type-input.wrong-input{border-color:#EF4444!important;background:#FEF2F2!important;box-shadow:0 0 0 3px rgba(239,68,68,.2)!important;animation:wrongShake .4s ease}
+        .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+        .progress-fill{transition:width .5s cubic-bezier(.25,.46,.45,.94)}
+        @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}100%{transform:translateY(120px) rotate(720deg) scale(0);opacity:0}}
+        .confetti-piece{position:absolute;pointer-events:none;animation:confettiFall 1.2s ease-out forwards}
+        @keyframes popIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+        .answer-reveal{animation:popIn .6s cubic-bezier(.175,.885,.32,1.275) forwards}
+        .pron{color:#94A3B8;font-style:italic;font-size:.7rem;line-height:1.2}
+        .trans{color:#CBD5E1;font-size:.65rem;line-height:1.2}
+
+        /* Slot animations */
+        .word-slot{min-height:76px;transition:all .4s ease;position:relative}
+        .word-slot.filled{border-color:#A5B4FC!important;background:#EEF2FF!important}
+        @keyframes slotFill{0%{transform:scale(0) rotate(-10deg);opacity:0}60%{transform:scale(1.1) rotate(2deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+        .slot-card{animation:slotFill .5s cubic-bezier(.175,.885,.32,1.275) forwards;opacity:0}
+        .slot-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;pointer-events:none;transition:opacity .3s ease}
+        .slot-placeholder.hidden-ph{opacity:0}
+    </style>
+</head>
+<body class="no-scrollbar">
+
+<header class="relative overflow-hidden pt-12 pb-16 px-6">
+    <span class="float-item top-8 left-[5%]" style="animation-delay:0s">✏️</span>
+    <span class="float-item top-16 right-[8%]" style="animation-delay:3s">📖</span>
+    <span class="float-item top-36 left-[18%]" style="animation-delay:6s">📏</span>
+    <span class="float-item top-12 right-[25%]" style="animation-delay:2s">🎯</span>
+    <span class="float-item bottom-8 left-[35%]" style="animation-delay:9s">🖊️</span>
+    <span class="float-item bottom-16 right-[10%]" style="animation-delay:4s">✂️</span>
+    <span class="float-item top-28 left-[55%]" style="animation-delay:7s">📐</span>
+    <span class="float-item bottom-10 left-[75%]" style="animation-delay:5s">📋</span>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+        <div class="flex justify-center gap-4 mb-6">
+            <span class="text-5xl md:text-6xl bounce-1 inline-block">🎒</span>
+            <span class="text-5xl md:text-6xl bounce-2 inline-block">❓</span>
+            <span class="text-5xl md:text-6xl bounce-3 inline-block">💬</span>
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold gradient-text leading-tight mb-3">What's in My Bag?</h1>
+        <p class="text-lg md:text-xl text-indigo-800/60 font-semibold max-w-lg mx-auto leading-relaxed">Aprende <strong class="text-indigo-600">singular</strong> y <strong class="text-pink-600">plural</strong> con diálogos y juegos</p>
+        <div class="mt-8 scroll-indicator text-indigo-500/40"><span class="iconify inline-block text-2xl" data-icon="lucide:chevrons-down"></span></div>
+    </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-5 pb-24 space-y-16">
+
+    <!-- ====== BAG ====== -->
+    <section class="section-fade" id="bag-section">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">🎒</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-indigo-700">Let's Open the Bag! <span class="pron font-nunito text-indigo-400">— lets óu-pen de bag — ¡Abramos la mochila!</span></h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-indigo-200 shadow-sm text-center">
+            <p class="text-base text-gray-600 mb-6">Haz clic en la mochila para ver qué hay dentro 👇</p>
+            <div id="the-bag" class="bag-body cursor-pointer inline-block" onclick="openBag()">
+                <svg viewBox="0 0 200 180" width="180" height="160">
+                    <rect x="20" y="60" width="160" height="110" rx="12" fill="#6366F1" stroke="#4F46E5" stroke-width="3"/>
+                    <rect x="30" y="70" width="140" height="90" rx="8" fill="#818CF8" opacity="0.5"/>
+                    <path d="M 60 60 Q 60 20, 100 20 Q 140 20, 140 60" fill="none" stroke="#4F46E5" stroke-width="6" stroke-linecap="round"/>
+                    <line x1="40" y1="75" x2="160" y2="75" stroke="#A5B4FC" stroke-width="2" stroke-dasharray="6 4"/>
+                    <text x="100" y="130" text-anchor="middle" font-size="40" fill="white" opacity="0.6" font-family="Fredoka">?</text>
+                </svg>
+            </div>
+            <p id="bag-message" class="mt-6 text-base text-gray-400 font-semibold transition-all duration-500"></p>
+        </div>
+    </section>
+
+    <!-- ====== SINGULAR vs PLURAL (with empty slots) ====== -->
+    <section class="section-fade" id="svp-section">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">1️⃣ vs 🔢</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-violet-700">Singular vs Plural</h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-violet-200 shadow-sm">
+            <p class="text-lg text-gray-700 leading-relaxed mb-2">En inglés, los sustantivos pueden ser <strong class="text-indigo-600">singular</strong> (uno solo) o <strong class="text-pink-600">plural</strong> (más de uno).</p>
+
+            <div class="grid sm:grid-cols-2 gap-4 mb-6">
+                <!-- Singular -->
+                <div class="bg-indigo-50 rounded-2xl p-5 border-2 border-indigo-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="bg-indigo-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">1</span>
+                        <h4 class="font-fredoka font-bold text-indigo-700">Singular = Uno solo</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-1">Preguntas: <strong class="text-indigo-600">"What is it?"</strong> <span class="pron">— guát is it — ¿Qué es?</span></p>
+                    <p class="text-sm text-gray-600 mb-3">O: <strong class="text-indigo-600">"What's this?"</strong> <span class="pron">— guáts dis — ¿Qué es esto?</span></p>
+                    <div class="space-y-2" id="singular-slots">
+                        <div class="word-slot rounded-xl border-2 border-dashed border-indigo-200 bg-white/50" data-slot="pen">
+                            <div class="slot-placeholder"><span class="text-gray-300 text-2xl">📝</span><span class="text-gray-300 text-xs">?</span></div>
+                        </div>
+                        <div class="word-slot rounded-xl border-2 border-dashed border-indigo-200 bg-white/50" data-slot="book">
+                            <div class="slot-placeholder"><span class="text-gray-300 text-2xl">📖</span><span class="text-gray-300 text-xs">?</span></div>
+                        </div>
+                        <div class="word-slot rounded-xl border-2 border-dashed border-indigo-200 bg-white/50" data-slot="eraser">
+                            <div class="slot-placeholder"><span class="text-gray-300 text-2xl">🧽</span><span class="text-gray-300 text-xs">?</span></div>
+                        </div>
+                        <div class="word-slot rounded-xl border-2 border-dashed border-indigo-200 bg-white/50" data-slot="ruler">
+                            <div class="slot-placeholder"><span class="text-gray-300 text-2xl">📏</span><span class="text-gray-300 text-xs">?</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plural -->
+                <div class="bg-pink-50 rounded-2xl p-5 border-2 border-pink-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="bg-pink-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">2+</span>
+                        <h4 class="font-fredoka font-bold text-pink-700">Plural = Más de uno</h4>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-1">Preguntas: <strong class="text-pink-600">"What are they?"</strong> <span class="pron">— guát ar déi — ¿Qué son?</span></p>
+                    <p class="text-sm text-gray-600 mb-3">O: <strong class="text-pink-600">"What are these?"</strong> <span class="pron">— guát ar diis — ¿Qué son estos?</span></p>
+                    <div class="space-y-2" id="plural-slots">
+                        <div class="word-slot rounded-xl border-2 border-dashed border-pink-200 bg-white/50" data-slot="pens">
+                            <div class="slot-placeholder"><span class="text-gray-300 text-2xl">📝📝</span><span class="text-gray-300 text-xs">?</span></div>
+                        </div>
+                        <div class="word-slot rounded-xl border-2 border-dashed border-pink-200 bg-white/50" data-slot="books">
+                            <div class="slot-placeholder"><span class="text-gray-300 text-2xl">📖📖</span><span class="text-gray-300 text-xs">?</span></div>
+                        </div>
+                        <div class="word-slot rounded-xl border-2 border-dashed border-pink-200 bg-white/50" data-slot="scissors">
+                            <div class="slot-placeholder"><span class="text-gray-300 text-2xl">✂️</span><span class="text-gray-300 text-xs">?</span></div>
+                        </div>
+                        <div class="word-slot rounded-xl border-2 border-dashed border-pink-200 bg-white/50" data-slot="rulers">
+                            <div class="slot-placeholder"><span class="text-gray-300 text-2xl">📏📏</span><span class="text-gray-300 text-xs">?</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rules -->
+            <div class="bg-amber-50 rounded-2xl p-5 border border-amber-200">
+                <h4 class="font-fredoka font-bold text-amber-700 mb-3">📏 Reglas para formar el plural <span class="pron font-nunito text-amber-500">— riilz for forming de plú-ral</span></h4>
+                <div class="space-y-3 text-sm">
+                    <div class="flex gap-2 items-start">
+                        <span class="bg-green-100 text-green-700 text-xs font-bold rounded-full px-2 py-0.5 flex-shrink-0">La mayoría</span>
+                        <p class="text-gray-700">Agrega <strong>-s</strong> <span class="pron">— ad s</span>: pen → <strong>pens</strong> <span class="pron">— penz — bolígrafos</span>, book → <strong>books</strong> <span class="pron">— buks — libros</span></p>
+                    </div>
+                    <div class="flex gap-2 items-start">
+                        <span class="bg-blue-100 text-blue-700 text-xs font-bold rounded-full px-2 py-0.5 flex-shrink-0">-sh, -ch, -x, -s</span>
+                        <p class="text-gray-700">Agrega <strong>-es</strong> <span class="pron">— ad es</span>: box → <strong>boxes</strong> <span class="pron">— bók-ses — cajas</span>, watch → <strong>watches</strong> <span class="pron">— wó-ches — relojes</span></p>
+                    </div>
+                    <div class="flex gap-2 items-start">
+                        <span class="bg-purple-100 text-purple-700 text-xs font-bold rounded-full px-2 py-0.5 flex-shrink-0">-y → -ies</span>
+                        <p class="text-gray-700">Cambia y a ies <span class="pron">— kéimb y tu aies</span>: pencil → <strong>pencils</strong> <span class="pron">— pen-silz — lápices</span></p>
+                    </div>
+                    <div class="flex gap-2 items-start">
+                        <span class="bg-pink-100 text-pink-700 text-xs font-bold rounded-full px-2 py-0.5 flex-shrink-0">Irregular <span class="pron">— i-re-gyu-lar</span></p>
+                        <p class="text-gray-700">¡Sin regla fija! <strong>scissors</strong> <span class="pron">— si-zers — tijeras</span> siempre es plural</p>
+                    </div>
+                </div>
+                <div class="mt-3 bg-amber-100 rounded-lg p-3">
+                    <p class="text-sm text-amber-700 font-semibold">💡 <strong>"a"</strong> <span class="pron">— a</span> va antes de consonantes: <em>a pen</em> (un bolígrafo) &nbsp;|&nbsp; <strong>"an"</strong> <span class="pron">— an</span> va antes de a,e,i,o,u: <em>an eraser</em> (un borrador)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== DIALOGUES ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">💬</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-blue-700">Let's Talk! <span class="pron font-nunito text-blue-400">— lets tok — ¡Hablemos!</span></h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-blue-200 shadow-sm">
+            <p class="text-lg text-gray-700 mb-6">Haz clic en cada línea para ver el diálogo aparecer</p>
+
+            <!-- Dialogue 1 -->
+            <div class="mb-8">
+                <div class="flex items-center gap-2 mb-3"><span class="bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full px-3 py-1">Diálogo 1 — Singular</span></div>
+                <div class="space-y-3" id="dialogue-1">
+                    <div class="dialogue-line flex items-start gap-3 cursor-pointer" onclick="showDialogueLine(this)">
+                        <div class="w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center flex-shrink-0 text-sm">👧</div>
+                        <div class="chat-bubble left bg-indigo-100 rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-xs">
+                            <p class="text-sm text-gray-400 italic placeholder-text">Clic para mostrar...</p>
+                            <p class="text-base text-indigo-800 font-semibold hidden">What's this?</p>
+                            <p class="pron hidden mt-1">🔊 guáts dis</p>
+                            <p class="trans hidden">🇪🇸 ¿Qué es esto?</p>
+                        </div>
+                    </div>
+                    <div class="dialogue-line flex items-start gap-3 cursor-pointer flex-row-reverse" onclick="showDialogueLine(this)">
+                        <div class="w-8 h-8 rounded-full bg-pink-200 flex items-center justify-center flex-shrink-0 text-sm">👦</div>
+                        <div class="chat-bubble right bg-pink-100 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-xs">
+                            <p class="text-sm text-gray-400 italic placeholder-text">Clic para mostrar...</p>
+                            <p class="text-base text-pink-800 font-semibold hidden">It's a pen.</p>
+                            <p class="pron hidden mt-1">🔊 its a pen</p>
+                            <p class="trans hidden">🇪🇸 Es un bolígrafo.</p>
+                        </div>
+                    </div>
+                    <div class="dialogue-line flex items-start gap-3 cursor-pointer" onclick="showDialogueLine(this)">
+                        <div class="w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center flex-shrink-0 text-sm">👧</div>
+                        <div class="chat-bubble left bg-indigo-100 rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-xs">
+                            <p class="text-sm text-gray-400 italic placeholder-text">Clic para mostrar...</p>
+                            <p class="text-base text-indigo-800 font-semibold hidden">What is it?</p>
+                            <p class="pron hidden mt-1">🔊 guát is it</p>
+                            <p class="trans hidden">🇪🇸 ¿Qué es?</p>
+                        </div>
+                    </div>
+                    <div class="dialogue-line flex items-start gap-3 cursor-pointer flex-row-reverse" onclick="showDialogueLine(this)">
+                        <div class="w-8 h-8 rounded-full bg-pink-200 flex items-center justify-center flex-shrink-0 text-sm">👦</div>
+                        <div class="chat-bubble right bg-pink-100 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-xs">
+                            <p class="text-sm text-gray-400 italic placeholder-text">Clic para mostrar...</p>
+                            <p class="text-base text-pink-800 font-semibold hidden">It's an eraser.</p>
+                            <p class="pron hidden mt-1">🔊 its an i-réi-ser</p>
+                            <p class="trans hidden">🇪🇸 Es un borrador.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dialogue 2 -->
+            <div class="mb-6">
+                <div class="flex items-center gap-2 mb-3"><span class="bg-pink-100 text-pink-700 text-xs font-bold rounded-full px-3 py-1">Diálogo 2 — Plural</span></div>
+                <div class="space-y-3" id="dialogue-2">
+                    <div class="dialogue-line flex items-start gap-3 cursor-pointer" onclick="showDialogueLine(this)">
+                        <div class="w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center flex-shrink-0 text-sm">👧</div>
+                        <div class="chat-bubble left bg-indigo-100 rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-xs">
+                            <p class="text-sm text-gray-400 italic placeholder-text">Clic para mostrar...</p>
+                            <p class="text-base text-indigo-800 font-semibold hidden">What are these?</p>
+                            <p class="pron hidden mt-1">🔊 guát ar diis</p>
+                            <p class="trans hidden">🇪🇸 ¿Qué son estos?</p>
+                        </div>
+                    </div>
+                    <div class="dialogue-line flex items-start gap-3 cursor-pointer flex-row-reverse" onclick="showDialogueLine(this)">
+                        <div class="w-8 h-8 rounded-full bg-pink-200 flex items-center justify-center flex-shrink-0 text-sm">👦</div>
+                        <div class="chat-bubble right bg-pink-100 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-xs">
+                            <p class="text-sm text-gray-400 italic placeholder-text">Clic para mostrar...</p>
+                            <p class="text-base text-pink-800 font-semibold hidden">They're pencils.</p>
+                            <p class="pron hidden mt-1">🔊 déir pen-silz</p>
+                            <p class="trans hidden">🇪🇸 Son lápices.</p>
+                        </div>
+                    </div>
+                    <div class="dialogue-line flex items-start gap-3 cursor-pointer" onclick="showDialogueLine(this)">
+                        <div class="w-8 h-8 rounded-full bg-indigo-200 flex items-center justify-center flex-shrink-0 text-sm">👧</div>
+                        <div class="chat-bubble left bg-indigo-100 rounded-2xl rounded-tl-sm px-4 py-2.5 max-w-xs">
+                            <p class="text-sm text-gray-400 italic placeholder-text">Clic para mostrar...</p>
+                            <p class="text-base text-indigo-800 font-semibold hidden">What are they?</p>
+                            <p class="pron hidden mt-1">🔊 guát ar déi</p>
+                            <p class="trans hidden">🇪🇸 ¿Qué son?</p>
+                        </div>
+                    </div>
+                    <div class="dialogue-line flex items-start gap-3 cursor-pointer flex-row-reverse" onclick="showDialogueLine(this)">
+                        <div class="w-8 h-8 rounded-full bg-pink-200 flex items-center justify-center flex-shrink-0 text-sm">👦</div>
+                        <div class="chat-bubble right bg-pink-100 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-xs">
+                            <p class="text-sm text-gray-400 italic placeholder-text">Clic para mostrar...</p>
+                            <p class="text-base text-pink-800 font-semibold hidden">They're scissors.</p>
+                            <p class="pron hidden mt-1">🔊 déir si-zers</p>
+                            <p class="trans hidden">🇪🇸 Son tijeras.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key phrases -->
+            <div class="bg-gradient-to-r from-indigo-500 to-pink-500 rounded-2xl p-5 text-white">
+                <h4 class="font-fredoka font-bold mb-3">🔑 Frases clave <span class="opacity-70 font-nunito text-sm">— kéi fréi-ses</span></h4>
+                <div class="grid sm:grid-cols-2 gap-3 text-sm">
+                    <div class="bg-white/15 rounded-xl p-3">
+                        <p class="font-bold">Singular <span class="opacity-70 font-nunito text-xs">(uno solo)</span>:</p>
+                        <p>• What is <strong>it</strong>? <span class="opacity-70 text-xs font-nunito">— guát is it — ¿Qué es?</span></p>
+                        <p>• What's <strong>this</strong>? <span class="opacity-70 text-xs font-nunito">— guáts dis — ¿Qué es esto?</span></p>
+                        <p>• <strong>It's</strong> a/an... <span class="opacity-70 text-xs font-nunito">— its a/an... — Es un/una...</span></p>
+                    </div>
+                    <div class="bg-white/15 rounded-xl p-3">
+                        <p class="font-bold">Plural <span class="opacity-70 font-nunito text-xs">(más de uno)</span>:</p>
+                        <p>• What are <strong>they</strong>? <span class="opacity-70 text-xs font-nunito">— guát ar déi — ¿Qué son?</span></p>
+                        <p>• What are <strong>these</strong>? <span class="opacity-70 text-xs font-nunito">— guát ar diis — ¿Qué son estos?</span></p>
+                        <p>• <strong>They're</strong>... <span class="opacity-70 text-xs font-nunito">— déir... — Son...</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SORTING GAME ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">🎮</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-emerald-700">Sort the Nouns! <span class="pron font-nunito text-emerald-400">— sort de náuns — ¡Clasifica!</span></h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-emerald-200 shadow-sm">
+            <p class="text-lg text-gray-700 mb-2">Arrastra cada palabra a la caja correcta</p>
+            <p class="text-sm text-gray-400 mb-5">Singular = uno solo &nbsp;|&nbsp; Plural = más de uno</p>
+            <div class="mb-5">
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                    <span class="text-gray-500">Progreso</span>
+                    <span id="sort-progress-text" class="text-emerald-600">0 / 8</span>
+                </div>
+                <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="sort-progress-bar" class="progress-fill h-full bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2.5 mb-6" id="sort-cards"></div>
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div class="drop-zone rounded-2xl border-2 border-dashed border-indigo-300 bg-indigo-50/50 p-4" id="drop-singular" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event,'singular')">
+                    <p class="text-center font-fredoka font-bold text-indigo-600 mb-2">1️⃣ Singular <span class="pron font-nunito text-xs">— sing-giu-lar</span></p>
+                    <div class="space-y-2" id="drop-singular-items"></div>
+                </div>
+                <div class="drop-zone rounded-2xl border-2 border-dashed border-pink-300 bg-pink-50/50 p-4" id="drop-plural" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event,'plural')">
+                    <p class="text-center font-fredoka font-bold text-pink-600 mb-2">🔢 Plural <span class="pron font-nunito text-xs">— plú-ral</span></p>
+                    <div class="space-y-2" id="drop-plural-items"></div>
+                </div>
+            </div>
+            <div id="sort-result" class="mt-4 text-center"></div>
+        </div>
+    </section>
+
+    <!-- ====== QUIZ ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">🧠</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-orange-700">What Is It? What Are They?</h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-orange-200 shadow-sm">
+            <p class="text-lg text-gray-700 mb-2">Mira el objeto y elige la pregunta correcta</p>
+            <p class="text-sm text-gray-400 mb-6"><strong>"What is it?"</strong> <span class="pron">— guát is it — ¿Qué es?</span> para uno &nbsp;|&nbsp; <strong>"What are they?"</strong> <span class="pron">— guát ar déi — ¿Qué son?</span> para varios</p>
+            <div class="mb-5">
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                    <span class="text-gray-500">Puntaje</span>
+                    <span id="quiz-progress-text" class="text-orange-600">0 / 6</span>
+                </div>
+                <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="quiz-progress-bar" class="progress-fill h-full bg-gradient-to-r from-orange-400 to-amber-400 rounded-full" style="width:0%"></div>
+                </div>
+            </div>
+            <div id="quiz-container"></div>
+            <div id="quiz-result" class="mt-4 text-center"></div>
+        </div>
+    </section>
+
+    <!-- ====== SPELLING ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">✍️</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-rose-700">Spelling Challenge <span class="pron font-nunito text-rose-400">— spé-ling chá-lench — ¡Escribe el plural!</span></h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-rose-200 shadow-sm">
+            <p class="text-lg text-gray-700 mb-2">Escribe el plural de cada palabra en inglés</p>
+            <p class="text-sm text-gray-400 mb-6">Presiona Enter o haz clic en Check para verificar ✅</p>
+            <div class="mb-5">
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                    <span class="text-gray-500">Progreso</span>
+                    <span id="spell-progress-text" class="text-rose-600">0 / 6</span>
+                </div>
+                <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="spell-progress-bar" class="progress-fill h-full bg-gradient-to-r from-rose-400 to-pink-400 rounded-full" style="width:0%"></div>
+                </div>
+            </div>
+            <div id="spell-container" class="space-y-4"></div>
+            <div id="spell-result" class="mt-6 text-center"></div>
+        </div>
+    </section>
+
+    <!-- ====== MATCH ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">🏃</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-cyan-700">Listen, Read & Match! <span class="pron font-nunito text-cyan-400">— lis-n, riid end mach — ¡Une!</span></h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-cyan-200 shadow-sm">
+            <p class="text-lg text-gray-700 mb-2">Haz clic en una oración, luego en la imagen correcta</p>
+            <p class="text-sm text-gray-400 mb-6">Une cada oración con el objeto que le corresponde</p>
+            <div class="mb-5">
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                    <span class="text-gray-500">Unidas</span>
+                    <span id="match-progress-text" class="text-cyan-600">0 / 5</span>
+                </div>
+                <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="match-progress-bar" class="progress-fill h-full bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-6" id="match-sentences"></div>
+            <div class="grid grid-cols-5 gap-2 sm:gap-3" id="match-pictures"></div>
+            <div id="match-result" class="mt-4 text-center"></div>
+        </div>
+    </section>
+
+    <!-- ====== REFERENCE TABLE ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">📋</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-amber-700">Tabla de Referencia <span class="pron font-nunito text-amber-400">— tá-bla de re-fe-ren-sia</span></h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-5 md:p-8 border-2 border-amber-200 shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="py-3 px-3 bg-indigo-100 rounded-tl-xl font-fredoka text-indigo-700 text-sm">Singular <span class="pron font-nunito text-xs text-indigo-400">— sing-giu-lar</span></th>
+                            <th class="py-3 px-3 bg-pink-100 font-fredoka text-pink-700 text-sm">Plural <span class="pron font-nunito text-xs text-pink-400">— plú-ral</span></th>
+                            <th class="py-3 px-3 bg-amber-100 rounded-tr-xl font-fredoka text-amber-700 text-sm hidden sm:table-cell">Regla <span class="pron font-nunito text-xs text-amber-400">— riil</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-2 px-3"><span class="text-xl">📝</span> <strong>a pen</strong><br><span class="pron">a pen — bolígrafo</span></td>
+                            <td class="py-2 px-3"><span class="text-xl">📝📝</span> <strong>pens</strong><br><span class="pron">penz — bolígrafos</span></td>
+                            <td class="py-2 px-3 text-xs text-gray-500 hidden sm:table-cell">+ s</td>
+                        </tr>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-2 px-3"><span class="text-xl">📖</span> <strong>a book</strong><br><span class="pron">a buk — libro</span></td>
+                            <td class="py-2 px-3"><span class="text-xl">📖📖</span> <strong>books</strong><br><span class="pron">buks — libros</span></td>
+                            <td class="py-2 px-3 text-xs text-gray-500 hidden sm:table-cell">+ s</td>
+                        </tr>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-2 px-3"><span class="text-xl">📏</span> <strong>a ruler</strong><br><span class="pron">a rú-ler — regla</span></td>
+                            <td class="py-2 px-3"><span class="text-xl">📏📏</span> <strong>rulers</strong><br><span class="pron">rú-lerz — reglas</span></td>
+                            <td class="py-2 px-3 text-xs text-gray-500 hidden sm:table-cell">+ s</td>
+                        </tr>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-2 px-3"><span class="text-xl">🧽</span> <strong>an eraser</strong><br><span class="pron">an i-réi-ser — borrador</span></td>
+                            <td class="py-2 px-3"><span class="text-xl">🧽🧽</span> <strong>erasers</strong><br><span class="pron">i-réi-serz — borradores</span></td>
+                            <td class="py-2 px-3 text-xs text-gray-500 hidden sm:table-cell">+ s</td>
+                        </tr>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-2 px-3"><span class="text-xl">🖍️</span> <strong>a pencil</strong><br><span class="pron">a pen-sil — lápiz</span></td>
+                            <td class="py-2 px-3"><span class="text-xl">🖍️🖍️</span> <strong>pencils</strong><br><span class="pron">pen-silz — lápices</span></td>
+                            <td class="py-2 px-3 text-xs text-gray-500 hidden sm:table-cell">+ s</td>
+                        </tr>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-2 px-3"><span class="text-xl">📦</span> <strong>a box</strong><br><span class="pron">a boks — caja</span></td>
+                            <td class="py-2 px-3"><span class="text-xl">📦📦</span> <strong>boxes</strong><br><span class="pron">bók-ses — cajas</span></td>
+                            <td class="py-2 px-3 text-xs text-gray-500 hidden sm:table-cell">+ es</td>
+                        </tr>
+                        <tr class="border-b border-gray-100">
+                            <td class="py-2 px-3"><span class="text-xl">⌚</span> <strong>a watch</strong><br><span class="pron">a wóch — reloj</span></td>
+                            <td class="py-2 px-3"><span class="text-xl">⌚⌚</span> <strong>watches</strong><br><span class="pron">wó-ches — relojes</span></td>
+                            <td class="py-2 px-3 text-xs text-gray-500 hidden sm:table-cell">+ es</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2 px-3 text-gray-400">— <span class="pron">— no existe en singular</span></td>
+                            <td class="py-2 px-3"><span class="text-xl">✂️</span> <strong>scissors</strong><br><span class="pron">si-zers — tijeras</span></td>
+                            <td class="py-2 px-3 text-xs text-gray-500 hidden sm:table-cell">siempre plural</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 rounded-2xl p-5 text-center text-white">
+                <p class="font-fredoka font-bold text-lg mb-1">🎯 Recuerda <span class="opacity-70 font-nunito text-sm">— ri-mém-ber</span></p>
+                <p class="text-sm opacity-90"><strong>"What is it?"</strong> <span class="opacity-60 text-xs">guát is it</span> → <strong>"It's a/an..."</strong> <span class="opacity-60 text-xs">its a/an...</span> &nbsp;|&nbsp; <strong>"What are they?"</strong> <span class="opacity-60 text-xs">guát ar déi</span> → <strong>"They're..."</strong> <span class="opacity-60 text-xs">déir...</span></p>
+                <p class="text-xs opacity-70 mt-2">Usa <strong>"a"</strong> <span class="opacity-50">a</span> antes de consonantes &nbsp;|&nbsp; <strong>"an"</strong> <span class="opacity-50">an</span> antes de a, e, i, o, u</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="text-center py-10 px-6 border-t border-indigo-200/50">
+    <p class="text-indigo-400 font-semibold text-sm">🎒 ¡Sigue aprendiendo inglés — una palabra a la vez! ✨</p>
+</footer>
+
+<script>
+// ====== DATA ======
+const bagItems = [
+    {key:'pen',     emoji:'📝',  name:'a pen',     pron:'a pen',        trans:'un bolígrafo', side:'singular'},
+    {key:'book',    emoji:'📖',  name:'a book',    pron:'a buk',        trans:'un libro',     side:'singular'},
+    {key:'eraser',  emoji:'🧽',  name:'an eraser', pron:'an i-réi-ser', trans:'un borrador',  side:'singular'},
+    {key:'ruler',   emoji:'📏',  name:'a ruler',   pron:'a rú-ler',     trans:'una regla',    side:'singular'},
+    {key:'pens',    emoji:'📝📝', name:'pens',      pron:'penz',         trans:'bolígrafos',   side:'plural'},
+    {key:'books',   emoji:'📖📖', name:'books',     pron:'buks',         trans:'libros',       side:'plural'},
+    {key:'scissors',emoji:'✂️',  name:'scissors',  pron:'si-zers',      trans:'tijeras',      side:'plural'},
+    {key:'rulers',  emoji:'📏📏', name:'rulers',    pron:'rú-lerz',      trans:'reglas',       side:'plural'},
+];
+
+// ====== BAG → SLOTS ======
+let bagOpened = false;
+function openBag() {
+    if (bagOpened) return;
+    bagOpened = true;
+    document.getElementById('the-bag').classList.add('opened');
+
+    // Scroll to the slots section
+    setTimeout(() => {
+        document.getElementById('svp-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+
+    // Fill slots one by one
+    bagItems.forEach((item, i) => {
+        setTimeout(() => {
+            fillSlot(item);
+        }, 600 + i * 300);
+    });
+
+    // Show message
+    setTimeout(() => {
+        const m = document.getElementById('bag-message');
+        m.textContent = '🎉 ¡Los objetos volaron a las tarjetas de abajo!';
+        m.className = 'mt-6 text-base text-indigo-600 font-semibold transition-all duration-500';
+    }, 300);
+}
+
+function fillSlot(item) {
+    const containerId = item.side === 'singular' ? 'singular-slots' : 'plural-slots';
+    const container = document.getElementById(containerId);
+    const slot = container.querySelector(`[data-slot="${item.key}"]`);
+    if (!slot || slot.classList.contains('filled')) return;
+
+    const placeholder = slot.querySelector('.slot-placeholder');
+    if (placeholder) placeholder.classList.add('hidden-ph');
+
+    const isSingular = item.side === 'singular';
+    const card = document.createElement('div');
+    card.className = 'slot-card flex items-center gap-2.5 bg-white rounded-xl p-2.5 border border-' + (isSingular ? 'indigo' : 'pink') + '-100';
+    card.innerHTML = `
+        <span class="text-2xl">${item.emoji}</span>
+        <div>
+            <p class="font-fredoka font-bold text-${isSingular ? 'indigo' : 'pink'}-700">${item.name}</p>
+            <p class="pron">🔊 ${item.pron}</p>
+            <p class="trans">🇪🇸 ${item.trans}</p>
+        </div>
+    `;
+    slot.appendChild(card);
+    slot.classList.add('filled');
+}
+
+// ====== DIALOGUES ======
+function showDialogueLine(el) {
+    const bubble = el.querySelector('.chat-bubble');
+    const ph = bubble.querySelector('.placeholder-text');
+    if (ph) ph.classList.add('hidden');
+    bubble.querySelectorAll('.hidden').forEach(h => h.classList.remove('hidden'));
+    el.classList.add('show');
+    el.style.cursor = 'default';
+}
+
+// ====== SORTING GAME ======
+const sortData = [
+    {word:'a pen',type:'singular',emoji:'📝',pron:'a pen',trans:'bolígrafo'},
+    {word:'pens',type:'plural',emoji:'📝📝',pron:'penz',trans:'bolígrafos'},
+    {word:'an eraser',type:'singular',emoji:'🧽',pron:'an i-réi-ser',trans:'borrador'},
+    {word:'scissors',type:'plural',emoji:'✂️',pron:'si-zers',trans:'tijeras'},
+    {word:'a ruler',type:'singular',emoji:'📏',pron:'a rú-ler',trans:'regla'},
+    {word:'books',type:'plural',emoji:'📖📖',pron:'buks',trans:'libros'},
+    {word:'a pencil',type:'singular',emoji:'🖍️',pron:'a pen-sil',trans:'lápiz'},
+    {word:'pencils',type:'plural',emoji:'🖍️🖍️',pron:'pen-silz',trans:'lápices'},
+];
+let sortCorrect=0, sortTotal=sortData.length, draggedItem=null;
+function initSortGame(){
+    const c=document.getElementById('sort-cards');
+    c.innerHTML=[...sortData].sort(()=>Math.random()-.5).map((item,i)=>`
+        <div class="sort-card bg-white rounded-xl px-3 py-2 border-2 border-gray-200 shadow-sm" draggable="true" data-type="${item.type}" data-word="${item.word}" id="sort-card-${i}" ondragstart="handleDragStart(event)" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
+            <div class="flex items-center gap-1.5"><span class="text-xl">${item.emoji}</span><div><span class="text-sm font-fredoka font-bold text-gray-700">${item.word}</span><br><span class="pron">${item.pron}</span> <span class="trans">— ${item.trans}</span></div></div>
+        </div>`).join('');
+}
+function handleDragStart(e){draggedItem=e.target.closest('.sort-card');draggedItem.style.opacity='.5';e.dataTransfer.effectAllowed='move';}
+function handleDragOver(e){e.preventDefault();e.currentTarget.classList.add('highlight');}
+function handleDragLeave(e){e.currentTarget.classList.remove('highlight');}
+function handleDrop(e,type){
+    e.preventDefault();e.currentTarget.classList.remove('highlight');if(!draggedItem)return;
+    if(draggedItem.dataset.type===type){
+        draggedItem.classList.add('correct');draggedItem.draggable=false;draggedItem.style.opacity='';
+        const ic=document.getElementById(`drop-${type}-items`);
+        const clone=draggedItem.cloneNode(true);clone.classList.add('correct');clone.removeAttribute('draggable');clone.style.cursor='default';
+        ic.appendChild(clone);draggedItem.remove();sortCorrect++;updateSortProgress();
+        if(sortCorrect===sortTotal)showSortComplete();
+    }else{draggedItem.classList.add('wrong');draggedItem.style.opacity='';setTimeout(()=>draggedItem.classList.remove('wrong'),400);}
+    draggedItem=null;
+}
+let touchSelectedCard=null;
+function handleTouchStart(e){touchSelectedCard=e.target.closest('.sort-card');}
+function handleTouchEnd(e){
+    if(!touchSelectedCard)return;const touch=e.changedTouches[0];const dt=document.elementFromPoint(touch.clientX,touch.clientY);
+    if(dt){const zone=dt.closest('.drop-zone');if(zone){draggedItem=touchSelectedCard;handleDrop({preventDefault:()=>{},currentTarget:zone},zone.id.replace('drop-',''));}}
+    touchSelectedCard=null;
+}
+function updateSortProgress(){const p=(sortCorrect/sortTotal)*100;document.getElementById('sort-progress-bar').style.width=p+'%';document.getElementById('sort-progress-text').textContent=`${sortCorrect} / ${sortTotal}`;}
+function showSortComplete(){const el=document.getElementById('sort-result');el.innerHTML=`<div class="answer-reveal bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl p-5 text-white inline-block"><p class="font-fredoka font-bold text-xl">🎉 ¡Perfecto!</p><p class="text-sm opacity-90 mt-1">¡Sabes distinguir singular de plural!</p></div>`;addConfetti(el);}
+
+// ====== QUIZ ======
+const quizData=[
+    {emoji:'📝',answer:'singular',label:'a pen',labelEs:'un bolígrafo',question:'What is it?',questionPron:'guát is it',questionEs:'¿Qué es?'},
+    {emoji:'📖📖',answer:'plural',label:'books',labelEs:'libros',question:'What are they?',questionPron:'guát ar déi',questionEs:'¿Qué son?'},
+    {emoji:'🧽',answer:'singular',label:'an eraser',labelEs:'un borrador',question:'What is it?',questionPron:'guát is it',questionEs:'¿Qué es?'},
+    {emoji:'✂️',answer:'plural',label:'scissors',labelEs:'tijeras',question:'What are they?',questionPron:'guát ar déi',questionEs:'¿Qué son?'},
+    {emoji:'📏📏',answer:'plural',label:'rulers',labelEs:'reglas',question:'What are they?',questionPron:'guát ar déi',questionEs:'¿Qué son?'},
+    {emoji:'🖍️',answer:'singular',label:'a pencil',labelEs:'un lápiz',question:'What is it?',questionPron:'guát is it',questionEs:'¿Qué es?'},
+];
+let quizIndex=0,quizScore=0;
+function renderQuiz(){
+    if(quizIndex>=quizData.length){showQuizResult();return;}
+    const item=quizData[quizIndex];const c=document.getElementById('quiz-container');
+    c.innerHTML=`<div class="text-center"><p class="text-6xl mb-2">${item.emoji}</p><p class="text-sm text-gray-400 mb-1">${item.label} — ${item.labelEs}</p><p class="text-gray-500 text-sm mb-4">Pregunta ${quizIndex+1} de ${quizData.length}</p><p class="text-lg text-gray-700 mb-5 font-semibold">¿Cuál es la pregunta correcta?</p><div class="flex flex-col sm:flex-row gap-3 justify-center"><button onclick="answerQuiz('singular')" class="px-6 py-3.5 rounded-2xl font-fredoka font-bold text-base border-2 border-indigo-300 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 hover:border-indigo-400 transition-all text-left sm:text-center">"What is it?"<br><span class="pron font-nunito text-xs">guát is it — ¿Qué es?</span></button><button onclick="answerQuiz('plural')" class="px-6 py-3.5 rounded-2xl font-fredoka font-bold text-base border-2 border-pink-300 bg-pink-50 text-pink-700 hover:bg-pink-100 hover:border-pink-400 transition-all text-left sm:text-center">"What are they?"<br><span class="pron font-nunito text-xs">guát ar déi — ¿Qué son?</span></button></div></div>`;
+}
+function answerQuiz(choice){
+    const item=quizData[quizIndex];const c=document.getElementById('quiz-container');const ok=choice===item.answer;if(ok)quizScore++;
+    document.getElementById('quiz-progress-bar').style.width=((quizIndex+1)/quizData.length*100)+'%';
+    document.getElementById('quiz-progress-text').textContent=`${quizIndex+1} / ${quizData.length}`;
+    c.innerHTML=`<div class="text-center answer-reveal"><p class="text-5xl mb-2">${ok?'✅':'❌'}</p><p class="font-fredoka font-bold text-xl ${ok?'text-emerald-600':'text-red-500'}">${ok?'¡Correcto!':'¡Casi!'}</p><p class="text-gray-600 mt-1">${item.emoji} ${item.label} <span class="text-gray-400">(${item.labelEs})</span> → <strong>"${item.question}"</strong> <span class="pron">${item.questionPron}</span> <span class="trans">— ${item.questionEs}</span></p>${!ok?`<p class="text-sm text-gray-400 mt-1">${item.answer==='singular'?'Es solo uno → usa "What is it?"':'Son más de uno → usa "What are they?"'}</p>`:''}<button onclick="quizIndex++;renderQuiz();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-indigo-500 hover:bg-indigo-600 transition-all">${quizIndex<quizData.length-1?'Siguiente →':'Ver resultados 🏆'}</button></div>`;
+}
+function showQuizResult(){
+    const c=document.getElementById('quiz-container');const p=Math.round((quizScore/quizData.length)*100);
+    let msg=p===100?'🏆 ¡Perfecto!':p>=80?'🌟 ¡Muy bien!':p>=50?'👍 ¡Buen intento!':'💪 ¡Sigue practicando!';
+    c.innerHTML=`<div class="text-center answer-reveal"><p class="text-5xl mb-2">${p===100?'🏆':'📚'}</p><p class="font-fredoka font-bold text-2xl gradient-text">${msg}</p><p class="text-gray-600 mt-2 text-lg">${quizScore} de ${quizData.length} correctas</p><button onclick="quizIndex=0;quizScore=0;document.getElementById('quiz-progress-bar').style.width='0%';document.getElementById('quiz-progress-text').textContent='0 / 6';renderQuiz();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-indigo-500 hover:bg-indigo-600 transition-all">Reintentar 🔄</button></div>`;
+    if(p===100)addConfetti(c);
+}
+
+// ====== SPELLING ======
+const spellData=[
+    {singular:'pen',plural:'pens',emoji:'📝',pronS:'pen',pronP:'penz',transS:'bolígrafo',transP:'bolígrafos'},
+    {singular:'book',plural:'books',emoji:'📖',pronS:'buk',pronP:'buks',transS:'libro',transP:'libros'},
+    {singular:'ruler',plural:'rulers',emoji:'📏',pronS:'rú-ler',pronP:'rú-lerz',transS:'regla',transP:'reglas'},
+    {singular:'eraser',plural:'erasers',emoji:'🧽',pronS:'i-réi-ser',pronP:'i-réi-serz',transS:'borrador',transP:'borradores'},
+    {singular:'box',plural:'boxes',emoji:'📦',pronS:'boks',pronP:'bók-ses',transS:'caja',transP:'cajas'},
+    {singular:'pencil',plural:'pencils',emoji:'🖍️',pronS:'pen-sil',pronP:'pen-silz',transS:'lápiz',transP:'lápices'},
+];
+let spellIndex=0,spellCorrect=0;
+function renderSpell(){
+    if(spellIndex>=spellData.length){showSpellResult();return;}
+    const item=spellData[spellIndex];const c=document.getElementById('spell-container');
+    c.innerHTML=`<div class="bg-white rounded-2xl p-5 border-2 border-rose-100"><div class="flex items-center gap-4 mb-4"><span class="text-4xl">${item.emoji}${item.emoji}</span><div><p class="text-sm text-gray-400">Escribe el plural:</p><p class="text-2xl font-fredoka font-bold text-gray-800">${item.singular} → <span class="text-rose-500">???</span></p><p class="pron">${item.pronS} — ${item.transS} → <span class="text-rose-400">${item.transP}</span></p></div></div><div class="flex gap-2"><input type="text" id="spell-input" class="type-input flex-1 text-xl font-fredoka font-semibold py-3 px-4 rounded-xl border-2 border-rose-200 bg-rose-50/50 text-gray-800 placeholder:text-rose-300 placeholder:font-nunito placeholder:font-normal placeholder:text-base" placeholder="Escribe aquí..." autocomplete="off" spellcheck="false"><button onclick="checkSpelling()" class="px-5 py-3 rounded-xl font-fredoka font-bold text-white bg-rose-500 hover:bg-rose-600 transition-all">Check</button></div><div id="spell-feedback" class="mt-3"></div></div>`;
+    const inp=document.getElementById('spell-input');inp.focus();
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkSpelling();}});
+}
+function checkSpelling(){
+    const inp=document.getElementById('spell-input');const answer=inp.value.trim().toLowerCase();
+    const item=spellData[spellIndex];const fb=document.getElementById('spell-feedback');const ok=answer===item.plural;inp.readOnly=true;
+    if(ok){inp.classList.add('correct-input');spellCorrect++;fb.innerHTML=`<p class="text-sm font-bold text-emerald-600">✅ ¡Perfecto! ${item.singular} <span class="pron">(${item.pronS})</span> → ${item.plural} <span class="pron">(${item.pronP} — ${item.transP})</span></p>`;}
+    else{inp.classList.add('wrong-input');fb.innerHTML=`<p class="text-sm font-bold text-red-500">❌ La respuesta correcta es: <span class="text-emerald-600 font-bold">${item.plural}</span> <span class="pron">(${item.pronP} — ${item.transP})</span></p>`;}
+    document.getElementById('spell-progress-bar').style.width=((spellIndex+1)/spellData.length*100)+'%';
+    document.getElementById('spell-progress-text').textContent=`${spellIndex+1} / ${spellData.length}`;
+    setTimeout(()=>{spellIndex++;renderSpell();},1800);
+}
+function showSpellResult(){
+    const c=document.getElementById('spell-container');const p=Math.round((spellCorrect/spellData.length)*100);
+    let msg=p===100?'🌟 ¡Maestro del spelling!':p>=80?'🎉 ¡Muy bien!':'💪 ¡Sigue practicando!';
+    c.innerHTML=`<div class="text-center answer-reveal py-4"><p class="text-5xl mb-2">${p===100?'🏆':'✍️'}</p><p class="font-fredoka font-bold text-2xl gradient-text">${msg}</p><p class="text-gray-600 mt-2">${spellCorrect} de ${spellData.length} correctas</p><button onclick="spellIndex=0;spellCorrect=0;document.getElementById('spell-progress-bar').style.width='0%';document.getElementById('spell-progress-text').textContent='0 / 6';renderSpell();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-rose-500 hover:bg-rose-600 transition-all">Reintentar 🔄</button></div>`;
+    if(p===100)addConfetti(c);
+}
+
+// ====== MATCH ======
+const matchData=[
+    {sentence:"It's a pen.",pron:"its a pen",trans:"Es un bolígrafo.",emoji:'📝',id:'m1'},
+    {sentence:"They're books.",pron:"déir buks",trans:"Son libros.",emoji:'📖📖',id:'m2'},
+    {sentence:"It's an eraser.",pron:"its an i-réi-ser",trans:"Es un borrador.",emoji:'🧽',id:'m3'},
+    {sentence:"They're scissors.",pron:"déir si-zers",trans:"Son tijeras.",emoji:'✂️',id:'m4'},
+    {sentence:"It's a ruler.",pron:"its a rú-ler",trans:"Es una regla.",emoji:'📏',id:'m5'},
+];
+let matchSelected=null,matchCorrect=0,matchDone=new Set();
+function initMatchGame(){
+    document.getElementById('match-sentences').innerHTML=[...matchData].sort(()=>Math.random()-.5).map(item=>`
+        <button onclick="selectMatchSentence('${item.id}',this)" class="match-sent-btn px-3 py-2.5 rounded-xl font-nunito font-bold text-sm border-2 border-cyan-200 bg-cyan-50 text-cyan-700 hover:bg-cyan-100 hover:border-cyan-300 transition-all text-left" data-id="${item.id}">${item.sentence}<br><span class="pron font-nunito font-normal">${item.pron} — ${item.trans}</span></button>`).join('');
+    document.getElementById('match-pictures').innerHTML=[...matchData].sort(()=>Math.random()-.5).map(item=>`
+        <button onclick="selectMatchPicture('${item.id}',this)" class="match-pic-btn bg-white rounded-xl p-3 border-2 border-gray-200 hover:border-cyan-300 hover:shadow-md transition-all text-center" data-id="${item.id}"><span class="text-3xl">${item.emoji}</span></button>`).join('');
+}
+function selectMatchSentence(id,el){
+    if(matchDone.has(id))return;
+    document.querySelectorAll('.match-sent-btn').forEach(b=>b.classList.remove('ring-4','ring-cyan-400','bg-cyan-200'));
+    el.classList.add('ring-4','ring-cyan-400','bg-cyan-200');matchSelected=id;
+}
+function selectMatchPicture(id,el){
+    if(!matchSelected){el.classList.add('ring-4','ring-red-300');setTimeout(()=>el.classList.remove('ring-4','ring-red-300'),400);return;}
+    if(matchDone.has(matchSelected))return;
+    const sb=document.querySelector(`.match-sent-btn[data-id="${matchSelected}"]`);
+    if(matchSelected===id){
+        matchCorrect++;matchDone.add(id);
+        sb.classList.remove('ring-4','ring-cyan-400','bg-cyan-200');sb.classList.add('bg-emerald-100','border-emerald-300','text-emerald-700');sb.style.pointerEvents='none';
+        el.classList.add('bg-emerald-100','border-emerald-300');el.style.pointerEvents='none';matchSelected=null;
+        document.getElementById('match-progress-bar').style.width=(matchCorrect/matchData.length*100)+'%';
+        document.getElementById('match-progress-text').textContent=`${matchCorrect} / ${matchData.length}`;
+        if(matchCorrect===matchData.length){setTimeout(()=>{const r=document.getElementById('match-result');r.innerHTML=`<div class="answer-reveal bg-gradient-to-r from-cyan-400 to-blue-400 rounded-2xl p-5 text-white inline-block"><p class="font-fredoka font-bold text-xl">🎉 ¡Todas unidas!</p><p class="text-sm opacity-90 mt-1">¡Sabes conectar oraciones con imágenes!</p></div>`;addConfetti(r);},300);}
+    }else{el.classList.add('ring-4','ring-red-400');setTimeout(()=>el.classList.remove('ring-4','ring-red-400'),500);}
+}
+
+// ====== CONFETTI ======
+function addConfetti(parent){
+    const colors=['#6366F1','#A855F7','#EC4899','#F97316','#14B8A6','#22C55E','#EAB308'];
+    for(let i=0;i<25;i++){let p=document.createElement('div');p.className='confetti-piece';p.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];p.style.left=(15+Math.random()*70)+'%';p.style.top='20%';p.style.animationDelay=(Math.random()*.5)+'s';p.style.animationDuration=(.8+Math.random()*.8)+'s';let s=(5+Math.random()*8)+'px';p.style.width=s;p.style.height=s;p.style.borderRadius=Math.random()>.5?'50%':'2px';parent.style.position='relative';parent.appendChild(p);setTimeout(()=>p.remove(),2000);}
+}
+
+// ====== SCROLL ======
+const observer=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');});},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.section-fade').forEach(el=>observer.observe(el));
+
+// ====== INIT ======
+document.addEventListener('DOMContentLoaded',()=>{initSortGame();renderQuiz();renderSpell();initMatchGame();});
+</script>
+</body>
+</html>
