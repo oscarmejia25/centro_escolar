@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torque - Aprende Física Divertido</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar{display:none}*{scrollbar-width:none}
+        body{font-family:'Inter',sans-serif;background:#000}
+        .font-oswald{font-family:'Oswald',sans-serif}
+        @keyframes fadeInUp{0%{opacity:0;transform:translateY(30px)}100%{opacity:1;transform:translateY(0)}}
+        @keyframes blurIn{0%{opacity:0;filter:blur(15px);transform:scale(.95)}100%{opacity:1;filter:blur(0);transform:scale(1)}}
+        @keyframes wiggle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+        @keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(59,130,246,.2)}50%{box-shadow:0 0 40px rgba(59,130,246,.5)}}
+        @keyframes confetti{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
+        @keyframes beam-drop{0%{transform:translateY(-100%)}100%{transform:translateY(500%)}}
+        .anim-up{animation:fadeInUp .8s cubic-bezier(.25,.46,.45,.94) both}
+        .anim-blur{animation:blurIn 1s cubic-bezier(.25,.46,.45,.94) both}
+        .anim-wiggle{animation:wiggle 1s ease-in-out infinite}
+        .anim-glow{animation:pulse-glow 2s ease-in-out infinite}
+        .d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}.d6{animation-delay:.6s}.d7{animation-delay:.7s}
+        .gradient-text{background:linear-gradient(to right,#60A5FA,#818CF8,#C084FC);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .card{background:linear-gradient(to bottom,#111,#0A0A0A);border:1px solid rgba(255,255,255,.08);transition:all .3s}
+        .card:hover{border-color:rgba(59,130,246,.3);box-shadow:0 0 30px -10px rgba(59,130,246,.2)}
+        .noise{background-image:url(https://grainy-gradients.vercel.app/noise.svg);opacity:.2;mix-blend-mode:soft-light}
+        .lever{position:relative;width:100%;height:120px}
+        .lever-tall{height:200px}
+        .bar{position:absolute;top:50%;left:5%;right:5%;height:8px;background:linear-gradient(to right,#3B82F6,#6366F1);border-radius:4px;transform:translateY(-50%)}
+        .pivot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:24px;background:#fff;border-radius:50%;z-index:10;box-shadow:0 0 15px rgba(255,255,255,.5)}
+        .arrow{position:absolute;top:8%;display:flex;flex-direction:column;align-items:center;transition:left .35s ease}
+        .arrow-line{width:4px;background:#F87171;border-radius:2px;transition:height .35s ease}
+        .arrow-head{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:14px solid #F87171}
+        .arrow-label{font-size:10px;color:#F87171;text-align:center;margin-top:2px;font-weight:600;transition:all .35s ease}
+        .dist-tag{position:absolute;top:78%;font-size:.65rem;color:#9CA3AF;white-space:nowrap;transition:left .35s ease}
+        .bracket{position:absolute;top:66%;height:8px;border-left:1px solid rgba(168,85,247,.5);border-right:1px solid rgba(168,85,247,.5);border-bottom:1px solid rgba(168,85,247,.5);border-radius:0 0 4px 4px;transition:all .35s ease}
+        .inp{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 12px;color:#fff;font-size:1rem;outline:none;transition:all .3s;width:100px;text-align:center}
+        .inp:focus{border-color:#3B82F6;box-shadow:0 0 15px rgba(59,130,246,.3)}
+        .inp.ok{border-color:#22C55E;background:rgba(34,197,94,.1);box-shadow:0 0 15px rgba(34,197,94,.3)}
+        .inp.no{border-color:#EF4444;background:rgba(239,68,68,.1);box-shadow:0 0 15px rgba(239,68,68,.3)}
+        .btn{background:#2563EB;color:#fff;padding:10px 24px;border-radius:10px;font-weight:600;font-size:.875rem;border:none;cursor:pointer;transition:all .3s;display:inline-flex;align-items:center;gap:8px}
+        .btn:hover{background:#3B82F6;box-shadow:0 0 25px rgba(37,99,235,.4);transform:translateY(-1px)}
+        .btn2{background:rgba(255,255,255,.05);color:#fff;padding:10px 24px;border-radius:10px;font-weight:500;font-size:.875rem;border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:all .3s}
+        .btn2:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
+        .toast{position:fixed;top:20px;right:20px;padding:16px 24px;border-radius:12px;font-weight:500;font-size:.875rem;z-index:1000;transform:translateX(120%);transition:transform .4s cubic-bezier(.25,.46,.45,.94);display:flex;align-items:center;gap:10px}
+        .toast.show{transform:translateX(0)}
+        .toast.s{background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(34,197,94,.05));border:1px solid rgba(34,197,94,.3);color:#4ADE80}
+        .toast.e{background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(239,68,68,.05));border:1px solid rgba(239,68,68,.3);color:#F87171}
+        .toast.i{background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(59,130,246,.05));border:1px solid rgba(59,130,246,.3);color:#60A5FA}
+        .pr{transition:stroke-dashoffset .5s ease}
+        .sn{width:36px;height:36px;min-width:36px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#4F46E5);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.875rem;color:#fff}
+        .tab{padding:8px 20px;border-radius:8px;font-size:.8rem;font-weight:500;cursor:pointer;transition:all .3s;border:1px solid transparent;color:#9CA3AF;background:transparent}
+        .tab.on{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.3);color:#60A5FA}
+        .tab:hover:not(.on){color:#fff;background:rgba(255,255,255,.05)}
+        .cf{position:absolute;width:8px;height:8px;border-radius:2px;animation:confetti 1s ease-out forwards}
+        .bl{position:absolute;width:1px;height:100%;top:0;background:linear-gradient(to bottom,transparent,rgba(59,130,246,.3),transparent);animation:beam-drop 5s cubic-bezier(.45,0,.55,1) infinite}
+        .sb{height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+        .sf{height:100%;border-radius:3px;background:linear-gradient(to right,#2563EB,#22D3EE);transition:width .8s cubic-bezier(.25,.46,.45,.94)}
+        input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;outline:none}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid #fff;box-shadow:0 0 10px rgba(0,0,0,.5)}
+        #cF::-webkit-slider-thumb{background:#EF4444}
+        #cD::-webkit-slider-thumb{background:#A855F7}
+    </style>
+</head>
+<body class="text-white overflow-x-hidden">
+<div class="fixed inset-0 noise pointer-events-none z-50"></div>
+<div class="fixed top-0 right-0 w-[800px] h-[800px] pointer-events-none" style="background:radial-gradient(circle at top right,rgba(59,130,246,.08),transparent 50%)"></div>
+<div class="fixed bottom-0 left-0 w-[600px] h-[600px] pointer-events-none" style="background:radial-gradient(circle at bottom left,rgba(168,85,247,.06),transparent 50%)"></div>
+<div id="toast" class="toast"></div>
+
+<!-- Nav -->
+<nav class="fixed top-4 left-1/2 -translate-x-1/2 z-40 w-full max-w-4xl px-4">
+    <div class="flex items-center justify-between px-6 py-3 rounded-2xl" style="background:rgba(0,0,0,.8);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.08)">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center"><i data-lucide="zap" class="w-4 h-4 text-white"></i></div>
+            <span class="font-oswald font-light text-lg tracking-tight">FísicaDivertida</span>
+        </div>
+        <div class="hidden md:flex items-center gap-6">
+            <a href="#def" class="text-[13px] text-gray-400 hover:text-white transition-colors">Definición</a>
+            <a href="#for" class="text-[13px] text-gray-400 hover:text-white transition-colors">Fórmula</a>
+            <a href="#ej" class="text-[13px] text-gray-400 hover:text-white transition-colors">Ejemplos</a>
+            <a href="#ex" class="text-[13px] text-gray-400 hover:text-white transition-colors">Ejercicios</a>
+        </div>
+        <div class="relative">
+            <svg width="36" height="36" viewBox="0 0 36 36" class="transform -rotate-90">
+                <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="3"/>
+                <circle id="pc" cx="18" cy="18" r="15" fill="none" stroke="url(#pg)" stroke-width="3" stroke-linecap="round" stroke-dasharray="94.25" stroke-dashoffset="94.25" class="pr"/>
+                <defs><linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
+            </svg>
+            <span id="pt" class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-blue-400">0%</span>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="relative pt-36 pb-20 px-4">
+    <div class="max-w-5xl mx-auto text-center">
+        <div class="anim-up">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2)">
+                <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                <span class="text-[10px] font-semibold tracking-wide uppercase text-blue-400">Unidad 5 · Semana 4</span>
+            </div>
+        </div>
+        <h1 class="font-oswald font-light text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[1.1] mb-6 anim-blur">¿Qué es el <span class="gradient-text">Torque</span>?</h1>
+        <p class="text-gray-400 text-base md:text-lg max-w-2xl mx-auto mb-10 anim-up d2 leading-relaxed">Imagina que intentas abrir una puerta empujando cerca de las bisagras... ¡Es súper difícil! Pero si empujas del pomo, se abre fácil. <strong class="text-white">Eso es torque en acción.</strong> 🚪</p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 anim-up d3">
+            <a href="#def" class="btn"><i data-lucide="play" class="w-4 h-4"></i>Empezar a aprender</a>
+            <a href="#ex" class="btn2">Ir a ejercicios</a>
+        </div>
+    </div>
+</section>
+
+<!-- Definición -->
+<section id="def" class="relative py-20 px-4">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 anim-up">
+            <span class="text-[10px] font-semibold tracking-wide uppercase text-blue-400 mb-3 block">01 · Definición</span>
+            <h2 class="font-oswald font-light text-3xl md:text-5xl tracking-tight">Entendiendo el <span class="gradient-text">Torque</span></h2>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="card rounded-2xl p-8 md:col-span-2 anim-up d1">
+                <div class="flex items-start gap-4">
+                    <div class="sn">📖</div>
+                    <div>
+                        <h3 class="text-xl font-medium mb-3">¿Qué es el Torque?</h3>
+                        <p class="text-gray-400 leading-relaxed text-[15px]">El <strong class="text-white">torque</strong> (también llamado <strong class="text-white">momento de fuerza</strong>) es la tendencia de una fuerza para hacer girar un objeto alrededor de un punto. Es como la "<em class="text-blue-400">fuerza de giro</em>".</p>
+                        <div class="mt-4 p-4 rounded-xl" style="background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.1)">
+                            <p class="text-sm text-blue-300">💡 <strong>Piensa en esto:</strong> Cuando usas una llave para apretar un tornillo, la fuerza que haces con tu mano crea un torque que hace girar el tornillo. ¡Entre más larga sea la llave, más fácil!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card rounded-2xl p-6 anim-up d2">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(59,130,246,.1)"><i data-lucide="move-horizontal" class="w-6 h-6 text-blue-400"></i></div>
+                <h3 class="font-medium mb-2">Fuerza (F)</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Es el empujón o jalón que aplicas. Se mide en <strong class="text-white">Newtons (N)</strong>. Más fuerza = más torque. 🏋️</p>
+                <div class="mt-3"><span class="text-[10px] px-2 py-1 rounded-md bg-red-500/10 text-red-400 font-medium">Ejemplo: 100 N</span></div>
+            </div>
+            <div class="card rounded-2xl p-6 anim-up d3">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(168,85,247,.1)"><i data-lucide="ruler" class="w-6 h-6 text-purple-400"></i></div>
+                <h3 class="font-medium mb-2">Brazo de palanca (d)</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Es la <strong class="text-white">distancia</strong> desde el punto de giro hasta donde aplicas la fuerza. Se mide en <strong class="text-white">metros (m)</strong>. Más distancia = más torque. 📏</p>
+                <div class="mt-3"><span class="text-[10px] px-2 py-1 rounded-md bg-purple-500/10 text-purple-400 font-medium">Ejemplo: 1.00 m</span></div>
+            </div>
+            <div class="card rounded-2xl p-6 anim-up d4">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(34,211,238,.1)"><i data-lucide="rotate-cw" class="w-6 h-6 text-cyan-400"></i></div>
+                <h3 class="font-medium mb-2">Torque (τ)</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Es el resultado: la "fuerza de giro". Se mide en <strong class="text-white">Newton·metro (N·m)</strong>. El símbolo es la letra griega <strong class="text-cyan-400">τ</strong> (tau). ⚙️</p>
+                <div class="mt-3"><span class="text-[10px] px-2 py-1 rounded-md bg-cyan-500/10 text-cyan-400 font-medium">Ejemplo: 100 N·m</span></div>
+            </div>
+            <div class="card rounded-2xl p-6 anim-up d5">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(34,197,94,.1)"><i data-lucide="target" class="w-6 h-6 text-green-400"></i></div>
+                <h3 class="font-medium mb-2">Eje de rotación</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Es el <strong class="text-white">punto fijo</strong> alrededor del cual gira el objeto. En una puerta son las bisagras, en una balanza es el centro. 🎯</p>
+                <div class="mt-3"><span class="text-[10px] px-2 py-1 rounded-md bg-green-500/10 text-green-400 font-medium">Punto de giro</span></div>
+            </div>
+        </div>
+        <div class="mt-12 card rounded-2xl p-8 anim-up d6">
+            <h3 class="font-oswald font-light text-2xl mb-6">🎯 El torque en tu vida diaria</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="text-center p-4 rounded-xl hover:bg-white/5 transition-colors"><div class="text-3xl mb-2">🚪</div><p class="text-sm font-medium mb-1">Abrir puertas</p><p class="text-[11px] text-gray-500">El pomo está lejos de las bisagras</p></div>
+                <div class="text-center p-4 rounded-xl hover:bg-white/5 transition-colors"><div class="text-3xl mb-2">🔧</div><p class="text-sm font-medium mb-1">Usar llaves</p><p class="text-[11px] text-gray-500">Una llave más larga necesita menos fuerza</p></div>
+                <div class="text-center p-4 rounded-xl hover:bg-white/5 transition-colors"><div class="text-3xl mb-2">🚲</div><p class="text-sm font-medium mb-1">Pedalear bicicleta</p><p class="text-[11px] text-gray-500">Tus pies crean torque para girar los pedales</p></div>
+                <div class="text-center p-4 rounded-xl hover:bg-white/5 transition-colors"><div class="text-3xl mb-2">🔄</div><p class="text-sm font-medium mb-1">Balanza de equilibrio</p><p class="text-[11px] text-gray-500">Mismo torque en ambos lados = equilibrio</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Fórmula -->
+<section id="for" class="relative py-20 px-4">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 anim-up">
+            <span class="text-[10px] font-semibold tracking-wide uppercase text-purple-400 mb-3 block">02 · Fórmula</span>
+            <h2 class="font-oswald font-light text-3xl md:text-5xl tracking-tight">La <span class="gradient-text">Fórmula Mágica</span></h2>
+        </div>
+        <div class="card rounded-3xl p-10 md:p-14 text-center mb-10 anim-blur relative overflow-hidden">
+            <div class="bl" style="left:20%;animation-delay:0s"></div>
+            <div class="bl" style="left:50%;animation-delay:2s"></div>
+            <div class="bl" style="left:80%;animation-delay:4s"></div>
+            <div class="relative z-10">
+                <p class="text-gray-500 text-sm mb-6">La fórmula del torque es súper simple:</p>
+                <div class="inline-flex items-center gap-4 md:gap-6 py-6 px-8 md:px-12 rounded-2xl" style="background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.15)">
+                    <span class="font-oswald text-5xl md:text-7xl font-light text-cyan-400">τ</span>
+                    <span class="text-3xl md:text-5xl text-gray-600">=</span>
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <span class="font-oswald text-3xl md:text-5xl font-light text-red-400">F</span>
+                        <span class="text-xl md:text-3xl text-gray-600">×</span>
+                        <span class="font-oswald text-3xl md:text-5xl font-light text-purple-400">d</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-6 mt-8">
+                    <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-cyan-400"></span><span class="text-sm text-gray-400">τ = Torque (N·m)</span></div>
+                    <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-400"></span><span class="text-sm text-gray-400">F = Fuerza (N)</span></div>
+                    <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-purple-400"></span><span class="text-sm text-gray-400">d = Distancia (m)</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="card rounded-2xl p-6 anim-up d1"><div class="sn mb-4">1</div><h4 class="font-medium mb-2">Identifica la Fuerza</h4><p class="text-gray-400 text-sm">¿Cuántos Newtons se aplican? Busca <strong class="text-red-400">F</strong>.</p><div class="mt-3 p-3 rounded-lg bg-white/5 text-center"><span class="text-2xl font-oswald text-red-400">F = 100 N</span></div></div>
+            <div class="card rounded-2xl p-6 anim-up d2"><div class="sn mb-4">2</div><h4 class="font-medium mb-2">Mide la Distancia</h4><p class="text-gray-400 text-sm">¿A qué distancia del eje está la fuerza? Busca <strong class="text-purple-400">d</strong>.</p><div class="mt-3 p-3 rounded-lg bg-white/5 text-center"><span class="text-2xl font-oswald text-purple-400">d = 1.00 m</span></div></div>
+            <div class="card rounded-2xl p-6 anim-up d3"><div class="sn mb-4">3</div><h4 class="font-medium mb-2">Multiplica</h4><p class="text-gray-400 text-sm">Multiplica F × d y obtienes <strong class="text-cyan-400">τ</strong>.</p><div class="mt-3 p-3 rounded-lg bg-white/5 text-center"><span class="text-2xl font-oswald text-cyan-400">τ = 100 N·m</span></div></div>
+        </div>
+        <div class="mt-12 card rounded-2xl p-8 anim-up d4">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="flex-shrink-0">
+                    <div class="w-40 h-40 rounded-2xl flex items-center justify-center anim-wiggle" style="background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(168,85,247,.1));border:1px solid rgba(59,130,246,.15)"><span class="text-7xl">🤚</span></div>
+                </div>
+                <div>
+                    <h3 class="font-oswald font-light text-2xl mb-3">🖐️ La Regla de la Mano Derecha</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">El torque es un <strong class="text-white">vector</strong>, tiene dirección además de magnitud:</p>
+                    <ol class="space-y-2">
+                        <li class="flex items-start gap-3 text-sm text-gray-300"><span class="w-6 h-6 min-w-[24px] rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold">1</span>Señala tus dedos en la dirección de la <strong>fuerza</strong></li>
+                        <li class="flex items-start gap-3 text-sm text-gray-300"><span class="w-6 h-6 min-w-[24px] rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold">2</span>Curva tus dedos hacia el <strong>brazo de palanca</strong></li>
+                        <li class="flex items-start gap-3 text-sm text-gray-300"><span class="w-6 h-6 min-w-[24px] rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold">3</span>Tu <strong class="text-blue-400">pulgar</strong> apunta en la dirección del torque ↑</li>
+                    </ol>
+                    <div class="mt-4 p-3 rounded-lg" style="background:rgba(234,179,8,.05);border:1px solid rgba(234,179,8,.1)">
+                        <p class="text-xs text-yellow-400/80">⚠️ Pulgar hacia ti = horario (↻). Pulgar hacia adentro = antihorario (↺).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ejemplos -->
+<section id="ej" class="relative py-20 px-4">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 anim-up">
+            <span class="text-[10px] font-semibold tracking-wide uppercase text-green-400 mb-3 block">03 · Ejemplos</span>
+            <h2 class="font-oswald font-light text-3xl md:text-5xl tracking-tight">Ejemplos <span class="gradient-text">Paso a Paso</span></h2>
+            <p class="text-gray-400 text-sm mt-4">Misma fuerza (100 N), diferentes distancias. La flecha SIEMPRE se aleja del centro.</p>
+        </div>
+        <div class="flex justify-center gap-2 mb-10 flex-wrap anim-up d1" id="tabs">
+            <button class="tab on" onclick="showEx('a',this)">Caso A</button>
+            <button class="tab" onclick="showEx('b',this)">Caso B</button>
+            <button class="tab" onclick="showEx('c',this)">Caso C</button>
+            <button class="tab" onclick="showEx('d',this)">Caso D</button>
+        </div>
+        <div class="card rounded-3xl p-8 md:p-10 anim-up d2">
+            <div class="max-w-lg mx-auto mb-8">
+                <div class="lever" id="exLev">
+                    <div class="bar"></div>
+                    <div class="pivot"></div>
+                    <div class="arrow" id="exArr" style="left:8%">
+                        <div class="arrow-head"></div>
+                        <div class="arrow-line" id="exLine" style="height:40px"></div>
+                        <div class="arrow-label" id="exLbl">100 N</div>
+                    </div>
+                    <div class="bracket" id="exBrk" style="left:10%;width:38%"></div>
+                    <div class="dist-tag" id="exTag" style="left:26%">d = 1.00 m</div>
+                </div>
+            </div>
+            <div class="max-w-lg mx-auto">
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center gap-3 px-5 py-3 rounded-xl" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
+                        <span class="text-sm text-gray-400">Datos:</span>
+                        <span class="text-sm font-mono text-red-400" id="exDF">F = 100 N</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-sm font-mono text-purple-400" id="exDD">d = 1.00 m</span>
+                    </div>
+                </div>
+                <div class="space-y-3" id="exSt"></div>
+                <div class="mt-6 text-center p-4 rounded-xl" style="background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.15)">
+                    <p class="text-sm text-gray-400 mb-1">Resultado:</p>
+                    <span class="font-oswald text-4xl font-light text-cyan-400" id="exRes">τ = 100 N·m</span>
+                </div>
+                <div class="mt-4 text-center"><p class="text-xs text-gray-500" id="exObs"></p></div>
+            </div>
+        </div>
+        <div class="mt-10 card rounded-2xl p-6 overflow-x-auto anim-up d3">
+            <h3 class="font-oswald font-light text-xl mb-4">📊 Tabla Comparativa</h3>
+            <table class="w-full text-sm">
+                <thead><tr class="border-b border-white/10">
+                    <th class="text-left py-3 px-4 text-gray-500 font-medium">Caso</th>
+                    <th class="text-center py-3 px-4 text-red-400 font-medium">Fuerza</th>
+                    <th class="text-center py-3 px-4 text-purple-400 font-medium">Distancia</th>
+                    <th class="text-center py-3 px-4 text-cyan-400 font-medium">Torque</th>
+                    <th class="text-center py-3 px-4 text-gray-500 font-medium">Relación</th>
+                </tr></thead>
+                <tbody id="tbl"></tbody>
+            </table>
+            <div class="mt-4 p-3 rounded-lg" style="background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.1)">
+                <p class="text-xs text-blue-300/80">📌 <strong>Conclusión:</strong> Con la misma fuerza (100 N), al reducir la distancia a la mitad, el torque también se reduce a la mitad. ¡Directamente proporcionales!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Calculadora (CORREGIDA) -->
+<section class="relative py-20 px-4">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 anim-up">
+            <span class="text-[10px] font-semibold tracking-wide uppercase text-cyan-400 mb-3 block">04 · Experimenta</span>
+            <h2 class="font-oswald font-light text-3xl md:text-5xl tracking-tight">Calculadora <span class="gradient-text">Interactiva</span></h2>
+            <p class="text-gray-400 text-sm mt-4">La flecha roja SIEMPER se mueve dentro de la mitad izquierda de la barra.</p>
+        </div>
+        <div class="card rounded-3xl p-8 md:p-10 anim-up d1">
+            <div class="grid md:grid-cols-2 gap-10 items-center">
+                <div class="space-y-8">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="text-sm font-medium flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-red-400"></span>Fuerza (F)</label>
+                            <span class="font-mono text-lg text-red-400" id="cFD">100 N</span>
+                        </div>
+                        <input type="range" min="10" max="200" value="100" id="cF" class="w-full" style="background:linear-gradient(to right,#7F1D1D,#EF4444)">
+                        <div class="flex justify-between text-[10px] text-gray-600 mt-1"><span>10 N</span><span>200 N</span></div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="text-sm font-medium flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-purple-400"></span>Distancia (d)</label>
+                            <span class="font-mono text-lg text-purple-400" id="cDD">1.00 m</span>
+                        </div>
+                        <input type="range" min="5" max="300" value="100" id="cD" class="w-full" style="background:linear-gradient(to right,#581C87,#A855F7)">
+                        <div class="flex justify-between text-[10px] text-gray-600 mt-1"><span>0.05 m</span><span>3.00 m</span></div>
+                    </div>
+                    <div class="p-6 rounded-2xl text-center anim-glow" style="background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(59,130,246,.08));border:1px solid rgba(34,211,238,.15)">
+                        <p class="text-xs text-gray-400 mb-2 uppercase tracking-wide">Torque Resultante</p>
+                        <span class="font-oswald text-5xl font-light text-cyan-400" id="cRes">100.0</span>
+                        <span class="text-xl text-cyan-400/60 ml-2">N·m</span>
+                        <div class="mt-3 text-xs text-gray-500" id="cFor">τ = 100 N × 1.00 m</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="relative bg-black/40 rounded-2xl p-6" style="border:1px solid rgba(255,255,255,.05)">
+                        <p class="text-[10px] text-gray-600 uppercase tracking-wide mb-2 text-center">Vista lateral</p>
+                        <!-- Scale reference -->
+                        <div class="flex justify-between text-[9px] text-gray-700 mb-1 px-1">
+                            <span>0%</span>
+                            <span style="color:rgba(168,85,247,.6)">← MITAD IZQUIERDA →</span>
+                            <span>50% = EJE</span>
+                            <span style="color:rgba(255,255,255,.15)">mitad derecha</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="lever lever-tall" id="cLev">
+                            <div class="bar" style="opacity:1"></div>
+                            <!-- Half-line marker at 50% -->
+                            <div class="absolute top-[30%] bottom-[30%] left-1/2 w-px" style="background:rgba(255,255,255,.08)"></div>
+                            <div class="pivot">
+                                <div class="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[9px] text-gray-400 whitespace-nowrap font-semibold">▲ EJE (50%)</div>
+                            </div>
+                            <!-- FORCE ARROW — ALWAYS LEFT OF PIVOT -->
+                            <div class="arrow" id="cArr" style="left:8%">
+                                <div class="arrow-head"></div>
+                                <div class="arrow-line" id="cLine" style="height:40px"></div>
+                                <div class="arrow-label" id="cLbl">100 N</div>
+                            </div>
+                            <!-- Bracket from arrow to pivot -->
+                            <div class="bracket" id="cBrk" style="left:10%;width:38%"></div>
+                            <!-- Distance label centered between arrow and pivot -->
+                            <div class="dist-tag" id="cTag" style="left:26%">d = 1.00 m</div>
+                            <!-- Torque arc -->
+                            <div class="absolute top-1 right-6">
+                                <svg width="50" height="50" viewBox="0 0 60 60">
+                                    <path d="M 30 5 A 25 25 0 0 1 55 30" fill="none" stroke="rgba(34,211,238,.3)" stroke-width="2" stroke-linecap="round"/>
+                                    <polygon points="55,30 48,25 50,33" fill="rgba(34,211,238,.5)"/>
+                                    <text x="8" y="55" fill="rgba(34,211,238,.6)" font-size="9" font-family="Oswald">τ</text>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="mt-14">
+                            <p class="text-[10px] text-gray-600 uppercase tracking-wide mb-2">Magnitud del torque</p>
+                            <div class="h-4 rounded-full bg-white/5 overflow-hidden">
+                                <div class="h-full rounded-full transition-all duration-300" id="cBar" style="width:17%;background:linear-gradient(to right,#2563EB,#22D3EE)"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] text-gray-600 mt-1"><span>0 N·m</span><span>600 N·m</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ejercicios -->
+<section id="ex" class="relative py-20 px-4">
+    <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 anim-up">
+            <span class="text-[10px] font-semibold tracking-wide uppercase text-red-400 mb-3 block">05 · Practica</span>
+            <h2 class="font-oswald font-light text-3xl md:text-5xl tracking-tight">Ejercicios <span class="gradient-text">Prácticos</span></h2>
+            <p class="text-gray-400 text-sm mt-4">Demuestra lo que aprendiste. ¡Tú puedes! 💪</p>
+        </div>
+        <div class="max-w-2xl mx-auto mb-10 anim-up d1">
+            <div class="card rounded-2xl p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-3"><i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i><span class="text-sm font-medium">Tu Puntaje</span></div>
+                    <span class="text-sm font-mono" id="sT">0 / 6 correctas</span>
+                </div>
+                <div class="sb"><div class="sf" id="sB" style="width:0%"></div></div>
+            </div>
+        </div>
+        <div class="space-y-6 max-w-3xl mx-auto" id="exC">
+            <!-- E1 -->
+            <div class="card rounded-2xl p-6 anim-up d2 ec" data-a="120">
+                <div class="flex items-start gap-4"><div class="sn text-sm">1</div><div class="flex-1">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 font-medium">Básico</span></div>
+                    <p class="text-sm mb-4">Fuerza de <strong class="text-red-400">60 N</strong> a <strong class="text-purple-400">2 m</strong> del eje. ¿Torque?</p>
+                    <div class="flex items-center gap-3 flex-wrap"><span class="text-sm text-gray-500">τ =</span><input type="number" class="inp" id="i1"><span class="text-sm text-gray-500">N·m</span><button class="btn text-xs py-2 px-4" onclick="chk(1,120)"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button><span class="text-xs hidden" id="f1"></span></div>
+                    <div class="mt-3 hidden" id="h1"><p class="text-xs text-gray-500">💡 τ = 60 × 2 = ?</p></div>
+                </div></div>
+            </div>
+            <!-- E2 -->
+            <div class="card rounded-2xl p-6 anim-up d3 ec" data-a="75">
+                <div class="flex items-start gap-4"><div class="sn text-sm">2</div><div class="flex-1">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 font-medium">Básico</span></div>
+                    <p class="text-sm mb-4"><strong class="text-red-400">100 N</strong> a <strong class="text-purple-400">0.75 m</strong> del eje. ¿Torque?</p>
+                    <div class="flex items-center gap-3 flex-wrap"><span class="text-sm text-gray-500">τ =</span><input type="number" class="inp" id="i2"><span class="text-sm text-gray-500">N·m</span><button class="btn text-xs py-2 px-4" onclick="chk(2,75)"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button><span class="text-xs hidden" id="f2"></span></div>
+                </div></div>
+            </div>
+            <!-- E3 -->
+            <div class="card rounded-2xl p-6 anim-up d4 ec" data-a="2">
+                <div class="flex items-start gap-4"><div class="sn text-sm">3</div><div class="flex-1">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 font-medium">Intermedio</span><span class="text-[10px] text-gray-600">Encuentra la distancia</span></div>
+                    <p class="text-sm mb-4">Necesitas <strong class="text-cyan-400">200 N·m</strong> con <strong class="text-red-400">100 N</strong>. ¿A qué distancia?</p>
+                    <div class="flex items-center gap-3 flex-wrap"><span class="text-sm text-gray-500">d =</span><input type="number" step="0.1" class="inp" id="i3"><span class="text-sm text-gray-500">m</span><button class="btn text-xs py-2 px-4" onclick="chk(3,2)"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button><span class="text-xs hidden" id="f3"></span></div>
+                    <div class="mt-3 hidden" id="h3"><p class="text-xs text-gray-500">💡 d = 200 ÷ 100 = ?</p></div>
+                </div></div>
+            </div>
+            <!-- E4 -->
+            <div class="card rounded-2xl p-6 anim-up d5 ec" data-a="50">
+                <div class="flex items-start gap-4"><div class="sn text-sm">4</div><div class="flex-1">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 font-medium">Intermedio</span></div>
+                    <p class="text-sm mb-4">¿Cuánta fuerza para <strong class="text-cyan-400">50 N·m</strong> con brazo de <strong class="text-purple-400">1 m</strong>?</p>
+                    <div class="flex items-center gap-3 flex-wrap"><span class="text-sm text-gray-500">F =</span><input type="number" class="inp" id="i4"><span class="text-sm text-gray-500">N</span><button class="btn text-xs py-2 px-4" onclick="chk(4,50)"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button><span class="text-xs hidden" id="f4"></span></div>
+                </div></div>
+            </div>
+            <!-- E5 -->
+            <div class="card rounded-2xl p-6 anim-up d6 ec" data-a="25">
+                <div class="flex items-start gap-4"><div class="sn text-sm">5</div><div class="flex-1">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 font-medium">Avanzado</span><span class="text-[10px] text-gray-600">Torque resultante</span></div>
+                    <p class="text-sm mb-4"><strong class="text-red-400">80 N</strong> a <strong class="text-purple-400">1 m</strong> gira horario (τ=80↻) y <strong class="text-blue-400">55 N</strong> a <strong class="text-purple-400">1 m</strong> antihorario (τ=55↺). ¿Torque resultante?</p>
+                    <div class="p-3 rounded-lg mb-4" style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05)"><p class="text-xs text-gray-500 font-mono">τ_neto = 80 − 55 = ?</p></div>
+                    <div class="flex items-center gap-3 flex-wrap"><span class="text-sm text-gray-500">τ_neto =</span><input type="number" class="inp" id="i5"><span class="text-sm text-gray-500">N·m (↻)</span><button class="btn text-xs py-2 px-4" onclick="chk(5,25)"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button><span class="text-xs hidden" id="f5"></span></div>
+                </div></div>
+            </div>
+            <!-- E6 -->
+            <div class="card rounded-2xl p-6 anim-up d7 ec" data-a="2">
+                <div class="flex items-start gap-4"><div class="sn text-sm">6</div><div class="flex-1">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-red-500/10 text-red-400 font-medium">Desafío</span><span class="text-[10px] text-gray-600">Equilibrio rotacional</span></div>
+                    <p class="text-sm mb-4">Izquierda: <strong class="text-red-400">50 N</strong> a <strong class="text-purple-400">3 m</strong>. Derecha: <strong class="text-blue-400">75 N</strong>. ¿Distancia para equilibrar?</p>
+                    <div class="p-3 rounded-lg mb-4" style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05)"><p class="text-xs text-gray-500 font-mono">50 × 3 = 75 × d → d = ?</p></div>
+                    <div class="flex items-center gap-3 flex-wrap"><span class="text-sm text-gray-500">d =</span><input type="number" step="0.1" class="inp" id="i6"><span class="text-sm text-gray-500">m</span><button class="btn text-xs py-2 px-4" onclick="chk(6,2)"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button><span class="text-xs hidden" id="f6"></span></div>
+                    <div class="mt-3 hidden" id="h6"><p class="text-xs text-gray-500">💡 150 = 75 × d → d = 150 ÷ 75 = ?</p></div>
+                </div></div>
+            </div>
+        </div>
+        <div class="flex justify-center gap-4 mt-10 anim-up d7">
+            <button class="btn2" onclick="rst()"><i data-lucide="rotate-ccw" class="w-4 h-4 inline mr-1"></i> Reiniciar</button>
+            <button class="btn2" onclick="hints()"><i data-lucide="lightbulb" class="w-4 h-4 inline mr-1"></i> Pistas</button>
+        </div>
+    </div>
+</section>
+
+<!-- Resumen -->
+<section class="relative py-20 px-4">
+    <div class="max-w-4xl mx-auto">
+        <div class="card rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+            <div class="absolute inset-0" style="background:radial-gradient(circle at center,rgba(59,130,246,.05),transparent 70%)"></div>
+            <div class="relative z-10">
+                <span class="text-5xl mb-6 block">🎓</span>
+                <h2 class="font-oswald font-light text-3xl md:text-4xl tracking-tight mb-6">Resumen <span class="gradient-text">Rápido</span></h2>
+                <div class="grid sm:grid-cols-3 gap-6 max-w-2xl mx-auto text-left mb-8">
+                    <div class="p-4 rounded-xl bg-white/5"><div class="text-2xl mb-2">📐</div><p class="text-sm font-medium mb-1">Fórmula</p><p class="text-xs text-gray-400">τ = F × d</p></div>
+                    <div class="p-4 rounded-xl bg-white/5"><div class="text-2xl mb-2">📏</div><p class="text-sm font-medium mb-1">Unidades</p><p class="text-xs text-gray-400">N·m (Newton·metro)</p></div>
+                    <div class="p-4 rounded-xl bg-white/5"><div class="text-2xl mb-2">⚖️</div><p class="text-sm font-medium mb-1">Equilibrio</p><p class="text-xs text-gray-400">τ_izq = τ_der</p></div>
+                </div>
+                <div class="p-4 rounded-xl max-w-lg mx-auto" style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.1)">
+                    <p class="text-sm text-green-300/80">✨ <strong>Lo más importante:</strong> El torque no solo depende de la fuerza, sino de <strong>dónde</strong> la aplicas. ¡La distancia importa tanto como la fuerza!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="py-10 px-4 border-t border-white/5">
+    <div class="max-w-5xl mx-auto text-center">
+        <div class="flex items-center justify-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center"><i data-lucide="zap" class="w-4 h-4 text-white"></i></div>
+            <span class="font-oswald font-light text-lg tracking-tight">FísicaDivertida</span>
+        </div>
+        <p class="text-xs text-gray-600">Aprender física puede ser divertido · Hecho con ❤️ para curiosos de 12 años</p>
+    </div>
+</footer>
+
+<script>
+lucide.createIcons();
+
+/* ==========================================
+   LEVER POSITION HELPER
+   PIVOT is at 50%.
+   Arrow is ALWAYS to the LEFT of pivot.
+   Max distance (3.00m) → arrow at ~8% (far left)
+   Min distance (0.05m) → arrow at ~48% (just left of pivot)
+   ========================================== */
+function arrowPos(d) {
+    // d: 0.05 to 3.00
+    // map to left%: 8% to 48%
+    // normalized: 0 (at d=0.05) to 1 (at d=3.00)
+    var t = (d - 0.05) / (3.00 - 0.05); // 0..1
+    return 48 - t * 40; // 48% (close) → 8% (far)
+}
+
+function updateLever(arrEl, lineEl, lblEl, brkEl, tagEl, f, d) {
+    var pos = arrowPos(d);
+    arrEl.style.left = pos + '%';
+    lineEl.style.height = Math.max(12, (f / 200) * 55) + 'px';
+    lblEl.textContent = f + ' N';
+    // bracket from arrow to pivot (50%)
+    var bL = pos + 2;
+    var bW = Math.max(1, 50 - bL);
+    brkEl.style.left = bL + '%';
+    brkEl.style.width = bW + '%';
+    // label centered between arrow and pivot
+    tagEl.style.left = ((pos + 50) / 2) + '%';
+    tagEl.textContent = 'd = ' + d.toFixed(2) + ' m';
+}
+
+/* ============ EJEMPLOS ============ */
+var exData = {
+    a: {f:100, d:1.00, tau:100, obs:'🔍 Con d = 1.00 m obtenemos el torque máximo de estos casos.'},
+    b: {f:100, d:0.75, tau:75,  obs:'🔍 Al reducir la distancia a 0.75 m, el torque baja a 75 N·m.'},
+    c: {f:100, d:0.50, tau:50,  obs:'🔍 Con la mitad de distancia (0.50 m), el torque es la mitad (50 N·m).'},
+    d: {f:100, d:0.25, tau:25,  obs:'🔍 Con solo 0.25 m de distancia, el torque se reduce a solo 25 N·m.'}
+};
+
+function showEx(k, btn) {
+    var e = exData[k];
+    document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on')});
+    btn.classList.add('on');
+    updateLever(
+        document.getElementById('exArr'),
+        document.getElementById('exLine'),
+        document.getElementById('exLbl'),
+        document.getElementById('exBrk'),
+        document.getElementById('exTag'),
+        e.f, e.d
+    );
+    document.getElementById('exDF').textContent = 'F = ' + e.f + ' N';
+    document.getElementById('exDD').textContent = 'd = ' + e.d.toFixed(2) + ' m';
+    document.getElementById('exSt').innerHTML =
+        '<div class="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02]"><span class="text-xs text-gray-500 w-16">Paso 1:</span><span class="text-sm font-mono text-gray-300">τ = F × d</span></div>' +
+        '<div class="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02]"><span class="text-xs text-gray-500 w-16">Paso 2:</span><span class="text-sm font-mono text-gray-300">τ = '+e.f+' N × '+e.d.toFixed(2)+' m</span></div>' +
+        '<div class="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02]"><span class="text-xs text-gray-500 w-16">Paso 3:</span><span class="text-sm font-mono text-gray-300">τ = '+e.tau+' N·m</span></div>';
+    document.getElementById('exRes').textContent = 'τ = ' + e.tau + ' N·m';
+    document.getElementById('exObs').textContent = e.obs;
+}
+
+// Tabla
+(function(){
+    var tb = document.getElementById('tbl');
+    var ks = ['a','b','c','d'];
+    tb.innerHTML = ks.map(function(k,i){
+        var e = exData[k];
+        return '<tr class="border-b border-white/5 hover:bg-white/[0.02] transition-colors cursor-pointer" onclick="document.querySelectorAll(\'.tab\')['+i+'].click()"><td class="py-3 px-4 font-medium">'+k.toUpperCase()+'</td><td class="py-3 px-4 text-center font-mono text-red-400">'+e.f+'</td><td class="py-3 px-4 text-center font-mono text-purple-400">'+e.d.toFixed(2)+'</td><td class="py-3 px-4 text-center font-mono text-cyan-400 font-semibold">'+e.tau+'</td><td class="py-3 px-4"><div class="flex items-center gap-2"><div class="h-1.5 rounded-full bg-white/5 flex-1 overflow-hidden"><div class="h-full rounded-full" style="width:'+e.tau+'%;background:linear-gradient(to right,#2563EB,#22D3EE)"></div></div><span class="text-[10px] text-gray-500">'+e.tau+'%</span></div></td></tr>';
+    }).join('');
+})();
+
+// Init first example
+showEx('a', document.querySelector('.tab.on'));
+
+/* ============ CALCULADORA INTERACTIVA ============ */
+var cFS = document.getElementById('cF');
+var cDS = document.getElementById('cD');
+
+function calcUpdate() {
+    var f = parseFloat(cFS.value);
+    var d = parseFloat(cDS.value) / 100; // 5..300 → 0.05..3.00
+    var tau = f * d;
+
+    document.getElementById('cFD').textContent = f + ' N';
+    document.getElementById('cDD').textContent = d.toFixed(2) + ' m';
+    document.getElementById('cRes').textContent = tau.toFixed(1);
+    document.getElementById('cFor').textContent = 'τ = ' + f + ' N × ' + d.toFixed(2) + ' m = ' + tau.toFixed(1) + ' N·m';
+
+    updateLever(
+        document.getElementById('cArr'),
+        document.getElementById('cLine'),
+        document.getElementById('cLbl'),
+        document.getElementById('cBrk'),
+        document.getElementById('cTag'),
+        f, d
+    );
+
+    document.getElementById('cBar').style.width = Math.min(100, (tau / 600) * 100) + '%';
+    var g = Math.min(0.6, tau / 600);
+    document.getElementById('cRes').parentElement.style.boxShadow = '0 0 ' + (30 * g) + 'px rgba(34,211,238,' + g + ')';
+}
+
+cFS.addEventListener('input', calcUpdate);
+cDS.addEventListener('input', calcUpdate);
+calcUpdate();
+
+/* ============ EJERCICIOS ============ */
+var score = 0, total = 6, done = {};
+
+function chk(n, ans) {
+    var inp = document.getElementById('i'+n);
+    var fb = document.getElementById('f'+n);
+    var v = parseFloat(inp.value);
+    if (isNaN(v)) { toast('Escribe un número primero 😅','e'); inp.focus(); return; }
+    if (done[n]) return;
+    done[n] = true;
+    var ok = Math.abs(v - ans) < 0.5;
+    inp.classList.add(ok ? 'ok' : 'no');
+    fb.classList.remove('hidden');
+    if (ok) {
+        score++;
+        fb.innerHTML = '<span class="text-green-400">✅ ¡Correcto!</span>';
+        toast('¡Muy bien! +1 punto 🎉','s');
+        confetti(inp);
+    } else {
+        fb.innerHTML = '<span class="text-red-400">❌ La respuesta es <strong>'+ans+'</strong>.</span>';
+        toast('Revisa el cálculo 💪','e');
+    }
+    upScore();
+}
+
+function upScore() {
+    document.getElementById('sT').textContent = score + ' / ' + total + ' correctas';
+    document.getElementById('sB').style.width = (score/total*100) + '%';
+    var p = score/total*100;
+    document.getElementById('pc').style.strokeDashoffset = 94.25 - (p/100)*94.25;
+    document.getElementById('pt').textContent = Math.round(p) + '%';
+    if (score === total) setTimeout(function(){toast('🏆 ¡PERFECTO! Dominaste el torque.','s')},500);
+}
+
+function rst() {
+    score = 0; done = {};
+    for (var i=1;i<=6;i++) {
+        var inp = document.getElementById('i'+i);
+        var fb = document.getElementById('f'+i);
+        inp.value = ''; inp.classList.remove('ok','no'); fb.classList.add('hidden');
+    }
+    upScore(); toast('Reiniciado 🔄','i');
+}
+
+function hints() {
+    ['h1','h3','h6'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.remove('hidden')});
+    toast('Pistas reveladas 💡','i');
+}
+
+document.querySelectorAll('.inp').forEach(function(inp,i){
+    inp.addEventListener('keypress',function(e){
+        if(e.key==='Enter'){var c=inp.closest('.ec');chk(i+1,parseFloat(c.dataset.a))}
+    });
+});
+
+/* ============ TOAST ============ */
+function toast(m,t){
+    var el=document.getElementById('toast');
+    var ic={s:'✅',e:'❌',i:'ℹ️'};
+    el.className='toast '+t;
+    el.innerHTML='<span>'+ic[t]+'</span><span>'+m+'</span>';
+    requestAnimationFrame(function(){el.classList.add('show')});
+    setTimeout(function(){el.classList.remove('show')},3000);
+}
+
+/* ============ CONFETTI ============ */
+function confetti(el){
+    var r=el.getBoundingClientRect();
+    var cols=['#3B82F6','#22D3EE','#A855F7','#22C55E','#EAB308','#EF4444'];
+    for(var i=0;i<12;i++){
+        var p=document.createElement('div');p.className='cf';
+        p.style.left=(r.left+r.width/2+(Math.random()-.5)*60)+'px';
+        p.style.top=(r.top+window.scrollY)+'px';
+        p.style.background=cols[Math.floor(Math.random()*cols.length)];
+        p.style.animationDelay=(Math.random()*.3)+'s';
+        p.style.animationDuration=(.6+Math.random()*.4)+'s';
+        p.style.position='absolute';p.style.zIndex='999';
+        document.body.appendChild(p);
+        setTimeout(function(){p.remove()},1200);
+    }
+}
+
+/* Smooth scroll */
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+        e.preventDefault();
+        var t=document.querySelector(a.getAttribute('href'));
+        if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+});
+</script>
+</body>
+</html>
