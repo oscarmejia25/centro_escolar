@@ -21,7 +21,6 @@
         @keyframes steam{0%{transform:translateY(0) scale(1);opacity:.6}100%{transform:translateY(-40px) scale(1.5);opacity:0}}
         @keyframes elephant-spray{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
         @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
         .anim-up{animation:fadeInUp .8s cubic-bezier(.25,.46,.45,.94) both}
         .anim-blur{animation:blurIn 1s cubic-bezier(.25,.46,.45,.94) both}
         .anim-wiggle{animation:wiggle 1.5s ease-in-out infinite}
@@ -39,10 +38,33 @@
         .card-cool{background:linear-gradient(to bottom,#080F15,#0A0A0A);border:1px solid rgba(34,211,238,.1);transition:all .3s}
         .card-cool:hover{border-color:rgba(34,211,238,.3);box-shadow:0 0 30px -10px rgba(34,211,238,.15)}
         .noise{background-image:url(https://grainy-gradients.vercel.app/noise.svg);opacity:.2;mix-blend-mode:soft-light}
-        .inp{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 12px;color:#fff;font-size:1rem;outline:none;transition:all .3s;width:110px;text-align:center}
+        .inp{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 12px;color:#fff;font-size:.875rem;outline:none;transition:all .3s;width:110px;text-align:center}
         .inp:focus{border-color:#3B82F6;box-shadow:0 0 15px rgba(59,130,246,.3)}
         .inp.ok{border-color:#22C55E;background:rgba(34,197,94,.1);box-shadow:0 0 15px rgba(34,197,94,.3)}
         .inp.no{border-color:#EF4444;background:rgba(239,68,68,.1);box-shadow:0 0 15px rgba(239,68,68,.3)}
+        /* FIX: Select con color-scheme dark para que las opciones sean visibles */
+        .sel{
+            color-scheme: dark;
+            background: #1a1a2e;
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #e2e8f0;
+            font-size: .875rem;
+            outline: none;
+            transition: all .3s;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+        .sel:focus{border-color:#3B82F6;box-shadow:0 0 15px rgba(59,130,246,.3)}
+        .sel.ok{border-color:#22C55E;background-color:#0d2818;box-shadow:0 0 15px rgba(34,197,94,.3)}
+        .sel.no{border-color:#EF4444;background-color:#2d0f0f;box-shadow:0 0 15px rgba(239,68,68,.3)}
+        .sel option{background:#1a1a2e;color:#e2e8f0;padding:8px}
         .btn{background:#2563EB;color:#fff;padding:10px 24px;border-radius:10px;font-weight:600;font-size:.875rem;border:none;cursor:pointer;transition:all .3s;display:inline-flex;align-items:center;gap:8px}
         .btn:hover{background:#3B82F6;box-shadow:0 0 25px rgba(37,99,235,.4);transform:translateY(-1px)}
         .btn2{background:rgba(255,255,255,.05);color:#fff;padding:10px 24px;border-radius:10px;font-weight:500;font-size:.875rem;border:1px solid rgba(255,255,255,.1);cursor:pointer;transition:all .3s}
@@ -65,12 +87,8 @@
         .molecule{position:absolute;width:8px;height:8px;border-radius:50%;background:#60A5FA;box-shadow:0 0 6px rgba(96,165,250,.5)}
         .molecule.fast{background:#F97316;box-shadow:0 0 6px rgba(249,115,22,.5)}
         .molecule.escape{background:#22D3EE;box-shadow:0 0 8px rgba(34,211,238,.6)}
-        .phase-arrow{position:relative;height:4px;background:linear-gradient(to right,rgba(96,165,250,.3),rgba(34,211,238,.3));border-radius:2px;margin:8px 0}
-        .temp-bar{height:12px;border-radius:6px;background:linear-gradient(to right,#3B82F6,#22D3EE,#22C55E,#EAB308,#F97316,#EF4444);position:relative}
-        .temp-marker{position:absolute;top:-6px;width:4px;height:24px;background:#fff;border-radius:2px;transition:left .5s ease;box-shadow:0 0 8px rgba(255,255,255,.5)}
         .steam-particle{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);animation:steam 2s ease-out infinite}
         .water-drop{position:absolute;width:10px;height:14px;background:radial-gradient(ellipse at 50% 30%,#60A5FA,#3B82F6);border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;animation:droplet 2s ease-in-out infinite}
-        .shimmer-text{background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.05) 50%,rgba(255,255,255,0) 100%);background-size:200% 100%;animation:shimmer 3s ease-in-out infinite}
     </style>
 </head>
 <body class="text-white overflow-x-hidden">
@@ -124,32 +142,26 @@
                     <a href="#exp" class="btn2">Ir al experimento</a>
                 </div>
             </div>
-            <!-- Elephant Illustration -->
             <div class="relative anim-blur d2">
                 <div class="relative w-full aspect-square max-w-sm mx-auto">
-                    <!-- Water background -->
                     <div class="absolute bottom-0 left-0 right-0 h-1/3 rounded-b-3xl overflow-hidden" style="background:linear-gradient(to bottom,rgba(59,130,246,.1),rgba(59,130,246,.2))">
                         <div class="water-drop" style="left:20%;bottom:60%;animation-delay:0s"></div>
                         <div class="water-drop" style="left:50%;bottom:50%;animation-delay:.5s"></div>
                         <div class="water-drop" style="left:75%;bottom:65%;animation-delay:1s"></div>
                     </div>
-                    <!-- Steam particles -->
                     <div class="steam-particle" style="left:30%;top:30%;animation-delay:0s"></div>
                     <div class="steam-particle" style="left:45%;top:25%;animation-delay:.4s"></div>
                     <div class="steam-particle" style="left:55%;top:20%;animation-delay:.8s"></div>
                     <div class="steam-particle" style="left:38%;top:15%;animation-delay:1.2s"></div>
                     <div class="steam-particle" style="left:50%;top:10%;animation-delay:1.6s"></div>
-                    <!-- Elephant emoji -->
                     <div class="absolute inset-0 flex items-center justify-center anim-spray" style="padding-bottom:15%">
                         <span class="text-[120px] md:text-[150px] leading-none" style="filter:drop-shadow(0 0 30px rgba(59,130,246,.2))">🐘</span>
                     </div>
-                    <!-- Spray drops -->
                     <div class="absolute top-[15%] right-[20%] flex gap-1 anim-spray">
                         <div class="water-drop" style="width:6px;height:8px;animation-delay:0s"></div>
                         <div class="water-drop" style="width:6px;height:8px;animation-delay:.2s"></div>
                         <div class="water-drop" style="width:6px;height:8px;animation-delay:.4s"></div>
                     </div>
-                    <!-- Temperature label -->
                     <div class="absolute top-4 right-4 px-3 py-1.5 rounded-lg text-xs font-mono" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#F87171">
                         <i data-lucide="thermometer" class="w-3 h-3 inline mr-1"></i>40°C ☀️
                     </div>
@@ -182,7 +194,7 @@
                         <div class="p-4 rounded-xl" style="background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.1)">
                             <p class="text-sm text-orange-300/80">
                                 🔬 <strong>Ojo al dato:</strong> La evaporación es un <strong>proceso endotérmico</strong>, 
-                                es decir, <em>absorbe energía (calor)</em> del surroundings. Por eso sentimos frío cuando 
+                                es decir, <em>absorbe energía (calor)</em> del entorno. Por eso sentimos frío cuando 
                                 nos ponemos alcohol en la piel o cuando salimos de la piscina al aire libre.
                             </p>
                         </div>
@@ -200,7 +212,6 @@
             <span class="text-[10px] font-semibold tracking-wide uppercase text-orange-400 mb-3 block">01 · Definición</span>
             <h2 class="font-oswald font-light text-3xl md:text-5xl tracking-tight">¿Qué es la <span class="gradient-text-warm">Evaporación</span>?</h2>
         </div>
-
         <div class="card rounded-2xl p-8 md:p-10 mb-8 anim-up d1">
             <div class="flex items-start gap-4">
                 <div class="sn text-xl">📖</div>
@@ -219,54 +230,40 @@
                 </div>
             </div>
         </div>
-
-        <!-- Key Concepts -->
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             <div class="card rounded-2xl p-6 anim-up d2">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(249,115,22,.1)">
-                    <i data-lucide="arrow-up-right" class="w-6 h-6 text-orange-400"></i>
-                </div>
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(249,115,22,.1)"><i data-lucide="arrow-up-right" class="w-6 h-6 text-orange-400"></i></div>
                 <h3 class="font-medium mb-2 text-sm">Superficie</h3>
-                <p class="text-gray-400 text-xs leading-relaxed">Solo ocurre en la <strong class="text-white">superficie</strong> del líquido, no en su interior. Por eso un charco poco profundo se seca más rápido.</p>
+                <p class="text-gray-400 text-xs leading-relaxed">Solo ocurre en la <strong class="text-white">superficie</strong> del líquido. Un charco poco profundo se seca más rápido.</p>
             </div>
             <div class="card rounded-2xl p-6 anim-up d3">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(59,130,246,.1)">
-                    <i data-lucide="thermometer-sun" class="w-6 h-6 text-blue-400"></i>
-                </div>
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(59,130,246,.1)"><i data-lucide="thermometer-sun" class="w-6 h-6 text-blue-400"></i></div>
                 <h3 class="font-medium mb-2 text-sm">Temperatura variable</h3>
-                <p class="text-gray-400 text-xs leading-relaxed">Ocurre a <strong class="text-white">cualquier temperatura</strong> por debajo del punto de ebullición. Más calor = más rápido.</p>
+                <p class="text-gray-400 text-xs leading-relaxed">Ocurre a <strong class="text-white">cualquier temperatura</strong> por debajo del punto de ebullición.</p>
             </div>
             <div class="card rounded-2xl p-6 anim-up d4">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(34,211,238,.1)">
-                    <i data-lucide="wind" class="w-6 h-6 text-cyan-400"></i>
-                </div>
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(34,211,238,.1)"><i data-lucide="wind" class="w-6 h-6 text-cyan-400"></i></div>
                 <h3 class="font-medium mb-2 text-sm">Ventilación</h3>
-                <p class="text-gray-400 text-xs leading-relaxed">El viento <strong class="text-white">acelera</strong> la evaporación al retirar el vapor de la superficie. Por eso soplas la sopa caliente.</p>
+                <p class="text-gray-400 text-xs leading-relaxed">El viento <strong class="text-white">acelera</strong> la evaporación al retirar el vapor. Por eso soplas la sopa.</p>
             </div>
             <div class="card rounded-2xl p-6 anim-up d5">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(34,197,94,.1)">
-                    <i data-lucide="snowflake" class="w-6 h-6 text-green-400"></i>
-                </div>
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style="background:rgba(34,197,94,.1)"><i data-lucide="snowflake" class="w-6 h-6 text-green-400"></i></div>
                 <h3 class="font-medium mb-2 text-sm">Enfriamiento</h3>
-                <p class="text-gray-400 text-xs leading-relaxed">Es <strong class="text-cyan-400">endotérmica</strong>: absorbe calor del entorno. Las moléculas que se van se llevan energía, enfriando lo que queda.</p>
+                <p class="text-gray-400 text-xs leading-relaxed">Es <strong class="text-cyan-400">endotérmica</strong>: absorbe calor. Las moléculas que se van se llevan energía.</p>
             </div>
         </div>
-
         <!-- Molecular Visualization -->
         <div class="card rounded-2xl p-8 mt-8 anim-up d6">
             <h3 class="font-oswald font-light text-xl mb-2">🔬 Visualización molecular</h3>
             <p class="text-gray-500 text-xs mb-6">Las moléculas naranjas son las más rápidas — ¡son las que escapan como vapor!</p>
             <div class="relative bg-black/40 rounded-xl overflow-hidden" style="height:180px;border:1px solid rgba(255,255,255,.05)">
-                <!-- Liquid region -->
                 <div class="absolute bottom-0 left-0 right-0 h-[55%]" style="background:linear-gradient(to top,rgba(59,130,246,.08),rgba(59,130,246,.03))">
                     <div class="absolute bottom-0 left-0 right-0 h-px" style="background:linear-gradient(to right,transparent,rgba(96,165,250,.3),transparent)"></div>
                 </div>
                 <div class="absolute bottom-2 left-3 text-[9px] text-blue-400/50 uppercase tracking-wide">Líquido</div>
                 <div class="absolute top-2 left-3 text-[9px] text-cyan-400/50 uppercase tracking-wide">Gas (aire)</div>
-                <!-- Surface line -->
                 <div class="absolute left-0 right-0 top-[45%] h-px" style="background:linear-gradient(to right,transparent,rgba(255,255,255,.1),transparent)"></div>
                 <div class="absolute left-1/2 -translate-x-1/2 top-[42%] text-[8px] text-gray-600">↑ superficie ↑</div>
-                <!-- Static slow molecules (blue) -->
                 <div class="molecule" style="left:15%;top:60%"></div>
                 <div class="molecule" style="left:30%;top:70%"></div>
                 <div class="molecule" style="left:50%;top:65%"></div>
@@ -275,15 +272,12 @@
                 <div class="molecule" style="left:25%;top:80%"></div>
                 <div class="molecule" style="left:60%;top:85%"></div>
                 <div class="molecule" style="left:40%;top:55%"></div>
-                <!-- Fast molecules near surface (orange) -->
                 <div class="molecule fast" style="left:20%;top:48%;animation:droplet 1.5s ease-in-out infinite"></div>
                 <div class="molecule fast" style="left:55%;top:46%;animation:droplet 1.8s ease-in-out infinite .3s"></div>
                 <div class="molecule fast" style="left:75%;top:50%;animation:droplet 1.3s ease-in-out infinite .6s"></div>
-                <!-- Escaping molecules (cyan, going up) -->
                 <div class="molecule escape" style="left:22%;top:30%;animation:steam 2.5s ease-out infinite 0s"></div>
                 <div class="molecule escape" style="left:58%;top:20%;animation:steam 2s ease-out infinite .8s"></div>
                 <div class="molecule escape" style="left:77%;top:25%;animation:steam 3s ease-out infinite 1.5s"></div>
-                <!-- Arrows showing escape -->
                 <svg class="absolute inset-0 w-full h-full pointer-events-none" style="opacity:.3">
                     <line x1="22%" y1="42%" x2="22%" y2="28%" stroke="#22D3EE" stroke-width="1" stroke-dasharray="3,3"/>
                     <line x1="58%" y1="42%" x2="58%" y2="18%" stroke="#22D3EE" stroke-width="1" stroke-dasharray="3,3"/>
@@ -303,52 +297,35 @@
         <div class="text-center mb-12 anim-up">
             <span class="text-[10px] font-semibold tracking-wide uppercase text-blue-400 mb-3 block">02 · Comparación</span>
             <h2 class="font-oswald font-light text-3xl md:text-4xl tracking-tight">Evaporación vs <span class="gradient-text-cool">Ebullición</span></h2>
-            <p class="text-gray-400 text-sm mt-3">Son diferentes aunque ambas convierten líquido en gas</p>
         </div>
         <div class="grid md:grid-cols-2 gap-6">
             <div class="card-warm rounded-2xl p-7 anim-up d1">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="text-3xl">💨</span>
-                    <div>
-                        <h3 class="font-medium text-orange-400">Evaporación</h3>
-                        <p class="text-[10px] text-gray-500">Superficie lenta y silenciosa</p>
-                    </div>
-                </div>
+                <div class="flex items-center gap-3 mb-4"><span class="text-3xl">💨</span><div><h3 class="font-medium text-orange-400">Evaporación</h3><p class="text-[10px] text-gray-500">Superficie, lenta y silenciosa</p></div></div>
                 <ul class="space-y-3 text-sm text-gray-300">
                     <li class="flex items-start gap-2"><span class="text-orange-400 mt-0.5">●</span>Solo en la <strong class="text-white">superficie</strong></li>
-                    <li class="flex items-start gap-2"><span class="text-orange-400 mt-0.5">●</span>A <strong class="text-white">cualquier temperatura</strong> (no necesita hervir)</li>
+                    <li class="flex items-start gap-2"><span class="text-orange-400 mt-0.5">●</span>A <strong class="text-white">cualquier temperatura</strong></li>
                     <li class="flex items-start gap-2"><span class="text-orange-400 mt-0.5">●</span><strong class="text-white">Lenta</strong> y silenciosa</li>
                     <li class="flex items-start gap-2"><span class="text-orange-400 mt-0.5">●</span>Las moléculas más rápidas escapan</li>
                     <li class="flex items-start gap-2"><span class="text-orange-400 mt-0.5">●</span><strong class="text-cyan-400">Enfría</strong> el líquido restante</li>
                 </ul>
-                <div class="mt-4 p-3 rounded-lg text-xs" style="background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.1)">
-                    <span class="text-orange-300/80">🌿 Ejemplo: Ropa secándose al aire, sudor, charco después de la lluvia</span>
-                </div>
+                <div class="mt-4 p-3 rounded-lg text-xs" style="background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.1)"><span class="text-orange-300/80">🌿 Ropa secándose, sudor, charco después de la lluvia</span></div>
             </div>
             <div class="card-cool rounded-2xl p-7 anim-up d2">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="text-3xl">🔥</span>
-                    <div>
-                        <h3 class="font-medium text-cyan-400">Ebullición</h3>
-                        <p class="text-[10px] text-gray-500">Todo el líquido con burbujas</p>
-                    </div>
-                </div>
+                <div class="flex items-center gap-3 mb-4"><span class="text-3xl">🔥</span><div><h3 class="font-medium text-cyan-400">Ebullición</h3><p class="text-[10px] text-gray-500">Todo el líquido con burbujas</p></div></div>
                 <ul class="space-y-3 text-sm text-gray-300">
-                    <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">●</span>En <strong class="text-white">todo el líquido</strong> (masa)</li>
-                    <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">●</span>A una <strong class="text-white">temperatura fija</strong> (punto de ebullición)</li>
-                    <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">●</span><strong class="text-white">Rápida</strong> con burbujas y ruido</li>
+                    <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">●</span>En <strong class="text-white">todo el líquido</strong></li>
+                    <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">●</span>A una <strong class="text-white">temperatura fija</strong></li>
+                    <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">●</span><strong class="text-white">Rápida</strong> con burbujas</li>
                     <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">●</span>Todas las moléculas se vaporizan</li>
                     <li class="flex items-start gap-2"><span class="text-cyan-400 mt-0.5">●</span>La temperatura <strong class="text-white">no sube</strong> mientras hierve</li>
                 </ul>
-                <div class="mt-4 p-3 rounded-lg text-xs" style="background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.1)">
-                    <span class="text-cyan-300/80">🍳 Ejemplo: Hervir agua para pasta, cocinar al vapor</span>
-                </div>
+                <div class="mt-4 p-3 rounded-lg text-xs" style="background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.1)"><span class="text-cyan-300/80">🍳 Hervir agua para pasta, cocinar al vapor</span></div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Factores que afectan -->
+<!-- Factores -->
 <section class="relative py-16 px-4">
     <div class="max-w-5xl mx-auto">
         <div class="text-center mb-12 anim-up">
@@ -357,33 +334,23 @@
         </div>
         <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div class="card rounded-2xl p-5 text-center anim-up d1 hover:scale-105 transition-transform">
-                <div class="text-3xl mb-3">🌡️</div>
-                <h4 class="text-sm font-medium mb-1">Más temperatura</h4>
-                <p class="text-[11px] text-gray-500">Más calor = moléculas más rápidas = más escapan</p>
+                <div class="text-3xl mb-3">🌡️</div><h4 class="text-sm font-medium mb-1">Más temperatura</h4><p class="text-[11px] text-gray-500">Más calor = moléculas más rápidas</p>
                 <div class="mt-2 text-[10px] px-2 py-0.5 rounded-full inline-block bg-orange-500/10 text-orange-400">+ velocidad</div>
             </div>
             <div class="card rounded-2xl p-5 text-center anim-up d2 hover:scale-105 transition-transform">
-                <div class="text-3xl mb-3">💨</div>
-                <h4 class="text-sm font-medium mb-1">Más viento</h4>
-                <p class="text-[11px] text-gray-500">Retira el vapor de la superficie, permitiendo más evaporación</p>
+                <div class="text-3xl mb-3">💨</div><h4 class="text-sm font-medium mb-1">Más viento</h4><p class="text-[11px] text-gray-500">Retira el vapor de la superficie</p>
                 <div class="mt-2 text-[10px] px-2 py-0.5 rounded-full inline-block bg-blue-500/10 text-blue-400">+ renovación</div>
             </div>
             <div class="card rounded-2xl p-5 text-center anim-up d3 hover:scale-105 transition-transform">
-                <div class="text-3xl mb-3">📐</div>
-                <h4 class="text-sm font-medium mb-1">Más superficie</h4>
-                <p class="text-[11px] text-gray-500">Más área expuesta = más moléculas pueden escapar</p>
+                <div class="text-3xl mb-3">📐</div><h4 class="text-sm font-medium mb-1">Más superficie</h4><p class="text-[11px] text-gray-500">Más área expuesta = más escapes</p>
                 <div class="mt-2 text-[10px] px-2 py-0.5 rounded-full inline-block bg-purple-500/10 text-purple-400">+ área</div>
             </div>
             <div class="card rounded-2xl p-5 text-center anim-up d4 hover:scale-105 transition-transform">
-                <div class="text-3xl mb-3">💧</div>
-                <h4 class="text-sm font-medium mb-1">Menos humedad</h4>
-                <p class="text-[11px] text-gray-500">Aire seco absorbe más vapor que aire húmedo</p>
+                <div class="text-3xl mb-3">💧</div><h4 class="text-sm font-medium mb-1">Menos humedad</h4><p class="text-[11px] text-gray-500">Aire seco absorbe más vapor</p>
                 <div class="mt-2 text-[10px] px-2 py-0.5 rounded-full inline-block bg-green-500/10 text-green-400">+ capacidad</div>
             </div>
             <div class="card rounded-2xl p-5 text-center anim-up d5 hover:scale-105 transition-transform">
-                <div class="text-3xl mb-3">⚗️</div>
-                <h4 class="text-sm font-medium mb-1">Tipo de líquido</h4>
-                <p class="text-[11px] text-gray-500">El alcohol se evapora más rápido que el agua</p>
+                <div class="text-3xl mb-3">⚗️</div><h4 class="text-sm font-medium mb-1">Tipo de líquido</h4><p class="text-[11px] text-gray-500">El alcohol se evapora más rápido</p>
                 <div class="mt-2 text-[10px] px-2 py-0.5 rounded-full inline-block bg-red-500/10 text-red-400">+ volatilidad</div>
             </div>
         </div>
@@ -396,189 +363,76 @@
         <div class="text-center mb-16 anim-up">
             <span class="text-[10px] font-semibold tracking-wide uppercase text-purple-400 mb-3 block">04 · Experimento</span>
             <h2 class="font-oswald font-light text-3xl md:text-5xl tracking-tight">A. <span class="gradient-text">Evaporación</span></h2>
-            <p class="text-gray-400 text-sm mt-4">Compara la evaporación del alcohol y del agua con tus propios sentidos</p>
+            <p class="text-gray-400 text-sm mt-4">Compara la evaporación del alcohol y del agua</p>
         </div>
-
-        <!-- Materials -->
         <div class="card rounded-2xl p-8 mb-6 anim-up d1">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="sn sn-cool text-sm">🧪</div>
-                <h3 class="font-oswald font-light text-xl">Materiales necesarios</h3>
-            </div>
+            <div class="flex items-center gap-3 mb-5"><div class="sn sn-cool text-sm">🧪</div><h3 class="font-oswald font-light text-xl">Materiales necesarios</h3></div>
             <div class="grid sm:grid-cols-2 gap-4">
-                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background:rgba(239,68,68,.1)">🧴</div>
-                    <div>
-                        <p class="text-sm font-medium">Alcohol</p>
-                        <p class="text-[11px] text-gray-500">5 mL (alcohol etílico)</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background:rgba(59,130,246,.1)">💧</div>
-                    <div>
-                        <p class="text-sm font-medium">Agua</p>
-                        <p class="text-[11px] text-gray-500">5 mL (a temperatura ambiente)</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background:rgba(168,85,247,.1)">🪟</div>
-                    <div>
-                        <p class="text-sm font-medium">Gotero o pipeta</p>
-                        <p class="text-[11px] text-gray-500">Para medir las gotas</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                    <div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background:rgba(34,197,94,.1)">🤚</div>
-                    <div>
-                        <p class="text-sm font-medium">El dorso de tu mano</p>
-                        <p class="text-[11px] text-gray-500">¡Eres parte del experimento!</p>
-                    </div>
-                </div>
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5"><div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background:rgba(239,68,68,.1)">🧴</div><div><p class="text-sm font-medium">Alcohol</p><p class="text-[11px] text-gray-500">5 mL (alcohol etílico)</p></div></div>
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5"><div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background:rgba(59,130,246,.1)">💧</div><div><p class="text-sm font-medium">Agua</p><p class="text-[11px] text-gray-500">5 mL (temperatura ambiente)</p></div></div>
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5"><div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background:rgba(168,85,247,.1)">🪟</div><div><p class="text-sm font-medium">Gotero o pipeta</p><p class="text-[11px] text-gray-500">Para medir las gotas</p></div></div>
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5"><div class="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style="background:rgba(34,197,94,.1)">🤚</div><div><p class="text-sm font-medium">El dorso de tu mano</p><p class="text-[11px] text-gray-500">¡Eres parte del experimento!</p></div></div>
             </div>
         </div>
-
-        <!-- Steps -->
         <div class="card rounded-2xl p-8 mb-6 anim-up d2">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="sn text-sm">📝</div>
-                <h3 class="font-oswald font-light text-xl">Procedimiento</h3>
-            </div>
+            <div class="flex items-center gap-3 mb-6"><div class="sn text-sm">📝</div><h3 class="font-oswald font-light text-xl">Procedimiento</h3></div>
             <div class="space-y-5">
-                <div class="flex items-start gap-4">
-                    <div class="sn text-sm flex-shrink-0">1</div>
-                    <div>
-                        <h4 class="text-sm font-medium mb-1">Aplica una gota de alcohol</h4>
-                        <p class="text-gray-400 text-sm">Con el gotero, coloca <strong class="text-red-400">1 o 2 gotas de alcohol</strong> sobre el dorso de una de tus manos. No te la frotes, solo déjala ahí.</p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-4">
-                    <div class="sn text-sm flex-shrink-0">2</div>
-                    <div>
-                        <h4 class="text-sm font-medium mb-1">Aplica una gota de agua</h4>
-                        <p class="text-gray-400 text-sm">En la <strong class="text-white">otra mano</strong>, coloca la misma cantidad de <strong class="text-blue-400">agua</strong>. También sin frotar.</p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-4">
-                    <div class="sn text-sm flex-shrink-0">3</div>
-                    <div>
-                        <h4 class="text-sm font-medium mb-1">Observa y siente</h4>
-                        <p class="text-gray-400 text-sm">Espera unos segundos. ¿Qué sientes en cada mano? ¿Cuál se seca primero? <strong class="text-white">¡Presta atención a la temperatura!</strong></p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-4">
-                    <div class="sn text-sm flex-shrink-0">4</div>
-                    <div>
-                        <h4 class="text-sm font-medium mb-1">Analiza</h4>
-                        <p class="text-gray-400 text-sm">Contesta: ¿En cuál mano sentiste más frío? ¿Cuál líquido se evaporó primero? ¿Por qué?</p>
-                    </div>
-                </div>
+                <div class="flex items-start gap-4"><div class="sn text-sm flex-shrink-0">1</div><div><h4 class="text-sm font-medium mb-1">Aplica una gota de alcohol</h4><p class="text-gray-400 text-sm">Coloca <strong class="text-red-400">1 o 2 gotas de alcohol</strong> sobre el dorso de una mano. No la frotes.</p></div></div>
+                <div class="flex items-start gap-4"><div class="sn text-sm flex-shrink-0">2</div><div><h4 class="text-sm font-medium mb-1">Aplica una gota de agua</h4><p class="text-gray-400 text-sm">En la <strong class="text-white">otra mano</strong>, coloca la misma cantidad de <strong class="text-blue-400">agua</strong>.</p></div></div>
+                <div class="flex items-start gap-4"><div class="sn text-sm flex-shrink-0">3</div><div><h4 class="text-sm font-medium mb-1">Observa y siente</h4><p class="text-gray-400 text-sm">¿Qué sientes en cada mano? ¿Cuál se seca primero? <strong class="text-white">¡Presta atención a la temperatura!</strong></p></div></div>
+                <div class="flex items-start gap-4"><div class="sn text-sm flex-shrink-0">4</div><div><h4 class="text-sm font-medium mb-1">Analiza</h4><p class="text-gray-400 text-sm">¿En cuál mano sentiste más frío? ¿Cuál líquido se evaporó primero? ¿Por qué?</p></div></div>
             </div>
         </div>
-
-        <!-- Interactive Simulation -->
+        <!-- Simulation -->
         <div class="card rounded-2xl p-8 mb-6 anim-up d3">
             <h3 class="font-oswald font-light text-xl mb-2">⚗️ Simulación del experimento</h3>
             <p class="text-gray-500 text-xs mb-6">Haz clic en "Iniciar" para ver la evaporación en tiempo real</p>
-            
             <div class="grid md:grid-cols-2 gap-6">
-                <!-- Alcohol -->
                 <div class="relative bg-black/40 rounded-xl p-5" style="border:1px solid rgba(239,68,68,.1)">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="text-lg">🧴</span>
-                        <span class="text-sm font-medium text-red-400">Alcohol</span>
-                        <span class="text-[10px] text-gray-600 ml-auto font-mono" id="alcTime">0.0s</span>
-                    </div>
+                    <div class="flex items-center gap-2 mb-3"><span class="text-lg">🧴</span><span class="text-sm font-medium text-red-400">Alcohol</span><span class="text-[10px] text-gray-600 ml-auto font-mono" id="alcTime">0.0s</span></div>
                     <div class="relative h-32 rounded-lg overflow-hidden mb-3" style="background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.08)">
-                        <!-- Drop visualization -->
                         <div class="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full transition-all duration-300" id="alcDrop" style="width:30px;height:15px;background:radial-gradient(ellipse,rgba(239,68,68,.4),rgba(239,68,68,.1));bottom:4px"></div>
-                        <!-- Steam -->
                         <div id="alcSteam" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 opacity-0 transition-opacity duration-500">
-                            <div class="steam-particle" style="left:0;animation-delay:0s"></div>
-                            <div class="steam-particle" style="left:10px;animation-delay:.3s"></div>
-                            <div class="steam-particle" style="left:-10px;animation-delay:.6s"></div>
+                            <div class="steam-particle" style="left:0;animation-delay:0s"></div><div class="steam-particle" style="left:10px;animation-delay:.3s"></div><div class="steam-particle" style="left:-10px;animation-delay:.6s"></div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] text-gray-500">Nivel:</span>
-                        <div class="flex-1 h-2 rounded-full bg-white/5 overflow-hidden">
-                            <div class="h-full rounded-full transition-all duration-200" id="alcBar" style="width:100%;background:linear-gradient(to right,#EF4444,#F97316)"></div>
-                        </div>
-                        <span class="text-[10px] text-red-400 font-mono" id="alcPct">100%</span>
-                    </div>
-                    <div class="mt-2 text-center">
-                        <span class="text-[10px] text-gray-600" id="alcStatus">Esperando...</span>
-                    </div>
+                    <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">Nivel:</span><div class="flex-1 h-2 rounded-full bg-white/5 overflow-hidden"><div class="h-full rounded-full transition-all duration-200" id="alcBar" style="width:100%;background:linear-gradient(to right,#EF4444,#F97316)"></div></div><span class="text-[10px] text-red-400 font-mono" id="alcPct">100%</span></div>
+                    <div class="mt-2 text-center"><span class="text-[10px] text-gray-600" id="alcStatus">Esperando...</span></div>
                 </div>
-
-                <!-- Water -->
                 <div class="relative bg-black/40 rounded-xl p-5" style="border:1px solid rgba(59,130,246,.1)">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="text-lg">💧</span>
-                        <span class="text-sm font-medium text-blue-400">Agua</span>
-                        <span class="text-[10px] text-gray-600 ml-auto font-mono" id="watTime">0.0s</span>
-                    </div>
+                    <div class="flex items-center gap-2 mb-3"><span class="text-lg">💧</span><span class="text-sm font-medium text-blue-400">Agua</span><span class="text-[10px] text-gray-600 ml-auto font-mono" id="watTime">0.0s</span></div>
                     <div class="relative h-32 rounded-lg overflow-hidden mb-3" style="background:rgba(59,130,246,.03);border:1px solid rgba(59,130,246,.08)">
                         <div class="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full transition-all duration-300" id="watDrop" style="width:30px;height:15px;background:radial-gradient(ellipse,rgba(59,130,246,.4),rgba(59,130,246,.1));bottom:4px"></div>
                         <div id="watSteam" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 opacity-0 transition-opacity duration-500">
-                            <div class="steam-particle" style="left:0;animation-delay:0s"></div>
-                            <div class="steam-particle" style="left:10px;animation-delay:.3s"></div>
-                            <div class="steam-particle" style="left:-10px;animation-delay:.6s"></div>
+                            <div class="steam-particle" style="left:0;animation-delay:0s"></div><div class="steam-particle" style="left:10px;animation-delay:.3s"></div><div class="steam-particle" style="left:-10px;animation-delay:.6s"></div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] text-gray-500">Nivel:</span>
-                        <div class="flex-1 h-2 rounded-full bg-white/5 overflow-hidden">
-                            <div class="h-full rounded-full transition-all duration-200" id="watBar" style="width:100%;background:linear-gradient(to right,#3B82F6,#22D3EE)"></div>
-                        </div>
-                        <span class="text-[10px] text-blue-400 font-mono" id="watPct">100%</span>
-                    </div>
-                    <div class="mt-2 text-center">
-                        <span class="text-[10px] text-gray-600" id="watStatus">Esperando...</span>
-                    </div>
+                    <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">Nivel:</span><div class="flex-1 h-2 rounded-full bg-white/5 overflow-hidden"><div class="h-full rounded-full transition-all duration-200" id="watBar" style="width:100%;background:linear-gradient(to right,#3B82F6,#22D3EE)"></div></div><span class="text-[10px] text-blue-400 font-mono" id="watPct">100%</span></div>
+                    <div class="mt-2 text-center"><span class="text-[10px] text-gray-600" id="watStatus">Esperando...</span></div>
                 </div>
             </div>
-
             <div class="flex justify-center gap-4 mt-6">
                 <button class="btn-warm" id="startSim" onclick="startSimulation()"><i data-lucide="play" class="w-4 h-4"></i>Iniciar experimento</button>
                 <button class="btn2" onclick="resetSimulation()"><i data-lucide="rotate-ccw" class="w-4 h-4"></i>Reiniciar</button>
             </div>
-
-            <!-- Result -->
             <div class="mt-6 p-5 rounded-xl hidden" id="simResult" style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.15)">
                 <h4 class="text-sm font-medium text-green-400 mb-2">📊 Resultado de la simulación</h4>
                 <p class="text-sm text-gray-300 mb-2" id="simText"></p>
                 <p class="text-xs text-green-300/80" id="simExplain"></p>
             </div>
         </div>
-
         <!-- Ojo al dato -->
         <div class="card-warm rounded-2xl p-8 anim-up d4">
             <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(234,179,8,.1)">
-                    <i data-lucide="eye" class="w-6 h-6 text-yellow-400"></i>
-                </div>
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(234,179,8,.1)"><i data-lucide="eye" class="w-6 h-6 text-yellow-400"></i></div>
                 <div>
                     <h3 class="font-medium text-yellow-400 mb-2">Ojo al dato...</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-3">
-                        En termodinámica, la <strong class="text-white">entalpía de vaporización</strong> es la energía necesaria 
-                        para convertir 1 kg de líquido en gas a temperatura constante.
-                    </p>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-3">La <strong class="text-white">entalpía de vaporización</strong> es la energía para convertir 1 kg de líquido en gas a temperatura constante.</p>
                     <div class="grid sm:grid-cols-2 gap-3">
-                        <div class="p-3 rounded-lg" style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.1)">
-                            <p class="text-xs text-red-400 font-medium mb-1">Alcohol etílico</p>
-                            <p class="text-lg font-oswald text-red-400">855 kJ/kg</p>
-                            <p class="text-[10px] text-gray-500">Necesita MENOS energía → se evapora más rápido</p>
-                        </div>
-                        <div class="p-3 rounded-lg" style="background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.1)">
-                            <p class="text-xs text-blue-400 font-medium mb-1">Agua</p>
-                            <p class="text-lg font-oswald text-blue-400">2,260 kJ/kg</p>
-                            <p class="text-[10px] text-gray-500">Necesita MÁS energía → se evapora más lento</p>
-                        </div>
+                        <div class="p-3 rounded-lg" style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.1)"><p class="text-xs text-red-400 font-medium mb-1">Alcohol etílico</p><p class="text-lg font-oswald text-red-400">855 kJ/kg</p><p class="text-[10px] text-gray-500">MENOS energía → se evapora más rápido</p></div>
+                        <div class="p-3 rounded-lg" style="background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.1)"><p class="text-xs text-blue-400 font-medium mb-1">Agua</p><p class="text-lg font-oswald text-blue-400">2,260 kJ/kg</p><p class="text-[10px] text-gray-500">MÁS energía → se evapora más lento</p></div>
                     </div>
-                    <p class="text-xs text-yellow-300/70 mt-3">
-                        💡 Por eso el alcohol se siente <strong>más frío</strong> al evaporarse: absorbe calor rápidamente 
-                        de tu piel, pero como su entalpía es menor, se evapora más rápido que el agua.
-                    </p>
+                    <p class="text-xs text-yellow-300/70 mt-3">💡 Por eso el alcohol se siente <strong>más frío</strong>: absorbe calor rápidamente de tu piel con menor entalpía.</p>
                 </div>
             </div>
         </div>
@@ -592,17 +446,12 @@
             <span class="text-[10px] font-semibold tracking-wide uppercase text-red-400 mb-3 block">05 · Practica</span>
             <h2 class="font-oswald font-light text-3xl md:text-5xl tracking-tight">Ejercicios <span class="gradient-text">Prácticos</span></h2>
         </div>
-
         <div class="max-w-2xl mx-auto mb-10 anim-up d1">
             <div class="card rounded-2xl p-5">
-                <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center gap-3"><i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i><span class="text-sm font-medium">Tu Puntaje</span></div>
-                    <span class="text-sm font-mono" id="sT">0 / 6 correctas</span>
-                </div>
+                <div class="flex items-center justify-between mb-3"><div class="flex items-center gap-3"><i data-lucide="trophy" class="w-5 h-5 text-yellow-400"></i><span class="text-sm font-medium">Tu Puntaje</span></div><span class="text-sm font-mono" id="sT">0 / 6 correctas</span></div>
                 <div class="sb"><div class="sf" id="sB" style="width:0%"></div></div>
             </div>
         </div>
-
         <div class="space-y-6 max-w-3xl mx-auto">
             <!-- E1 -->
             <div class="card rounded-2xl p-6 anim-up d2 ec" data-a="superficie">
@@ -610,29 +459,28 @@
                     <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 font-medium">Básico</span></div>
                     <p class="text-sm mb-4">¿En qué parte del líquido ocurre la evaporación?</p>
                     <div class="flex items-center gap-3 flex-wrap">
-                        <select class="inp text-left text-sm" id="i1" style="width:200px;appearance:auto">
-                            <option value="">Selecciona...</option>
-                            <option value="superficie">En la superficie</option>
-                            <option value="fondo">En el fondo</option>
-                            <option value="todo">En todo el líquido</option>
-                            <option value="nada">No ocurre naturalmente</option>
+                        <select class="sel" id="i1" style="width:240px">
+                            <option value="">Selecciona una opción...</option>
+                            <option value="superficie">En la superficie del líquido</option>
+                            <option value="fondo">En el fondo del recipiente</option>
+                            <option value="todo">En todo el líquido a la vez</option>
+                            <option value="nada">No ocurre de forma natural</option>
                         </select>
                         <button class="btn text-xs py-2 px-4" onclick="chkSel(1,'superficie')"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button>
                         <span class="text-xs hidden" id="f1"></span>
                     </div>
                 </div></div>
             </div>
-
             <!-- E2 -->
             <div class="card rounded-2xl p-6 anim-up d3 ec" data-a="endotermico">
                 <div class="flex items-start gap-4"><div class="sn text-sm">2</div><div class="flex-1">
                     <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 font-medium">Básico</span></div>
                     <p class="text-sm mb-4">¿La evaporación es un proceso endotérmico o exotérmico?</p>
                     <div class="flex items-center gap-3 flex-wrap">
-                        <select class="inp text-left text-sm" id="i2" style="width:200px;appearance:auto">
-                            <option value="">Selecciona...</option>
-                            <option value="endotermico">Endotérmico (absorbe calor)</option>
-                            <option value="exotermico">Exotérmico (libera calor)</option>
+                        <select class="sel" id="i2" style="width:280px">
+                            <option value="">Selecciona una opción...</option>
+                            <option value="endotermico">Endotérmico — absorbe calor del entorno</option>
+                            <option value="exotermico">Exotérmico — libera calor al entorno</option>
                             <option value="ninguno">Ninguno de los dos</option>
                         </select>
                         <button class="btn text-xs py-2 px-4" onclick="chkSel(2,'endotermico')"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button>
@@ -640,33 +488,31 @@
                     </div>
                 </div></div>
             </div>
-
             <!-- E3 -->
             <div class="card rounded-2xl p-6 anim-up d4 ec" data-a="alcohol">
                 <div class="flex items-start gap-4"><div class="sn text-sm">3</div><div class="flex-1">
                     <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 font-medium">Intermedio</span></div>
                     <p class="text-sm mb-4">En el experimento, ¿cuál líquido se evapora primero y por qué se siente más frío?</p>
                     <div class="flex items-center gap-3 flex-wrap">
-                        <select class="inp text-left text-sm" id="i3" style="width:220px;appearance:auto">
-                            <option value="">Selecciona...</option>
-                            <option value="alcohol">El alcohol (menor entalpía de vaporización)</option>
-                            <option value="agua">El agua (mayor entalpía de vaporización)</option>
-                            <option value="ambos">Ambos al mismo tiempo</option>
+                        <select class="sel" id="i3" style="width:300px">
+                            <option value="">Selecciona una opción...</option>
+                            <option value="alcohol">El alcohol — tiene menor entalpía de vaporización</option>
+                            <option value="agua">El agua — tiene mayor entalpía de vaporización</option>
+                            <option value="ambos">Ambos se evaporan al mismo tiempo</option>
                         </select>
                         <button class="btn text-xs py-2 px-4" onclick="chkSel(3,'alcohol')"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button>
                         <span class="text-xs hidden" id="f3"></span>
                     </div>
                 </div></div>
             </div>
-
             <!-- E4 -->
             <div class="card rounded-2xl p-6 anim-up d5 ec" data-a="viento">
                 <div class="flex items-start gap-4"><div class="sn text-sm">4</div><div class="flex-1">
                     <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 font-medium">Intermedio</span></div>
                     <p class="text-sm mb-4">¿Por qué soplamos la sopa caliente para enfriarla?</p>
                     <div class="flex items-center gap-3 flex-wrap">
-                        <select class="inp text-left text-sm" id="i4" style="width:280px;appearance:auto">
-                            <option value="">Selecciona...</option>
+                        <select class="sel" id="i4" style="width:320px">
+                            <option value="">Selecciona una opción...</option>
                             <option value="viento">El viento retira el vapor y acelera la evaporación, que enfría</option>
                             <option value="frio">El aire de nuestra boca es más frío que la sopa</option>
                             <option value="presion">Reducimos la presión atmosférica sobre la sopa</option>
@@ -676,33 +522,29 @@
                     </div>
                 </div></div>
             </div>
-
             <!-- E5 -->
             <div class="card rounded-2xl p-6 anim-up d6 ec" data-a="mas rapida">
                 <div class="flex items-start gap-4"><div class="sn text-sm">5</div><div class="flex-1">
                     <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 font-medium">Avanzado</span></div>
-                    <p class="text-sm mb-4">Si tienes un vaso de agua lleno y otro con la mitad, ¿cuál se evapora más rápido (misma temperatura y condiciones)?</p>
+                    <p class="text-sm mb-4">Si tienes un vaso lleno y otro con la mitad de agua (misma temperatura), ¿cuál se evapora más rápido?</p>
                     <div class="flex items-center gap-3 flex-wrap">
-                        <select class="inp text-left text-sm" id="i5" style="width:240px;appearance:auto">
-                            <option value="">Selecciona...</option>
+                        <select class="sel" id="i5" style="width:300px">
+                            <option value="">Selecciona una opción...</option>
                             <option value="mas rapida">El que tiene menos agua (menos masa que evaporar)</option>
-                            <option value="igual">Ambos se evaporan igual</option>
-                            <option value="lleno">El vaso lleno (más superficie)</option>
+                            <option value="igual">Ambos se evaporan a la misma velocidad</option>
+                            <option value="lleno">El vaso lleno (más superficie expuesta)</option>
                         </select>
                         <button class="btn text-xs py-2 px-4" onclick="chkSel(5,'mas rapida')"><i data-lucide="check" class="w-3 h-3"></i> Verificar</button>
                         <span class="text-xs hidden" id="f5"></span>
                     </div>
                 </div></div>
             </div>
-
             <!-- E6 -->
-            <div class="card rounded-2xl p-6 anim-up d7 ec" data-a="2260">
+            <div class="card rounded-2xl p-6 anim-up d7 ec" data-a="1130">
                 <div class="flex items-start gap-4"><div class="sn text-sm">6</div><div class="flex-1">
                     <div class="flex items-center gap-2 mb-3"><span class="text-[10px] px-2 py-0.5 rounded-md bg-red-500/10 text-red-400 font-medium">Desafío</span><span class="text-[10px] text-gray-600">Cálculo</span></div>
-                    <p class="text-sm mb-4">La entalpía de vaporización del agua es 2,260 kJ/kg. ¿Cuánta energía se necesita para evaporar 0.5 kg de agua?</p>
-                    <div class="p-3 rounded-lg mb-3" style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05)">
-                        <p class="text-xs text-gray-500 font-mono">Q = m × Lv = 0.5 × 2,260 = ? kJ</p>
-                    </div>
+                    <p class="text-sm mb-4">La entalpía de vaporización del agua es 2,260 kJ/kg. ¿Cuánta energía se necesita para evaporar 0.5 kg?</p>
+                    <div class="p-3 rounded-lg mb-3" style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05)"><p class="text-xs text-gray-500 font-mono">Q = m × Lv = 0.5 × 2,260 = ? kJ</p></div>
                     <div class="flex items-center gap-3 flex-wrap">
                         <span class="text-sm text-gray-500">Q =</span>
                         <input type="number" class="inp" id="i6">
@@ -713,7 +555,6 @@
                 </div></div>
             </div>
         </div>
-
         <div class="flex justify-center gap-4 mt-10 anim-up d7">
             <button class="btn2" onclick="rst()"><i data-lucide="rotate-ccw" class="w-4 h-4 inline mr-1"></i> Reiniciar</button>
         </div>
@@ -729,28 +570,12 @@
                 <span class="text-5xl mb-6 block">💦</span>
                 <h2 class="font-oswald font-light text-3xl md:text-4xl tracking-tight mb-6">Resumen <span class="gradient-text-warm">Rápido</span></h2>
                 <div class="grid sm:grid-cols-3 gap-6 max-w-2xl mx-auto text-left mb-8">
-                    <div class="p-4 rounded-xl bg-white/5">
-                        <div class="text-2xl mb-2">💨</div>
-                        <p class="text-sm font-medium mb-1">¿Qué es?</p>
-                        <p class="text-xs text-gray-400">Líquido → Gas en la superficie, a cualquier temperatura</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-white/5">
-                        <div class="text-2xl mb-2">❄️</div>
-                        <p class="text-sm font-medium mb-1">Efecto</p>
-                        <p class="text-xs text-gray-400">Endotérmico: absorbe calor → enfría el entorno</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-white/5">
-                        <div class="text-2xl mb-2">⚡</div>
-                        <p class="text-sm font-medium mb-1">Factores</p>
-                        <p class="text-xs text-gray-400">Temperatura, viento, superficie, humedad, tipo de líquido</p>
-                    </div>
+                    <div class="p-4 rounded-xl bg-white/5"><div class="text-2xl mb-2">💨</div><p class="text-sm font-medium mb-1">¿Qué es?</p><p class="text-xs text-gray-400">Líquido → Gas en la superficie, a cualquier temperatura</p></div>
+                    <div class="p-4 rounded-xl bg-white/5"><div class="text-2xl mb-2">❄️</div><p class="text-sm font-medium mb-1">Efecto</p><p class="text-xs text-gray-400">Endotérmico: absorbe calor → enfría el entorno</p></div>
+                    <div class="p-4 rounded-xl bg-white/5"><div class="text-2xl mb-2">⚡</div><p class="text-sm font-medium mb-1">Factores</p><p class="text-xs text-gray-400">Temperatura, viento, superficie, humedad, tipo de líquido</p></div>
                 </div>
                 <div class="p-4 rounded-xl max-w-lg mx-auto" style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.1)">
-                    <p class="text-sm text-green-300/80">
-                        ✨ <strong>Idea clave:</strong> El elefante, el sudor humano y el alcohol en tu piel 
-                        comparten el mismo secreto: la evaporación <strong>roba calor</strong> para convertir líquido en gas, 
-                        y ese calor robado es lo que te enfría. ¡La termodinámica está en todas partes! 🌍
-                    </p>
+                    <p class="text-sm text-green-300/80">✨ <strong>Idea clave:</strong> El elefante, el sudor y el alcohol comparten el mismo secreto: la evaporación <strong>roba calor</strong> para convertir líquido en gas. ¡La termodinámica está en todas partes! 🌍</p>
                 </div>
             </div>
         </div>
@@ -771,214 +596,96 @@
 lucide.createIcons();
 
 /* ============ SIMULATION ============ */
-var simInterval = null;
-var simRunning = false;
-// Alcohol: faster evaporation (~5s), Water: slower (~12s)
-var alcLevel = 100, watLevel = 100;
-var alcDone = false, watDone = false;
-var alcEndTime = 0, watEndTime = 0;
-var simStart = 0;
+var simInterval=null,simRunning=false,alcLevel=100,watLevel=100,alcDone=false,watDone=false,alcEndTime=0,watEndTime=0,simStart=0;
 
-function startSimulation() {
-    if (simRunning) return;
-    simRunning = true;
-    simStart = Date.now();
-    alcLevel = 100; watLevel = 100; alcDone = false; watDone = false;
+function startSimulation(){
+    if(simRunning)return;simRunning=true;simStart=Date.now();
+    alcLevel=100;watLevel=100;alcDone=false;watDone=false;
     document.getElementById('simResult').classList.add('hidden');
-    document.getElementById('alcSteam').style.opacity = '1';
-    document.getElementById('watSteam').style.opacity = '1';
-    document.getElementById('alcStatus').textContent = 'Evaporando...';
-    document.getElementById('watStatus').textContent = 'Evaporando...';
-    document.getElementById('startSim').disabled = true;
-    document.getElementById('startSim').style.opacity = '.5';
-
-    simInterval = setInterval(function() {
-        var elapsed = (Date.now() - simStart) / 1000;
-        
-        // Alcohol: ~5 seconds to evaporate
-        if (!alcDone) {
-            alcLevel = Math.max(0, 100 - (elapsed / 5) * 100);
-            document.getElementById('alcTime').textContent = elapsed.toFixed(1) + 's';
-            updateSimVisuals('alc', alcLevel);
-            if (alcLevel <= 0) {
-                alcDone = true;
-                alcEndTime = elapsed;
-                document.getElementById('alcStatus').innerHTML = '<span class="text-red-400">✅ Completado en ' + elapsed.toFixed(1) + 's</span>';
-                document.getElementById('alcSteam').style.opacity = '0';
-            }
-        }
-
-        // Water: ~12 seconds to evaporate
-        if (!watDone) {
-            watLevel = Math.max(0, 100 - (elapsed / 12) * 100);
-            document.getElementById('watTime').textContent = elapsed.toFixed(1) + 's';
-            updateSimVisuals('wat', watLevel);
-            if (watLevel <= 0) {
-                watDone = true;
-                watEndTime = elapsed;
-                document.getElementById('watStatus').innerHTML = '<span class="text-blue-400">✅ Completado en ' + elapsed.toFixed(1) + 's</span>';
-                document.getElementById('watSteam').style.opacity = '0';
-            }
-        }
-
-        // Both done
-        if (alcDone && watDone) {
-            clearInterval(simInterval);
-            simRunning = false;
-            document.getElementById('startSim').disabled = false;
-            document.getElementById('startSim').style.opacity = '1';
-            showSimResult();
-        }
-    }, 50);
+    document.getElementById('alcSteam').style.opacity='1';
+    document.getElementById('watSteam').style.opacity='1';
+    document.getElementById('alcStatus').textContent='Evaporando...';
+    document.getElementById('watStatus').textContent='Evaporando...';
+    document.getElementById('startSim').disabled=true;
+    document.getElementById('startSim').style.opacity='.5';
+    simInterval=setInterval(function(){
+        var elapsed=(Date.now()-simStart)/1000;
+        if(!alcDone){alcLevel=Math.max(0,100-(elapsed/5)*100);document.getElementById('alcTime').textContent=elapsed.toFixed(1)+'s';updVis('alc',alcLevel);if(alcLevel<=0){alcDone=true;alcEndTime=elapsed;document.getElementById('alcStatus').innerHTML='<span class="text-red-400">✅ '+elapsed.toFixed(1)+'s</span>';document.getElementById('alcSteam').style.opacity='0';}}
+        if(!watDone){watLevel=Math.max(0,100-(elapsed/12)*100);document.getElementById('watTime').textContent=elapsed.toFixed(1)+'s';updVis('wat',watLevel);if(watLevel<=0){watDone=true;watEndTime=elapsed;document.getElementById('watStatus').innerHTML='<span class="text-blue-400">✅ '+elapsed.toFixed(1)+'s</span>';document.getElementById('watSteam').style.opacity='0';}}
+        if(alcDone&&watDone){clearInterval(simInterval);simRunning=false;document.getElementById('startSim').disabled=false;document.getElementById('startSim').style.opacity='1';showRes();}
+    },50);
 }
 
-function updateSimVisuals(prefix, level) {
-    var drop = document.getElementById(prefix + 'Drop');
-    var bar = document.getElementById(prefix + 'Bar');
-    var pct = document.getElementById(prefix + 'Pct');
-    
-    var scale = Math.max(0.05, level / 100);
-    drop.style.transform = 'translateX(-50%) scale(' + scale + ')';
-    drop.style.opacity = Math.max(0.1, level / 100);
-    bar.style.width = level + '%';
-    pct.textContent = Math.round(level) + '%';
+function updVis(p,l){
+    var d=document.getElementById(p+'Drop'),b=document.getElementById(p+'Bar'),pc=document.getElementById(p+'Pct');
+    var s=Math.max(.05,l/100);d.style.transform='translateX(-50%) scale('+s+')';d.style.opacity=Math.max(.1,l/100);
+    b.style.width=l+'%';pc.textContent=Math.round(l)+'%';
 }
 
-function resetSimulation() {
-    clearInterval(simInterval);
-    simRunning = false;
-    alcLevel = 100; watLevel = 100; alcDone = false; watDone = false;
-    ['alc','wat'].forEach(function(p) {
-        document.getElementById(p + 'Drop').style.transform = 'translateX(-50%) scale(1)';
-        document.getElementById(p + 'Drop').style.opacity = '1';
-        document.getElementById(p + 'Bar').style.width = '100%';
-        document.getElementById(p + 'Pct').textContent = '100%';
-        document.getElementById(p + 'Time').textContent = '0.0s';
-        document.getElementById(p + 'Steam').style.opacity = '0';
-        document.getElementById(p + 'Status').textContent = 'Esperando...';
+function resetSimulation(){
+    clearInterval(simInterval);simRunning=false;alcLevel=100;watLevel=100;alcDone=false;watDone=false;
+    ['alc','wat'].forEach(function(p){
+        document.getElementById(p+'Drop').style.transform='translateX(-50%) scale(1)';document.getElementById(p+'Drop').style.opacity='1';
+        document.getElementById(p+'Bar').style.width='100%';document.getElementById(p+'Pct').textContent='100%';
+        document.getElementById(p+'Time').textContent='0.0s';document.getElementById(p+'Steam').style.opacity='0';
+        document.getElementById(p+'Status').textContent='Esperando...';
     });
     document.getElementById('simResult').classList.add('hidden');
-    document.getElementById('startSim').disabled = false;
-    document.getElementById('startSim').style.opacity = '1';
+    document.getElementById('startSim').disabled=false;document.getElementById('startSim').style.opacity='1';
 }
 
-function showSimResult() {
-    var el = document.getElementById('simResult');
-    el.classList.remove('hidden');
-    document.getElementById('simText').textContent = 
-        'El alcohol se evaporó en ' + alcEndTime.toFixed(1) + 's y el agua en ' + watEndTime.toFixed(1) + 's. ' +
-        '¡El alcohol fue ' + (watEndTime / alcEndTime).toFixed(1) + 'x más rápido!';
-    document.getElementById('simExplain').innerHTML = 
-        '💡 Esto ocurre porque la <strong>entalpía de vaporización del alcohol (855 kJ/kg)</strong> es mucho menor que la del agua ' +
-        '<strong>(2,260 kJ/kg)</strong>. Necesita menos energía por kg para evaporarse, por eso se evapora más rápido ' +
-        'y produce una sensación de enfriamiento más intensa. ¡Igual que sentiste en el experimento!';
+function showRes(){
+    var el=document.getElementById('simResult');el.classList.remove('hidden');
+    document.getElementById('simText').textContent='El alcohol se evaporó en '+alcEndTime.toFixed(1)+'s y el agua en '+watEndTime.toFixed(1)+'s. ¡El alcohol fue '+(watEndTime/alcEndTime).toFixed(1)+'x más rápido!';
+    document.getElementById('simExplain').innerHTML='💡 La <strong>entalpía del alcohol (855 kJ/kg)</strong> es mucho menor que la del agua <strong>(2,260 kJ/kg)</strong>. Necesita menos energía para evaporarse, por eso se evapora más rápido y produce mayor enfriamiento.';
 }
 
 /* ============ EXERCISES ============ */
-var score = 0, total = 6, done = {};
+var score=0,total=6,done={};
 
-function chkSel(n, ans) {
-    var sel = document.getElementById('i' + n);
-    var fb = document.getElementById('f' + n);
-    var v = sel.value;
-    if (!v) { toast('Selecciona una opción 😅', 'e'); sel.focus(); return; }
-    if (done[n]) return;
-    done[n] = true;
-    sel.style.pointerEvents = 'none';
-    var ok = v === ans;
-    fb.classList.remove('hidden');
-    if (ok) {
-        score++;
-        fb.innerHTML = '<span class="text-green-400">✅ ¡Correcto!</span>';
-        sel.classList.add('ok');
-        toast('¡Muy bien! +1 punto 🎉', 's');
-        confetti(sel);
-    } else {
-        fb.innerHTML = '<span class="text-red-400">❌ No. Revisa la sección de definición.</span>';
-        sel.classList.add('no');
-        toast('Inténtalo de nuevo 💪', 'e');
-    }
+function chkSel(n,ans){
+    var sel=document.getElementById('i'+n),fb=document.getElementById('f'+n),v=sel.value;
+    if(!v){toast('Selecciona una opción 😅','e');sel.focus();return;}
+    if(done[n])return;done[n]=true;sel.disabled=true;
+    var ok=v===ans;fb.classList.remove('hidden');
+    if(ok){score++;fb.innerHTML='<span class="text-green-400">✅ ¡Correcto!</span>';sel.classList.add('ok');toast('¡Muy bien! +1 punto 🎉','s');confetti(sel);}
+    else{fb.innerHTML='<span class="text-red-400">❌ Incorrecto. Revisa la sección de definición.</span>';sel.classList.add('no');toast('Inténtalo de nuevo 💪','e');}
     upScore();
 }
 
-function chkNum(n, ans) {
-    var inp = document.getElementById('i' + n);
-    var fb = document.getElementById('f' + n);
-    var v = parseFloat(inp.value);
-    if (isNaN(v)) { toast('Escribe un número 😅', 'e'); inp.focus(); return; }
-    if (done[n]) return;
-    done[n] = true;
-    var ok = Math.abs(v - ans) < 5;
-    fb.classList.remove('hidden');
-    if (ok) {
-        score++;
-        fb.innerHTML = '<span class="text-green-400">✅ ¡Correcto! Q = 1,130 kJ</span>';
-        inp.classList.add('ok');
-        toast('¡Muy bien! +1 punto 🎉', 's');
-        confetti(inp);
-    } else {
-        fb.innerHTML = '<span class="text-red-400">❌ Q = 0.5 × 2,260 = <strong>1,130 kJ</strong></span>';
-        inp.classList.add('no');
-        toast('Revisa el cálculo 💪', 'e');
-    }
+function chkNum(n,ans){
+    var inp=document.getElementById('i'+n),fb=document.getElementById('f'+n),v=parseFloat(inp.value);
+    if(isNaN(v)){toast('Escribe un número 😅','e');inp.focus();return;}
+    if(done[n])return;done[n]=true;
+    var ok=Math.abs(v-ans)<5;fb.classList.remove('hidden');
+    if(ok){score++;fb.innerHTML='<span class="text-green-400">✅ ¡Correcto! Q = 1,130 kJ</span>';inp.classList.add('ok');toast('¡Muy bien! +1 punto 🎉','s');confetti(inp);}
+    else{fb.innerHTML='<span class="text-red-400">❌ Q = 0.5 × 2,260 = <strong>1,130 kJ</strong></span>';inp.classList.add('no');toast('Revisa el cálculo 💪','e');}
     upScore();
 }
 
-function upScore() {
-    document.getElementById('sT').textContent = score + ' / ' + total + ' correctas';
-    document.getElementById('sB').style.width = (score / total * 100) + '%';
-    var p = score / total * 100;
-    document.getElementById('pc').style.strokeDashoffset = 94.25 - (p / 100) * 94.25;
-    document.getElementById('pt').textContent = Math.round(p) + '%';
-    if (score === total) setTimeout(function(){toast('🏆 ¡PERFECTO! Dominaste la evaporación.','s')},500);
+function upScore(){
+    document.getElementById('sT').textContent=score+' / '+total+' correctas';
+    document.getElementById('sB').style.width=(score/total*100)+'%';
+    var p=score/total*100;
+    document.getElementById('pc').style.strokeDashoffset=94.25-(p/100)*94.25;
+    document.getElementById('pt').textContent=Math.round(p)+'%';
+    if(score===total)setTimeout(function(){toast('🏆 ¡PERFECTO! Dominaste la evaporación.','s')},500);
 }
 
-function rst() {
-    score = 0; done = {};
-    for (var i = 1; i <= 6; i++) {
-        var el = document.getElementById('i' + i);
-        var fb = document.getElementById('f' + i);
-        el.value = ''; el.classList.remove('ok', 'no'); el.style.pointerEvents = '';
-        fb.classList.add('hidden');
+function rst(){
+    score=0;done={};
+    for(var i=1;i<=6;i++){
+        var el=document.getElementById('i'+i),fb=document.getElementById('f'+i);
+        el.value='';el.classList.remove('ok','no');el.disabled=false;fb.classList.add('hidden');
     }
-    upScore(); toast('Reiniciado 🔄', 'i');
+    upScore();toast('Reiniciado 🔄','i');
 }
 
-/* ============ TOAST ============ */
-function toast(m, t) {
-    var el = document.getElementById('toast');
-    var ic = {s:'✅', e:'❌', i:'ℹ️'};
-    el.className = 'toast ' + t;
-    el.innerHTML = '<span>' + ic[t] + '</span><span>' + m + '</span>';
-    requestAnimationFrame(function(){ el.classList.add('show'); });
-    setTimeout(function(){ el.classList.remove('show'); }, 3000);
-}
+function toast(m,t){var el=document.getElementById('toast'),ic={s:'✅',e:'❌',i:'ℹ️'};el.className='toast '+t;el.innerHTML='<span>'+ic[t]+'</span><span>'+m+'</span>';requestAnimationFrame(function(){el.classList.add('show')});setTimeout(function(){el.classList.remove('show')},3000);}
 
-/* ============ CONFETTI ============ */
-function confetti(el) {
-    var r = el.getBoundingClientRect();
-    var cols = ['#3B82F6','#22D3EE','#A855F7','#22C55E','#EAB308','#EF4444','#F97316'];
-    for (var i = 0; i < 12; i++) {
-        var p = document.createElement('div'); p.className = 'cf';
-        p.style.left = (r.left + r.width / 2 + (Math.random() - .5) * 60) + 'px';
-        p.style.top = (r.top + window.scrollY) + 'px';
-        p.style.background = cols[Math.floor(Math.random() * cols.length)];
-        p.style.animationDelay = (Math.random() * .3) + 's';
-        p.style.animationDuration = (.6 + Math.random() * .4) + 's';
-        p.style.position = 'absolute'; p.style.zIndex = '999';
-        document.body.appendChild(p);
-        setTimeout(function(){ p.remove(); }, 1200);
-    }
-}
+function confetti(el){var r=el.getBoundingClientRect(),cols=['#3B82F6','#22D3EE','#A855F7','#22C55E','#EAB308','#EF4444','#F97316'];for(var i=0;i<12;i++){var p=document.createElement('div');p.className='cf';p.style.left=(r.left+r.width/2+(Math.random()-.5)*60)+'px';p.style.top=(r.top+window.scrollY)+'px';p.style.background=cols[Math.floor(Math.random()*cols.length)];p.style.animationDelay=(Math.random()*.3)+'s';p.style.animationDuration=(.6+Math.random()*.4)+'s';p.style.position='absolute';p.style.zIndex='999';document.body.appendChild(p);setTimeout(function(){p.remove()},1200);}}
 
-/* Smooth scroll */
-document.querySelectorAll('a[href^="#"]').forEach(function(a) {
-    a.addEventListener('click', function(e) {
-        e.preventDefault();
-        var t = document.querySelector(a.getAttribute('href'));
-        if (t) t.scrollIntoView({behavior:'smooth', block:'start'});
-    });
-});
+document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
 </script>
 </body>
 </html>
