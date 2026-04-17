@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ I Am a Pilot! — Verb Be</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <script>
+        tailwind.config={theme:{extend:{fontFamily:{'fredoka':['Fredoka','sans-serif'],'nunito':['Nunito','sans-serif']}}}}
+    </script>
+    <style>
+        body{font-family:'Nunito',sans-serif;background:linear-gradient(180deg,#FFFBEB 0%,#FEF3C7 25%,#FDE68A22 50%,#D1FAE522 75%,#E0E7FF 100%);min-height:100vh}
+        h1,h2,h3,h4{font-family:'Fredoka',sans-serif}
+        .float-item{position:absolute;font-size:1.5rem;opacity:.06;animation:floatItem 20s infinite ease-in-out;pointer-events:none}
+        @keyframes floatItem{0%,100%{transform:translateY(0) rotate(0deg)}33%{transform:translateY(-20px) rotate(8deg)}66%{transform:translateY(-8px) rotate(-5deg)}}
+        @keyframes bounce-slow{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+        .bounce-1{animation:bounce-slow 3s ease-in-out infinite}.bounce-2{animation:bounce-slow 3s ease-in-out infinite .4s}.bounce-3{animation:bounce-slow 3s ease-in-out infinite .8s}
+        .gradient-text{background:linear-gradient(135deg,#D97706,#EA580C,#DC2626);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .gradient-text-cool{background:linear-gradient(135deg,#2563EB,#7C3AED,#DB2777);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .section-fade{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.25,.46,.45,.94)}.section-fade.visible{opacity:1;transform:translateY(0)}
+        .scroll-indicator{animation:scrollBounce 2s ease-in-out infinite}
+        @keyframes scrollBounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(10px);opacity:1}}
+        .pron{color:#94A3B8;font-style:italic;font-size:.68rem;line-height:1.2}
+        .trans{color:#CBD5E1;font-size:.63rem;line-height:1.2}
+        .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+        .progress-fill{transition:width .5s cubic-bezier(.25,.46,.45,.94)}
+        @keyframes popIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+        .answer-reveal{animation:popIn .6s cubic-bezier(.175,.885,.32,1.275) forwards}
+        @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}100%{transform:translateY(120px) rotate(720deg) scale(0);opacity:0}}
+        .confetti-piece{position:absolute;pointer-events:none;animation:confettiFall 1.2s ease-out forwards}
+        @keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+        @keyframes starPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+        .star-earned{animation:starPulse .4s ease}
+        .type-input{transition:all .3s ease}
+        .type-input:focus{outline:none;box-shadow:0 0 0 3px rgba(37,99,235,.3);border-color:#2563EB}
+        .type-input.correct-input{border-color:#22C55E!important;background:#F0FDF4!important;box-shadow:0 0 0 3px rgba(34,197,94,.2)!important}
+        .type-input.wrong-input{border-color:#EF4444!important;background:#FEF2F2!important;box-shadow:0 0 0 3px rgba(239,68,68,.2)!important;animation:wrongShake .4s ease}
+        .mime-card{transition:all .2s ease;cursor:pointer}.mime-card:hover{transform:translateY(-3px);box-shadow:0 8px 25px -5px rgba(0,0,0,.1)}
+        .word-chip{transition:all .2s ease;cursor:pointer;user-select:none}
+        .word-chip:hover{transform:scale(1.05)}.word-chip:active{transform:scale(.95)}
+        .word-chip.placed{opacity:.25;pointer-events:none}
+        .slot-box{min-height:48px;transition:all .3s ease}
+        .slot-box.filled{border-color:#93C5FD!important;background:#EFF6FF!important}
+        @keyframes slotPop{0%{transform:scale(0)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+        .slot-word{animation:slotPop .3s cubic-bezier(.175,.885,.32,1.275) forwards}
+        .letter-btn{transition:all .2s ease;cursor:pointer}
+        .letter-btn:hover{transform:scale(1.1);background:#F59E0B;color:white}
+        .letter-btn.used{opacity:.25;pointer-events:none}
+        .letter-btn.wrong-letter{animation:wrongShake .4s ease}
+        .be-cell{transition:all .3s ease}.be-cell:hover{transform:scale(1.02)}
+    </style>
+</head>
+<body class="no-scrollbar">
+
+<header class="relative overflow-hidden pt-12 pb-16 px-6">
+    <span class="float-item top-8 left-[5%]" style="animation-delay:0s">✈️</span>
+    <span class="float-item top-16 right-[8%]" style="animation-delay:3s">👨‍⚕️</span>
+    <span class="float-item top-36 left-[15%]" style="animation-delay:6s">👩‍🍳</span>
+    <span class="float-item top-12 right-[22%]" style="animation-delay:2s">⭐</span>
+    <span class="float-item bottom-8 left-[30%]" style="animation-delay:9s">👨‍🏫</span>
+    <span class="float-item bottom-16 right-[12%]" style="animation-delay:4s">🚒</span>
+    <span class="float-item top-28 left-[58%]" style="animation-delay:7s">👮</span>
+    <span class="float-item bottom-10 left-[72%]" style="animation-delay:5s">👩‍🔬</span>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+        <div class="flex justify-center gap-4 mb-6">
+            <span class="text-5xl md:text-6xl bounce-1 inline-block">✈️</span>
+            <span class="text-5xl md:text-6xl bounce-2 inline-block">⭐</span>
+            <span class="text-5xl md:text-6xl bounce-3 inline-block">🎭</span>
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold gradient-text leading-tight mb-3">I Am a Pilot!</h1>
+        <p class="text-lg md:text-xl text-amber-800/60 font-semibold max-w-lg mx-auto leading-relaxed">
+            Aprende el verbo <strong class="text-amber-600">to be</strong> y las <strong class="text-orange-600">ocupaciones</strong> con juegos y dinámicas
+        </p>
+        <div class="mt-8 scroll-indicator text-amber-500/40"><span class="iconify inline-block text-2xl" data-icon="lucide:chevrons-down"></span></div>
+    </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-5 pb-24 space-y-16">
+
+    <!-- ====== VOCABULARY ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">📚</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-amber-700">Ocupaciones</h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-amber-200 shadow-sm">
+            <p class="text-base text-gray-600 mb-5">Estas son las profesiones que vamos a usar hoy. Apréndetelas bien:</p>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="vocab-grid"></div>
+        </div>
+    </section>
+
+    <!-- ====== KEEPING MY STARS ====== -->
+    <section class="section-fade" id="stars-section">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">⭐</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-yellow-700">Keeping My Stars! — ¡Guarda tus estrellas!</h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-yellow-200 shadow-sm">
+            <p class="text-base text-gray-600 mb-2">¡Adivina la ocupación letra por letra y gana estrellas! ⭐</p>
+            <p class="text-sm text-gray-400 mb-5">Haz clic en las letras para adivinar. Cada error te quita una vida ❤️</p>
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-1"><span class="text-sm font-bold text-yellow-600 mr-1">Estrellas:</span><div id="star-display" class="flex gap-0.5"></div></div>
+                <div class="flex items-center gap-1"><span class="text-sm font-bold text-red-500 mr-1">Vidas:</span><div id="lives-display" class="flex gap-0.5"></div></div>
+            </div>
+            <div class="bg-yellow-50 rounded-2xl p-5 mb-4 text-center border border-yellow-200">
+                <p id="stars-word" class="text-3xl md:text-4xl font-fredoka font-bold text-yellow-700 tracking-[.25em]"></p>
+                <p id="stars-hint" class="text-sm text-yellow-500 mt-2"></p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-1.5 mb-4" id="letter-buttons"></div>
+            <div class="flex justify-center gap-3"><button onclick="nextStarWord()" id="stars-next-btn" class="hidden px-5 py-2.5 rounded-xl font-fredoka font-bold text-white bg-yellow-500 hover:bg-yellow-600 transition-all text-sm">Siguiente palabra →</button></div>
+            <div id="stars-result" class="mt-3 text-center"></div>
+        </div>
+    </section>
+
+    <!-- ====== VERB BE ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">🔗</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-blue-700">El Verbo "Be" — Presente simple</h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-blue-200 shadow-sm">
+            <p class="text-base text-gray-600 mb-2">El verbo <strong class="text-blue-600">to be</strong> <span class="pron">— tu bi — ser/estar</span> cambia de forma según quién habla:</p>
+            <p class="text-sm text-gray-400 mb-5">¡Es el verbo más importante del inglés! Lo usas para decir quién eres o qué eres.</p>
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 mb-5 border border-blue-200">
+                <div class="grid grid-cols-3 gap-2 text-center mb-3">
+                    <div class="font-fredoka font-bold text-blue-600 text-sm">Sujeto</div>
+                    <div class="font-fredoka font-bold text-blue-600 text-sm">Verbo</div>
+                    <div class="font-fredoka font-bold text-blue-600 text-sm">Ejemplo</div>
+                </div>
+                <div class="space-y-1.5" id="be-table"></div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+                <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                    <p class="font-fredoka font-bold text-amber-700 text-sm mb-1">⚠️ ¡Cuidado!</p>
+                    <p class="text-sm text-gray-600"><strong>"I"</strong> <span class="pron">— ai — yo</span> siempre usa <strong>"am"</strong>, nunca "is" o "are"</p>
+                    <p class="text-base font-fredoka font-bold text-red-500 mt-1">❌ I is / I are</p>
+                    <p class="text-base font-fredoka font-bold text-green-600">✅ I am</p>
+                </div>
+                <div class="bg-green-50 rounded-xl p-4 border border-green-200">
+                    <p class="font-fredoka font-bold text-green-700 text-sm mb-1">💡 Truco</p>
+                    <p class="text-sm text-gray-600"><strong>"He, She, It"</strong> <span class="pron">— ji, shi, it</span> comparten <strong>"is"</strong></p>
+                    <p class="text-sm text-gray-600 mt-1"><strong>"You, We, They"</strong> <span class="pron">— iu, ui, déi</span> comparten <strong>"are"</strong></p>
+                </div>
+            </div>
+            <div class="mt-5 bg-purple-50 rounded-2xl p-5 border border-purple-200">
+                <h4 class="font-fredoka font-bold text-purple-700 mb-3">✂️ Contracciones <span class="pron font-nunito text-purple-400">— con-trák-shons — Formas cortas</span></h4>
+                <div class="grid sm:grid-cols-3 gap-2 text-sm">
+                    <div class="bg-white rounded-lg p-2.5 border border-purple-100 text-center"><p class="font-bold text-purple-700">I am → I'm</p><p class="pron">ai am → aim</p></div>
+                    <div class="bg-white rounded-lg p-2.5 border border-purple-100 text-center"><p class="font-bold text-purple-700">He is → He's</p><p class="pron">ji is → jiiz</p></div>
+                    <div class="bg-white rounded-lg p-2.5 border border-purple-100 text-center"><p class="font-bold text-purple-700">She is → She's</p><p class="pron">shi is → shiiz</p></div>
+                    <div class="bg-white rounded-lg p-2.5 border border-purple-100 text-center"><p class="font-bold text-purple-700">It is → It's</p><p class="pron">it is → its</p></div>
+                    <div class="bg-white rounded-lg p-2.5 border border-purple-100 text-center"><p class="font-bold text-purple-700">You are → You're</p><p class="pron">iu ar → iur</p></div>
+                    <div class="bg-white rounded-lg p-2.5 border border-purple-100 text-center"><p class="font-bold text-purple-700">They are → They're</p><p class="pron">déi ar → déir</p></div>
+                </div>
+                <p class="text-sm text-purple-600 mt-3 font-semibold">💡 Las contracciones se usan MUCHO al hablar. ¡Apréndetelas!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== MIME AND GUESS ====== -->
+    <section class="section-fade" id="mime-section">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">🎭</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-rose-700">Mime and Guess! — ¡Mímica y adivina!</h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-rose-200 shadow-sm">
+            <p class="text-base text-gray-600 mb-2">Imagina que alguien hace mímica de una profesión. ¡Tú debes adivinar y formar la oración correcta!</p>
+            <p class="text-sm text-gray-400 mb-5">Haz clic en la tarjeta para ver la pista de mímica, luego elige la oración correcta</p>
+            <div class="mb-5">
+                <div class="flex justify-between text-sm font-semibold mb-1"><span class="text-gray-500">Progreso</span><span id="mime-progress-text" class="text-rose-600">0 / 6</span></div>
+                <div class="h-3 bg-gray-200 rounded-full overflow-hidden"><div id="mime-progress-bar" class="progress-fill h-full bg-gradient-to-r from-rose-400 to-pink-400 rounded-full" style="width:0%"></div></div>
+            </div>
+            <div id="mime-container"></div>
+            <div id="mime-result" class="mt-4 text-center"></div>
+        </div>
+    </section>
+
+    <!-- ====== SENTENCE BUILDER ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">🧩</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-indigo-700">Sentence Builder — ¡Arma la oración!</h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-indigo-200 shadow-sm">
+            <p class="text-base text-gray-600 mb-2">Haz clic en las palabras en el orden correcto para formar la oración</p>
+            <p class="text-sm text-gray-400 mb-5">Ejemplo: <strong>I</strong> → <strong>am</strong> → <strong>a</strong> → <strong>pilot</strong></p>
+            <div class="mb-5">
+                <div class="flex justify-between text-sm font-semibold mb-1"><span class="text-gray-500">Progreso</span><span id="build-progress-text" class="text-indigo-600">0 / 5</span></div>
+                <div class="h-3 bg-gray-200 rounded-full overflow-hidden"><div id="build-progress-bar" class="progress-fill h-full bg-gradient-to-r from-indigo-400 to-blue-400 rounded-full" style="width:0%"></div></div>
+            </div>
+            <div id="build-container"></div>
+            <div id="build-result" class="mt-4 text-center"></div>
+        </div>
+    </section>
+
+    <!-- ====== FILL IN THE BLANK ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">✍️</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-teal-700">Fill in the Blank — ¡Completa!</h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-teal-200 shadow-sm">
+            <p class="text-base text-gray-600 mb-2">Escribe <strong>am</strong>, <strong>is</strong> o <strong>are</strong> donde corresponda</p>
+            <p class="text-sm text-gray-400 mb-5">Presiona Enter para pasar a la siguiente</p>
+            <div class="mb-5">
+                <div class="flex justify-between text-sm font-semibold mb-1"><span class="text-gray-500">Progreso</span><span id="fill-progress-text" class="text-teal-600">0 / 8</span></div>
+                <div class="h-3 bg-gray-200 rounded-full overflow-hidden"><div id="fill-progress-bar" class="progress-fill h-full bg-gradient-to-r from-teal-400 to-emerald-400 rounded-full" style="width:0%"></div></div>
+            </div>
+            <div id="fill-container" class="space-y-4"></div>
+            <div id="fill-result" class="mt-6 text-center"></div>
+        </div>
+    </section>
+
+    <!-- ====== REFERENCE ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5">
+            <span class="text-3xl">📋</span>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-700">Resumen Rápido</h2>
+        </div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-5 md:p-8 border-2 border-gray-200 shadow-sm">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr>
+                            <th class="py-2.5 px-2.5 bg-blue-100 rounded-tl-xl font-fredoka text-blue-700 text-xs">Pronombre</th>
+                            <th class="py-2.5 px-2.5 bg-blue-100 font-fredoka text-blue-700 text-xs">Verbo</th>
+                            <th class="py-2.5 px-2.5 bg-blue-100 font-fredoka text-blue-700 text-xs">Contracción</th>
+                            <th class="py-2.5 px-2.5 bg-amber-100 rounded-tr-xl font-fredoka text-amber-700 text-xs">Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-gray-100"><td class="py-2 px-2.5"><strong>I</strong> <span class="pron">ai — yo</span></td><td class="py-2 px-2.5 font-bold text-blue-600">am</td><td class="py-2 px-2.5 text-purple-600">I'm</td><td class="py-2 px-2.5">a pilot <span class="pron">a pái-lot</span></td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 px-2.5"><strong>You</strong> <span class="pron">iu — tú/ustedes</span></td><td class="py-2 px-2.5 font-bold text-blue-600">are</td><td class="py-2 px-2.5 text-purple-600">You're</td><td class="py-2 px-2.5">a teacher <span class="pron">a ti-cher</span></td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 px-2.5"><strong>He</strong> <span class="pron">ji — él</span></td><td class="py-2 px-2.5 font-bold text-blue-600">is</td><td class="py-2 px-2.5 text-purple-600">He's</td><td class="py-2 px-2.5">a firefighter <span class="pron">a fáiar-fái-ter</span></td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 px-2.5"><strong>She</strong> <span class="pron">shi — ella</span></td><td class="py-2 px-2.5 font-bold text-blue-600">is</td><td class="py-2 px-2.5 text-purple-600">She's</td><td class="py-2 px-2.5">a doctor <span class="pron">a dóc-tor</span></td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 px-2.5"><strong>It</strong> <span class="pron">it — eso</span></td><td class="py-2 px-2.5 font-bold text-blue-600">is</td><td class="py-2 px-2.5 text-purple-600">It's</td><td class="py-2 px-2.5 text-gray-400">—</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2 px-2.5"><strong>We</strong> <span class="pron">ui — nosotros</span></td><td class="py-2 px-2.5 font-bold text-blue-600">are</td><td class="py-2 px-2.5 text-purple-600">We're</td><td class="py-2 px-2.5">chefs <span class="pron">shefs</span></td></tr>
+                        <tr><td class="py-2 px-2.5"><strong>They</strong> <span class="pron">déi — ellos</span></td><td class="py-2 px-2.5 font-bold text-blue-600">are</td><td class="py-2 px-2.5 text-purple-600">They're</td><td class="py-2 px-2.5">police officers <span class="pron">po-liis ó-fi-sers</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-5 bg-gradient-to-r from-amber-400 to-orange-400 rounded-2xl p-5 text-center text-white">
+                <p class="font-fredoka font-bold text-lg">🎯 Fórmula mágica</p>
+                <p class="text-sm opacity-90 mt-1"><strong>Sujeto + am/is/are + a/an + ocupación</strong></p>
+                <p class="text-xs opacity-70 mt-2">I am a pilot. / She is a doctor. / They are police officers.</p>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="text-center py-10 px-6 border-t border-amber-200/50">
+    <p class="text-amber-400 font-semibold text-sm">⭐ ¡Sigue practicando — cada palabra cuenta! ✨</p>
+</footer>
+
+<script>
+// ====== DATA ======
+const occupations = [
+    {word:'pilot',emoji:'✈️',pron:'pái-lot',trans:'piloto/a'},
+    {word:'doctor',emoji:'👨‍⚕️',pron:'dóc-tor',trans:'doctor/a'},
+    {word:'teacher',emoji:'👨‍🏫',pron:'ti-cher',trans:'maestro/a'},
+    {word:'firefighter',emoji:'🚒',pron:'fáiar-fái-ter',trans:'bombero/a'},
+    {word:'chef',emoji:'👨‍🍳',pron:'shef',trans:'chef/cocinero/a'},
+    {word:'police officer',emoji:'👮',pron:'po-liis ó-fi-ser',trans:'policía'},
+    {word:'nurse',emoji:'👩‍⚕️',pron:'ners',trans:'enfermero/a'},
+    {word:'student',emoji:'🧑‍🎓',pron:'stiú-dent',trans:'estudiante'},
+    {word:'driver',emoji:'🚕',pron:'drái-ver',trans:'conductor/a'},
+];
+
+const beTable = [
+    {subj:'I',pron:'ai — yo',be:'am',ex:'I am a pilot.',exPron:'ai am a pái-lot',exTrans:'Yo soy piloto.',color:'blue'},
+    {subj:'You',pron:'iu — tú/ustedes',be:'are',ex:'You are a teacher.',exPron:'iu ar a ti-cher',exTrans:'Tú eres maestro.',color:'green'},
+    {subj:'He',pron:'ji — él',be:'is',ex:'He is a firefighter.',exPron:'ji is a fáiar-fái-ter',exTrans:'Él es bombero.',color:'purple'},
+    {subj:'She',pron:'shi — ella',be:'is',ex:'She is a doctor.',exPron:'shi is a dóc-tor',exTrans:'Ella es doctora.',color:'pink'},
+    {subj:'It',pron:'it — eso',be:'is',ex:'It is a book.',exPron:'it is a buk',exTrans:'Eso es un libro.',color:'gray'},
+    {subj:'We',pron:'ui — nosotros',be:'are',ex:'We are students.',exPron:'ui ar stiú-dents',exTrans:'Nosotros somos estudiantes.',color:'teal'},
+    {subj:'They',pron:'déi — ellos',be:'are',ex:'They are chefs.',exPron:'déi ar shefs',exTrans:'Ellos son chefs.',color:'orange'},
+];
+
+const mimeData = [
+    {occ:'pilot',mime:'Una persona lleva gafas de sol y uniforme, extiende los brazos como si estuviera volando un avión.',sentence:'He is a pilot.',pron:'ji is a pái-lot',trans:'Él es piloto.',options:['He is a pilot.','She is a doctor.','They are chefs.','I am a teacher.']},
+    {occ:'doctor',mime:'Alguien se pone un estetoscopio en los oídos y revisa el pecho de un paciente con atención.',sentence:'She is a doctor.',pron:'shi is a dóc-tor',trans:'Ella es doctora.',options:['I am a firefighter.','She is a doctor.','He is a pilot.','You are a nurse.']},
+    {occ:'teacher',mime:'Una persona escribe con tiza en un pizarrón grande y luego señala con un dedo a los alumnos.',sentence:'I am a teacher.',pron:'ai am a ti-cher',trans:'Yo soy maestro.',options:['They are students.','She is a chef.','I am a teacher.','He is a driver.']},
+    {occ:'firefighter',mime:'Un grupo sostiene una manguera grande de agua y la apunta hacia arriba como apagando un incendio.',sentence:'They are firefighters.',pron:'déi ar fáiar-fái-ters',trans:'Ellos son bomberos.',options:['I am a pilot.','You are a doctor.','They are firefighters.','She is a nurse.']},
+    {occ:'chef',mime:'Alguien revuelve una olla grande con una cuchara enorme, prueba la comida y luego asiente satisfecho.',sentence:'You are a chef.',pron:'iu ar shef',trans:'Tú eres chef.',options:['He is a teacher.','You are a chef.','They are pilots.','I am a police officer.']},
+    {occ:'police officer',mime:'Una persona con uniforme azul dirige el tráfico moviendo los brazos y lleva un silbato en la boca.',sentence:'He is a police officer.',pron:'ji is a po-liis ó-fi-ser',trans:'Él es policía.',options:['She is a chef.','I am a student.','He is a police officer.','They are doctors.']},
+];
+
+const buildData = [
+    {words:['I','am','a','pilot.'],answer:'I am a pilot.',pron:'ai am a pái-lot',trans:'Yo soy piloto.'},
+    {words:['She','is','a','doctor.'],answer:'She is a doctor.',pron:'shi is a dóc-tor',trans:'Ella es doctora.'},
+    {words:['They','are','firefighters.'],answer:'They are firefighters.',pron:'déi ar fáiar-fái-ters',trans:'Ellos son bomberos.'},
+    {words:['He','is','a','police','officer.'],answer:'He is a police officer.',pron:'ji is a po-liis ó-fi-ser',trans:'Él es policía.'},
+    {words:['We','are','students.'],answer:'We are students.',pron:'ui ar stiú-dents',trans:'Nosotros somos estudiantes.'},
+];
+
+const fillData = [
+    {subj:'I',blank:'am',after:'a pilot.',emoji:'✈️',pron:'ai am a pái-lot — yo soy piloto'},
+    {subj:'She',blank:'is',after:'a doctor.',emoji:'👨‍⚕️',pron:'shi is a dóc-tor — ella es doctora'},
+    {subj:'They',blank:'are',after:'firefighters.',emoji:'🚒',pron:'déi ar fáiar-fái-ters — ellos son bomberos'},
+    {subj:'He',blank:'is',after:'a chef.',emoji:'👨‍🍳',pron:'ji is a shef — él es chef'},
+    {subj:'You',blank:'are',after:'a teacher.',emoji:'👨‍🏫',pron:'iu ar a ti-cher — tú eres maestro'},
+    {subj:'We',blank:'are',after:'students.',emoji:'🧑‍🎓',pron:'ui ar stiú-dents — nosotros somos estudiantes'},
+    {subj:'It',blank:'is',after:'a book.',emoji:'📖',pron:'it is a buk — eso es un libro'},
+    {subj:'I',blank:'am',after:'a police officer.',emoji:'👮',pron:'ai am a po-liis ó-fi-ser — yo soy policía'},
+];
+
+// ====== VOCABULARY ======
+function renderVocab(){
+    document.getElementById('vocab-grid').innerHTML=occupations.map(o=>`
+        <div class="bg-white rounded-xl p-3 border border-amber-100 text-center hover:shadow-md transition-all cursor-default">
+            <p class="text-3xl mb-1">${o.emoji}</p>
+            <p class="font-fredoka font-bold text-amber-700 text-sm">${o.word}</p>
+            <p class="pron">🔊 ${o.pron}</p>
+            <p class="trans">🇪🇸 ${o.trans}</p>
+        </div>`).join('');
+}
+
+// ====== BE TABLE ======
+function renderBeTable(){
+    document.getElementById('be-table').innerHTML=beTable.map(r=>`
+        <div class="be-cell grid grid-cols-3 gap-2 bg-white rounded-xl p-3 border border-${r.color}-100 items-center text-center cursor-default hover:shadow-sm">
+            <div><p class="font-fredoka font-bold text-${r.color}-700">${r.subj}</p><p class="pron">${r.pron}</p></div>
+            <div><p class="font-fredoka font-bold text-blue-600 text-lg">${r.be}</p></div>
+            <div><p class="text-xs font-bold text-gray-700">${r.ex}</p><p class="pron">${r.exPron}</p><p class="trans">${r.exTrans}</p></div>
+        </div>`).join('');
+}
+
+// ====== KEEPING MY STARS ======
+const starWords=occupations.slice(0,6);
+let starIdx=0,starPoints=0,starLives=5,starRevealed=[],starWrongLetters=[];
+
+function initStarGame(){starIdx=0;starPoints=0;renderStarRound();}
+
+function renderStarRound(){
+    if(starIdx>=starWords.length){showStarResult();return;}
+    const w=starWords[starIdx].word;
+    starRevealed=new Array(w.length).fill(false);
+    starWrongLetters=[];starLives=5;
+    updateStarDisplay();renderStarWord();renderLetterButtons();
+    document.getElementById('stars-next-btn').classList.add('hidden');
+    document.getElementById('stars-hint').textContent=`Pista: ${starWords[starIdx].trans}`;
+    document.getElementById('stars-result').innerHTML='';
+}
+
+function renderStarWord(){
+    const w=starWords[starIdx].word;
+    document.getElementById('stars-word').innerHTML=w.split('').map((ch,i)=>{
+        if(ch===' ')return '<span class="inline-block w-4"></span>';
+        return `<span class="inline-block mx-0.5">${starRevealed[i]?ch:'<span class="text-yellow-300">_</span>'}</span>`;
+    }).join('');
+}
+
+function renderLetterButtons(){
+    document.getElementById('letter-buttons').innerHTML='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l=>
+        `<button class="letter-btn w-8 h-8 rounded-lg bg-amber-100 text-amber-700 font-fredoka font-bold text-sm border border-amber-200 flex items-center justify-center" onclick="pickLetter('${l}')" id="lb-${l}">${l}</button>`
+    ).join('');
+}
+
+function pickLetter(l){
+    const w=starWords[starIdx].word;
+    const btn=document.getElementById('lb-'+l);
+    if(btn.classList.contains('used'))return;
+    btn.classList.add('used');
+    let found=false;
+    for(let i=0;i<w.length;i++){
+        if(w[i].toLowerCase()===l.toLowerCase()){starRevealed[i]=true;found=true;}
+    }
+    if(!found){
+        starWrongLetters.push(l);starLives--;
+        btn.classList.add('wrong-letter');
+        setTimeout(()=>btn.classList.remove('wrong-letter'),400);
+    }
+    updateStarDisplay();renderStarWord();
+
+    // Check win: every non-space position revealed
+    const won=starRevealed.every((v,i)=>v||w[i]===' ');
+    if(won){
+        starPoints++;
+        setTimeout(()=>{
+            document.getElementById('stars-next-btn').classList.remove('hidden');
+            document.getElementById('stars-result').innerHTML=`<p class="text-sm font-bold text-green-600">⭐ ¡Correcto! +1 estrella — <span class="pron">${starWords[starIdx].pron}</span></p>`;
+        },300);
+    }
+    if(starLives<=0){
+        document.getElementById('stars-result').innerHTML=`<p class="text-sm font-bold text-red-500">💔 La respuesta era: <strong>${w}</strong> <span class="pron">(${starWords[starIdx].pron})</span></p>`;
+        document.getElementById('stars-next-btn').classList.remove('hidden');
+    }
+}
+
+function updateStarDisplay(){
+    document.getElementById('star-display').innerHTML=Array.from({length:starWords.length},(_,i)=>
+        `<span class="text-lg ${i<starPoints?'star-earned':'opacity-20'}">${i<starPoints?'⭐':'☆'}</span>`
+    ).join('');
+    document.getElementById('lives-display').innerHTML=Array.from({length:5},(_,i)=>
+        `<span class="text-lg ${i<starLives?'':'opacity-20'}">${i<starLives?'❤️':'🤍'}</span>`
+    ).join('');
+}
+
+function nextStarWord(){starIdx++;renderStarRound();}
+
+function showStarResult(){
+    const c=document.getElementById('stars-result');
+    const pct=Math.round((starPoints/starWords.length)*100);
+    c.innerHTML=`<div class="answer-reveal bg-gradient-to-r from-yellow-400 to-amber-400 rounded-2xl p-5 text-white inline-block">
+        <p class="font-fredoka font-bold text-xl">${pct>=80?'🌟 ¡Excelente!':pct>=50?'👍 ¡Bien!':'💪 ¡Sigue practicando!'}</p>
+        <p class="text-sm opacity-90 mt-1">${starPoints} de ${starWords.length} estrellas ganadas</p>
+        <button onclick="initStarGame()" class="mt-3 px-5 py-2 rounded-xl font-fredoka font-bold text-sm bg-white/20 hover:bg-white/30 transition-all">Reintentar 🔄</button>
+    </div>`;
+    if(pct>=80)addConfetti(c);
+}
+
+// ====== MIME AND GUESS ======
+let mimeIdx=0,mimeScore=0;
+
+function renderMime(){
+    if(mimeIdx>=mimeData.length){showMimeResult();return;}
+    const m=mimeData[mimeIdx];
+    document.getElementById('mime-container').innerHTML=`
+        <div class="bg-rose-50 rounded-2xl p-5 mb-4 border border-rose-200 mime-card" onclick="this.querySelector('.mime-detail').classList.toggle('hidden')">
+            <p class="text-sm text-rose-500 font-semibold mb-1">👆 Clic para ver la mímica</p>
+            <p class="mime-detail hidden text-base text-rose-700 font-semibold bg-white rounded-xl p-3 border border-rose-100">${m.mime}</p>
+        </div>
+        <p class="text-sm text-gray-500 text-center mb-3">¿Cuál es la oración correcta?</p>
+        <div class="space-y-2">${m.options.map((opt,i)=>`
+            <button onclick="answerMime('${opt.replace(/'/g,"\\'")}')" class="w-full text-left px-4 py-3 rounded-xl font-nunito font-bold text-sm border-2 border-gray-200 bg-white text-gray-700 hover:border-rose-300 hover:bg-rose-50 transition-all">${opt}</button>
+        `).join('')}</div>`;
+    document.getElementById('mime-progress-bar').style.width=(mimeIdx/mimeData.length*100)+'%';
+    document.getElementById('mime-progress-text').textContent=`${mimeIdx} / ${mimeData.length}`;
+}
+
+function answerMime(chosen){
+    const m=mimeData[mimeIdx];
+    const ok=chosen===m.sentence;
+    if(ok)mimeScore++;
+    document.getElementById('mime-progress-bar').style.width=((mimeIdx+1)/mimeData.length*100)+'%';
+    document.getElementById('mime-progress-text').textContent=`${mimeIdx+1} / ${mimeData.length}`;
+    document.getElementById('mime-container').innerHTML=`
+        <div class="text-center answer-reveal">
+            <p class="text-4xl mb-2">${ok?'✅':'❌'}</p>
+            <p class="font-fredoka font-bold text-xl ${ok?'text-emerald-600':'text-red-500'}">${ok?'¡Correcto!':'¡Casi!'}</p>
+            <p class="text-gray-700 mt-1 font-fredoka font-bold text-lg">${m.sentence}</p>
+            <p class="pron">${m.pron} — ${m.trans}</p>
+            <button onclick="mimeIdx++;renderMime();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-rose-500 hover:bg-rose-600 transition-all">${mimeIdx<mimeData.length-1?'Siguiente →':'Ver resultados 🏆'}</button>
+        </div>`;
+}
+
+function showMimeResult(){
+    const c=document.getElementById('mime-container');
+    const p=Math.round((mimeScore/mimeData.length)*100);
+    c.innerHTML=`<div class="text-center answer-reveal">
+        <p class="text-5xl mb-2">${p>=80?'🏆':'🎭'}</p>
+        <p class="font-fredoka font-bold text-2xl gradient-text">${p>=80?'🌟 ¡Gran actor/actriz!':p>=50?'👍 ¡Buen intento!':'💪 ¡Sigue practicando!'}</p>
+        <p class="text-gray-600 mt-2">${mimeScore} de ${mimeData.length} correctas</p>
+        <button onclick="mimeIdx=0;mimeScore=0;document.getElementById('mime-progress-bar').style.width='0%';document.getElementById('mime-progress-text').textContent='0 / 6';renderMime();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-rose-500 hover:bg-rose-600 transition-all">Reintentar 🔄</button>
+    </div>`;
+    if(p>=80)addConfetti(c);
+}
+
+// ====== SENTENCE BUILDER ======
+let buildIdx=0,buildScore=0,buildPlaced=[];
+
+function renderBuild(){
+    if(buildIdx>=buildData.length){showBuildResult();return;}
+    buildPlaced=[];
+    const b=buildData[buildIdx];
+    const shuffled=[...b.words].sort(()=>Math.random()-.5);
+    document.getElementById('build-container').innerHTML=`
+        <div class="slot-box rounded-2xl border-2 border-dashed border-indigo-300 bg-indigo-50/50 p-4 mb-4 flex flex-wrap gap-2 items-center justify-center" id="build-slot">
+            <span class="text-gray-300 text-sm" id="build-placeholder">Haz clic en las palabras ↓</span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-2" id="build-chips">
+            ${shuffled.map(w=>`<button class="word-chip px-4 py-2.5 rounded-xl font-fredoka font-bold text-sm border-2 border-indigo-200 bg-white text-indigo-700" onclick="placeWord(this,'${w.replace(/'/g,"\\'")}')">${w}</button>`).join('')}
+        </div>
+        <div class="flex justify-center gap-2 mt-3">
+            <button onclick="resetBuild()" class="px-4 py-2 rounded-lg font-fredoka font-bold text-sm text-gray-500 bg-gray-100 hover:bg-gray-200 transition-all">Limpiar</button>
+        </div>`;
+    document.getElementById('build-progress-bar').style.width=(buildIdx/buildData.length*100)+'%';
+    document.getElementById('build-progress-text').textContent=`${buildIdx} / ${buildData.length}`;
+}
+
+function placeWord(el,w){
+    el.classList.add('placed');buildPlaced.push(w);
+    const slot=document.getElementById('build-slot');
+    const ph=document.getElementById('build-placeholder');
+    if(ph)ph.remove();
+    const span=document.createElement('span');
+    span.className='slot-word px-3 py-1.5 rounded-lg bg-indigo-100 text-indigo-700 font-fredoka font-bold text-sm border border-indigo-200';
+    span.textContent=w;slot.appendChild(span);
+    slot.classList.add('filled');
+    if(buildPlaced.length===buildData[buildIdx].words.length)setTimeout(checkBuild,200);
+}
+
+function resetBuild(){
+    buildPlaced=[];
+    const slot=document.getElementById('build-slot');
+    slot.innerHTML='<span class="text-gray-300 text-sm" id="build-placeholder">Haz clic en las palabras ↓</span>';
+    slot.classList.remove('filled');
+    document.querySelectorAll('#build-chips .word-chip').forEach(c=>c.classList.remove('placed'));
+}
+
+function checkBuild(){
+    const b=buildData[buildIdx];
+    const attempt=buildPlaced.join(' ');
+    const ok=attempt===b.answer;
+    if(ok)buildScore++;
+    document.getElementById('build-progress-bar').style.width=((buildIdx+1)/buildData.length*100)+'%';
+    document.getElementById('build-progress-text').textContent=`${buildIdx+1} / ${buildData.length}`;
+    document.getElementById('build-container').innerHTML=`
+        <div class="text-center answer-reveal">
+            <p class="text-4xl mb-2">${ok?'✅':'❌'}</p>
+            <p class="font-fredoka font-bold text-xl ${ok?'text-emerald-600':'text-red-500'}">${ok?'¡Perfecto!':'¡Casi!'}</p>
+            <p class="text-gray-700 mt-1 font-fredoka font-bold text-lg">${b.answer}</p>
+            <p class="pron">${b.pron} — ${b.trans}</p>
+            ${!ok?`<p class="text-sm text-gray-400 mt-1">Tu respuesta: ${attempt}</p>`:''}
+            <button onclick="buildIdx++;renderBuild();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-indigo-500 hover:bg-indigo-600 transition-all">${buildIdx<buildData.length-1?'Siguiente →':'Ver resultados 🏆'}</button>
+        </div>`;
+}
+
+function showBuildResult(){
+    const c=document.getElementById('build-container');
+    const p=Math.round((buildScore/buildData.length)*100);
+    c.innerHTML=`<div class="text-center answer-reveal">
+        <p class="text-5xl mb-2">${p===100?'🏆':'🧩'}</p>
+        <p class="font-fredoka font-bold text-2xl gradient-text-cool">${p===100?'🌟 ¡Constructor experto!':p>=60?'🎉 ¡Muy bien!':'💪 ¡Sigue practicando!'}</p>
+        <p class="text-gray-600 mt-2">${buildScore} de ${buildData.length} correctas</p>
+        <button onclick="buildIdx=0;buildScore=0;document.getElementById('build-progress-bar').style.width='0%';document.getElementById('build-progress-text').textContent='0 / 5';renderBuild();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-indigo-500 hover:bg-indigo-600 transition-all">Reintentar 🔄</button>
+    </div>`;
+    if(p===100)addConfetti(c);
+}
+
+// ====== FILL IN THE BLANK ======
+let fillIdx=0,fillScore=0;
+
+function renderFill(){
+    if(fillIdx>=fillData.length){showFillResult();return;}
+    const f=fillData[fillIdx];
+    document.getElementById('fill-container').innerHTML=`
+        <div class="bg-white rounded-2xl p-4 border-2 border-teal-100 flex items-center gap-3">
+            <span class="text-3xl">${f.emoji}</span>
+            <div class="flex items-center gap-1 text-lg font-fredoka font-bold text-gray-800 flex-wrap">
+                <span>${f.subj}</span>
+                <input type="text" id="fill-input" class="type-input w-20 text-center font-fredoka font-bold text-lg py-1 px-2 rounded-lg border-2 border-teal-200 bg-teal-50/50 text-gray-800" placeholder="?" autocomplete="off" spellcheck="false" maxlength="3">
+                <span>${f.after}</span>
+            </div>
+        </div>`;
+    document.getElementById('fill-progress-bar').style.width=(fillIdx/fillData.length*100)+'%';
+    document.getElementById('fill-progress-text').textContent=`${fillIdx} / ${fillData.length}`;
+    const inp=document.getElementById('fill-input');inp.focus();
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkFill();}});
+}
+
+function checkFill(){
+    const inp=document.getElementById('fill-input');
+    const answer=inp.value.trim().toLowerCase();
+    const f=fillData[fillIdx];
+    const ok=answer===f.blank;inp.readOnly=true;
+    if(ok){inp.classList.add('correct-input');fillScore++;}
+    else{inp.classList.add('wrong-input');}
+    const fb=document.createElement('div');
+    fb.className='text-sm mt-1 '+(ok?'text-emerald-600 font-bold':'text-red-500 font-bold');
+    fb.innerHTML=ok?`✅ ${f.pron}`:`❌ La respuesta es: <strong>${f.blank}</strong> — ${f.pron}`;
+    inp.closest('.bg-white').appendChild(fb);
+    document.getElementById('fill-progress-bar').style.width=((fillIdx+1)/fillData.length*100)+'%';
+    document.getElementById('fill-progress-text').textContent=`${fillIdx+1} / ${fillData.length}`;
+    setTimeout(()=>{fillIdx++;renderFill();},1200);
+}
+
+function showFillResult(){
+    const c=document.getElementById('fill-container');
+    const p=Math.round((fillScore/fillData.length)*100);
+    c.innerHTML=`<div class="text-center answer-reveal py-4">
+        <p class="text-5xl mb-2">${p===100?'🏆':'✍️'}</p>
+        <p class="font-fredoka font-bold text-2xl gradient-text">${p===100?'🌟 ¡Dominaste el verbo be!':p>=75?'🎉 ¡Muy bien!':'💪 ¡Sigue practicando!'}</p>
+        <p class="text-gray-600 mt-2">${fillScore} de ${fillData.length} correctas</p>
+        <button onclick="fillIdx=0;fillScore=0;document.getElementById('fill-progress-bar').style.width='0%';document.getElementById('fill-progress-text').textContent='0 / 8';renderFill();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-teal-500 hover:bg-teal-600 transition-all">Reintentar 🔄</button>
+    </div>`;
+    if(p===100)addConfetti(c);
+}
+
+// ====== CONFETTI ======
+function addConfetti(parent){
+    const colors=['#D97706','#EA580C','#DC2626','#2563EB','#7C3AED','#059669','#EAB308'];
+    for(let i=0;i<25;i++){
+        let p=document.createElement('div');p.className='confetti-piece';
+        p.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+        p.style.left=(15+Math.random()*70)+'%';p.style.top='20%';
+        p.style.animationDelay=(Math.random()*.5)+'s';
+        p.style.animationDuration=(.8+Math.random()*.8)+'s';
+        let s=(5+Math.random()*8)+'px';p.style.width=s;p.style.height=s;
+        p.style.borderRadius=Math.random()>.5?'50%':'2px';
+        parent.style.position='relative';parent.appendChild(p);
+        setTimeout(()=>p.remove(),2000);
+    }
+}
+
+// ====== SCROLL ======
+const observer=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');});},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.section-fade').forEach(el=>observer.observe(el));
+
+// ====== INIT ======
+document.addEventListener('DOMContentLoaded',()=>{renderVocab();renderBeTable();initStarGame();renderMime();renderBuild();renderFill();});
+</script>
+</body>
+</html>
