@@ -46,6 +46,7 @@
         .usc-input:focus{outline:none;box-shadow:0 0 0 3px rgba(244,63,94,.2);border-color:#F43F5E}
         .usc-input.correct-input{border-color:#22C55E!important;background:#F0FDF4!important;box-shadow:0 0 0 3px rgba(34,197,94,.2)!important}
         .usc-input.wrong-input{border-color:#EF4444!important;background:#FEF2F2!important;box-shadow:0 0 0 3px rgba(239,68,68,.2)!important;animation:wrongShake .4s ease}
+        .restart-btn{transition:all .2s ease}.restart-btn:hover{transform:scale(1.05)}.restart-btn:active{transform:scale(.95)}
     </style>
 </head>
 <body class="no-scrollbar">
@@ -93,10 +94,10 @@
     <section class="section-fade">
         <div class="flex items-center gap-3 mb-5"><span class="text-3xl">📋</span><h2 class="text-2xl md:text-3xl font-bold text-teal-700">Tabla de Verbos</h2></div>
         <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-5 md:p-8 border-2 border-teal-200 shadow-sm">
-            <p class="text-base text-gray-600 mb-5">Estos son los 15 verbos irregulares que vamos a practicar hoy.</p>
+            <p class="text-base text-gray-600 mb-5">Estos son los 15 verbos con sus tres formas:</p>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-sm">
-                    <thead><tr><th class="py-2.5 px-3 bg-emerald-100 rounded-tl-xl font-fredoka text-emerald-700">Base form</th><th class="py-2.5 px-3 bg-amber-100 font-fredoka text-amber-700">Past tense</th><th class="py-2.5 px-3 bg-amber-100 rounded-tr-xl font-fredoka text-amber-700">Español</th></tr></thead>
+                    <thead><tr><th class="py-2 px-2 bg-emerald-100 rounded-tl-xl font-fredoka text-emerald-700 text-xs">Base</th><th class="py-2 px-2 bg-sky-100 font-fredoka text-sky-700 text-xs">3ra persona</th><th class="py-2 px-2 bg-amber-100 font-fredoka text-amber-700 text-xs">Past</th><th class="py-2 px-2 bg-gray-100 rounded-tr-xl font-fredoka text-gray-700 text-xs">Español</th></tr></thead>
                     <tbody id="verb-table-body"></tbody>
                 </table>
             </div>
@@ -108,7 +109,6 @@
         <div class="flex items-center gap-3 mb-5"><span class="text-3xl">🔗</span><h2 class="text-2xl md:text-3xl font-bold text-emerald-700">Part I — Match! <span class="pron font-nunito text-emerald-400">— ¡Conecta!</span></h2></div>
         <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-emerald-200 shadow-sm">
             <p class="text-base text-gray-600 mb-2">Haz clic en un verbo de la izquierda, luego en su pasado a la derecha</p>
-            <p class="text-sm text-gray-400 mb-5">¡Conecta los 15 pares!</p>
             <div class="mb-5"><div class="flex justify-between text-sm font-semibold mb-1"><span class="text-gray-500">Pares</span><span id="match-progress-text" class="text-emerald-600">0 / 15</span></div><div class="h-3 bg-gray-200 rounded-full overflow-hidden"><div id="match-progress-bar" class="progress-fill h-full bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full" style="width:0%"></div></div></div>
             <div class="grid grid-cols-2 gap-4">
                 <div><p class="text-xs font-fredoka font-bold text-emerald-600 mb-2 text-center uppercase tracking-wider">Box A — Base form</p><div class="space-y-1.5" id="match-col-a"></div></div>
@@ -138,7 +138,10 @@
             <p class="text-sm text-gray-400 mb-5">Los verbos que necesitas están al final</p>
             <div class="bg-violet-50 rounded-2xl p-5 border border-violet-200 mb-4" id="text-fill-area"></div>
             <div id="text-fill-result" class="text-center"></div>
-            <button onclick="checkTextFill()" id="text-fill-btn" class="w-full mt-4 px-6 py-3 rounded-2xl font-fredoka font-bold text-white bg-violet-500 hover:bg-violet-600 transition-all flex items-center justify-center gap-2"><span class="text-xl">✨</span> Verificar todo</button>
+            <div class="flex gap-3 mt-4">
+                <button onclick="checkTextFill()" id="text-fill-btn" class="flex-1 px-6 py-3 rounded-2xl font-fredoka font-bold text-white bg-violet-500 hover:bg-violet-600 transition-all flex items-center justify-center gap-2"><span class="text-xl">✨</span> Verificar</button>
+                <button onclick="restartTextFill()" class="restart-btn px-5 py-3 rounded-2xl font-fredoka font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 border-2 border-gray-200 flex items-center justify-center gap-2"><span class="iconify text-lg" data-icon="lucide:arrow-rotate-left"></span> Reiniciar</button>
+            </div>
         </div>
     </section>
 
@@ -147,7 +150,7 @@
         <div class="flex items-center gap-3 mb-5"><span class="text-3xl">🧩</span><h2 class="text-2xl md:text-3xl font-bold text-rose-700">Part IV — Unscramble! <span class="pron font-nunito text-rose-400">— ¡Descifra!</span></h2></div>
         <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-rose-200 shadow-sm">
             <p class="text-base text-gray-600 mb-2">Las letras están mezcladas. Escribe el <strong>pasado simple</strong> correcto y su <strong>forma base</strong></p>
-            <p class="text-sm text-gray-400 mb-5">Escribe el pasado, presiona Enter, luego escribe la base</p>
+            <p class="text-sm text-gray-400 mb-5">Escribe el pasado, presiona Enter, luego la base</p>
             <div class="mb-5"><div class="flex justify-between text-sm font-semibold mb-1"><span class="text-gray-500">Progreso</span><span id="usc-progress-text" class="text-rose-600">0 / 6</span></div><div class="h-3 bg-gray-200 rounded-full overflow-hidden"><div id="usc-progress-bar" class="progress-fill h-full bg-gradient-to-r from-rose-400 to-pink-400 rounded-full" style="width:0%"></div></div></div>
             <div id="usc-container" class="space-y-5"></div>
             <div id="usc-result" class="mt-6 text-center"></div>
@@ -162,21 +165,21 @@
 
 <script>
 const verbs=[
-    {base:'wake',past:'woke',es:'despertarse',pron:'ueik → wóuk'},
-    {base:'make',past:'made',es:'hacer',pron:'meik → meid'},
-    {base:'take',past:'took',es:'tomar/llevar',pron:'teik → tuk'},
-    {base:'go',past:'went',es:'ir',pron:'góu → went'},
-    {base:'have',past:'had',es:'tener',pron:'jav → jad'},
-    {base:'come',past:'came',es:'venir',pron:'kam → keim'},
-    {base:'see',past:'saw',es:'ver',pron:'sii → so'},
-    {base:'buy',past:'bought',es:'comprar',pron:'bai → bot'},
-    {base:'get',past:'got',es:'conseguir',pron:'guet → got'},
-    {base:'do',past:'did',es:'hacer',pron:'duu → did'},
-    {base:'eat',past:'ate',es:'comer',pron:'iit → eit'},
-    {base:'give',past:'gave',es:'dar',pron:'giv → geiv'},
-    {base:'leave',past:'left',es:'salir/dejar',pron:'liiv → left'},
-    {base:'find',past:'found',es:'encontrar',pron:'faind → faund'},
-    {base:'meet',past:'met',es:'conocer',pron:'miit → met'},
+    {base:'wake',third:'wakes',past:'woke',es:'despertarse',pron:'ueik → ueiks → wóuk'},
+    {base:'make',third:'makes',past:'made',es:'hacer',pron:'meik → meiks → meid'},
+    {base:'take',third:'takes',past:'took',es:'tomar/llevar',pron:'teik → teiks → tuk'},
+    {base:'go',third:'goes',past:'went',es:'ir',pron:'góu → góuz → went'},
+    {base:'have',third:'has',past:'had',es:'tener',pron:'jav → jas → jad'},
+    {base:'come',third:'comes',past:'came',es:'venir',pron:'kam → kams → keim'},
+    {base:'see',third:'sees',past:'saw',es:'ver',pron:'sii → siiz → so'},
+    {base:'buy',third:'buys',past:'bought',es:'comprar',pron:'bai → baiz → bot'},
+    {base:'get',third:'gets',past:'got',es:'conseguir',pron:'guet → guets → got'},
+    {base:'do',third:'does',past:'did',es:'hacer',pron:'duu → daz → did'},
+    {base:'eat',third:'eats',past:'ate',es:'comer',pron:'iit → iits → eit'},
+    {base:'give',third:'gives',past:'gave',es:'dar',pron:'giv → givz → geiv'},
+    {base:'leave',third:'leaves',past:'left',es:'salir/dejar',pron:'liiv → liivz → left'},
+    {base:'find',third:'finds',past:'found',es:'encontrar',pron:'faind → faindz → faund'},
+    {base:'meet',third:'meets',past:'met',es:'conocer',pron:'miit → miits → met'},
 ];
 
 const fillSentences=[
@@ -184,13 +187,12 @@ const fillSentences=[
     {text:'She ___ (buy) a new book last week.',blank:'bought',verb:'buy',pron:'shi bot a niu buk last wiik — Compró un libro la semana pasada'},
     {text:'We ___ (eat) pizza for dinner.',blank:'ate',verb:'eat',pron:'ui eit pít-sa for di-ner — Comimos pizza en la cena'},
     {text:'He ___ (see) a bird in the garden.',blank:'saw',verb:'see',pron:'ji so a berd in de gar-den — Vio un pájaro en el jardín'},
-    {text:'They ___ (have) a great time at the party.',blank:'had',verb:'have',pron:'déi jad a greit taim at de par-ti — Pasaron un gran momento en la fiesta'},
+    {text:'They ___ (have) a great time at the party.',blank:'had',verb:'have',pron:'déi jad a greit taim at de par-ti — Pasaron un gran momento'},
     {text:'You ___ (make) a delicious cake.',blank:'made',verb:'make',pron:'iu meid a de-li-shas keik — Hiciste un pastel delicioso'},
     {text:'The bus ___ (come) late this morning.',blank:'came',verb:'come',pron:'de bas keim leit dis mor-ning — El bus llegó tarde esta mañana'},
     {text:'I ___ (take) my umbrella and it ___ (rain).',blank:'took',verb:'take',pron:'ai tuk mai am-bre-la end it reind — Tomé mi paraguas y llovió',twoBlanks:true,secondBlank:'rained'},
 ];
 
-// Part III data — properly structured
 const textFillSlots=[
     {id:'tf1',past:'woke',base:'wake',es:'despertar'},
     {id:'tf2',past:'took',base:'take',es:'tomar'},
@@ -222,20 +224,23 @@ const textParts=[
 const unscrambleData=[
     {scrambled:'TOKO',past:'took',base:'take',es:'tomar',pron:'tuk — teik'},
     {scrambled:'WNET',past:'went',base:'go',es:'ir',pron:'went — góu'},
-    {scrambled:'WOSKE',past:'woke',base:'wake',es:'despertar',pron:'wóuk — ueik'},
+    {scrambled:'KOWE',past:'woke',base:'wake',es:'despertar',pron:'wóuk — ueik'},
     {scrambled:'DAEM',past:'made',base:'make',es:'hacer',pron:'meid — meik'},
-    {scrambled:'TAES',past:'ate',base:'eat',es:'comer',pron:'eit — iit'},
+    {scrambled:'ETA',past:'ate',base:'eat',es:'comer',pron:'eit — iit'},
     {scrambled:'FTOUN',past:'found',base:'find',es:'encontrar',pron:'faund — faind'},
 ];
 
 // ====== RENDER VERB TABLE ======
 function renderVerbTable(){
-    document.getElementById('verb-table-body').innerHTML=verbs.map((v,i)=>`
-        <tr class="${i%2===0?'bg-white':'bg-gray-50'} border-b border-gray-100">
-            <td class="py-2 px-3 font-bold text-emerald-700">${v.base} <span class="pron">${v.pron.split('→')[0].trim()}</span></td>
-            <td class="py-2 px-3 font-bold text-amber-600">${v.past} <span class="pron">${v.pron.split('→')[1]?v.pron.split('→')[1].trim():''}</span></td>
-            <td class="py-2 px-3"><span class="trans">${v.es}</span></td>
-        </tr>`).join('');
+    document.getElementById('verb-table-body').innerHTML=verbs.map((v,i)=>{
+        const ps=v.pron.split('→');const baseP=ps[0]?ps[0].trim():'';const thirdP=ps[1]?ps[1].trim():'';const pastP=ps[2]?ps[2].trim():'';
+        return `<tr class="${i%2===0?'bg-white':'bg-gray-50'} border-b border-gray-100">
+            <td class="py-2 px-2 font-bold text-emerald-700">${v.base} <span class="pron">${baseP}</span></td>
+            <td class="py-2 px-2 font-bold text-sky-600">${v.third} <span class="pron">${thirdP}</span></td>
+            <td class="py-2 px-2 font-bold text-amber-600">${v.past} <span class="pron">${pastP}</span></td>
+            <td class="py-2 px-2"><span class="trans">${v.es}</span></td>
+        </tr>`;
+    }).join('');
 }
 
 // ====== PART I: MATCHING ======
@@ -244,12 +249,8 @@ function initMatch(){
     matchSelected=null;matchCount=0;
     const sA=[...verbs].sort(()=>Math.random()-.5);
     const sB=[...verbs].sort(()=>Math.random()-.5);
-    document.getElementById('match-col-a').innerHTML=sA.map(v=>
-        `<button class="match-btn w-full text-left px-3 py-2 rounded-xl font-nunito font-bold text-sm border-2 border-emerald-200 bg-white text-emerald-700" data-past="${v.past}" onclick="selectMatch(this,'a')">${v.base} <span class="pron">${v.pron.split('→')[0].trim()}</span></button>`
-    ).join('');
-    document.getElementById('match-col-b').innerHTML=sB.map(v=>
-        `<button class="match-btn w-full text-left px-3 py-2 rounded-xl font-nunito font-bold text-sm border-2 border-amber-200 bg-white text-amber-700" data-past="${v.past}" onclick="selectMatch(this,'b')">${v.past} <span class="pron">${v.pron.split('→')[1]?v.pron.split('→')[1].trim():''}</span></button>`
-    ).join('');
+    document.getElementById('match-col-a').innerHTML=sA.map(v=>`<button class="match-btn w-full text-left px-3 py-2 rounded-xl font-nunito font-bold text-sm border-2 border-emerald-200 bg-white text-emerald-700" data-past="${v.past}" onclick="selectMatch(this,'a')">${v.base}</button>`).join('');
+    document.getElementById('match-col-b').innerHTML=sB.map(v=>`<button class="match-btn w-full text-left px-3 py-2 rounded-xl font-nunito font-bold text-sm border-2 border-amber-200 bg-white text-amber-700" data-past="${v.past}" onclick="selectMatch(this,'b')">${v.past}</button>`).join('');
     document.getElementById('match-progress-bar').style.width='0%';
     document.getElementById('match-progress-text').textContent='0 / 15';
     document.getElementById('match-result').innerHTML='';
@@ -262,11 +263,10 @@ function selectMatch(el,side){
     else{
         if(!matchSelected){el.classList.add('wrong-match');setTimeout(()=>el.classList.remove('wrong-match'),400);return;}
         if(matchSelected.dataset.past===el.dataset.past){
-            matchSelected.classList.add('matched');el.classList.add('matched');
-            matchSelected.classList.remove('selected-a');matchCount++;matchSelected=null;
+            matchSelected.classList.add('matched');el.classList.add('matched');matchSelected.classList.remove('selected-a');matchCount++;matchSelected=null;
             document.getElementById('match-progress-bar').style.width=(matchCount/15*100)+'%';
             document.getElementById('match-progress-text').textContent=matchCount+' / 15';
-            if(matchCount===15)setTimeout(()=>{const r=document.getElementById('match-result');r.innerHTML=`<div class="answer-reveal bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl p-5 text-white inline-block"><p class="font-fredoka font-bold text-xl">🎉 ¡Todos conectados!</p></div>`;addConfetti(r);},300);
+            if(matchCount===15)setTimeout(()=>{const r=document.getElementById('match-result');r.innerHTML=`<div class="answer-reveal bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl p-5 text-white inline-block"><p class="font-fredoka font-bold text-xl">🎉 ¡Todos conectados!</p><button onclick="initMatch()" class="mt-3 px-5 py-2 rounded-xl font-fredoka font-bold text-sm bg-white/20 hover:bg-white/30 transition-all">🔄 Reiniciar</button></div>`;addConfetti(r);},300);
         }else{
             el.classList.add('wrong-match');matchSelected.classList.add('wrong-match');
             setTimeout(()=>{el.classList.remove('wrong-match');if(matchSelected)matchSelected.classList.remove('wrong-match');},400);
@@ -278,39 +278,22 @@ function selectMatch(el,side){
 let fillIdx=0,fillScore=0;
 function renderFill(){
     if(fillIdx>=fillSentences.length){showFillResult();return;}
-    const f=fillSentences[fillIdx];
-    const parts=f.text.split('___');
+    const f=fillSentences[fillIdx];const parts=f.text.split('___');
     if(f.twoBlanks){
-        document.getElementById('fill-container').innerHTML=`
-            <div class="bg-white rounded-2xl p-4 border-2 border-blue-100">
-                <div class="flex items-center gap-1 text-base font-fredoka font-bold text-gray-800 flex-wrap">
-                    <span>${parts[0]}</span>
-                    <input type="text" id="fi1" class="type-input w-24 text-center font-fredoka font-bold text-base py-1 px-2 rounded-lg border-2 border-blue-200 bg-blue-50/50" placeholder="?" autocomplete="off" spellcheck="false">
-                    <span>${parts[1]}</span>
-                    <input type="text" id="fi2" class="type-input w-24 text-center font-fredoka font-bold text-base py-1 px-2 rounded-lg border-2 border-blue-200 bg-blue-50/50" placeholder="?" autocomplete="off" spellcheck="false">
-                    <span>${parts[2]}</span>
-                </div><p class="pron mt-2">${f.pron}</p>
-            </div>`;
+        document.getElementById('fill-container').innerHTML=`<div class="bg-white rounded-2xl p-4 border-2 border-blue-100"><div class="flex items-center gap-1 text-base font-fredoka font-bold text-gray-800 flex-wrap"><span>${parts[0]}</span><input type="text" id="fi1" class="type-input w-24 text-center font-fredoka font-bold text-base py-1 px-2 rounded-lg border-2 border-blue-200 bg-blue-50/50" placeholder="?" autocomplete="off" spellcheck="false"><span>${parts[1]}</span><input type="text" id="fi2" class="type-input w-24 text-center font-fredoka font-bold text-base py-1 px-2 rounded-lg border-2 border-blue-200 bg-blue-50/50" placeholder="?" autocomplete="off" spellcheck="false"><span>${parts[2]}</span></div><p class="pron mt-2">${f.pron}</p></div>`;
         document.getElementById('fi1').focus();
-        document.getElementById('fi1').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('fi2').focus();}});
-        document.getElementById('fi2').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkFillTwo();}});
+        document.getElementById('fi1').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();document.getElementById('fi2').focus();}};
+        document.getElementById('fi2').onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();checkFillTwo();}};
     }else{
-        document.getElementById('fill-container').innerHTML=`
-            <div class="bg-white rounded-2xl p-4 border-2 border-blue-100">
-                <div class="flex items-center gap-1 text-base font-fredoka font-bold text-gray-800 flex-wrap">
-                    <span>${parts[0]}</span>
-                    <input type="text" id="fi1" class="type-input w-24 text-center font-fredoka font-bold text-base py-1 px-2 rounded-lg border-2 border-blue-200 bg-blue-50/50" placeholder="?" autocomplete="off" spellcheck="false">
-                    <span>${parts[1]}</span>
-                </div><p class="pron mt-2">${f.pron}</p>
-            </div>`;
-        const inp=document.getElementById('fi1');inp.focus();
-        inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkFillSingle();}});
+        document.getElementById('fill-container').innerHTML=`<div class="bg-white rounded-2xl p-4 border-2 border-blue-100"><div class="flex items-center gap-1 text-base font-fredoka font-bold text-gray-800 flex-wrap"><span>${parts[0]}</span><input type="text" id="fi1" class="type-input w-24 text-center font-fredoka font-bold text-base py-1 px-2 rounded-lg border-2 border-blue-200 bg-blue-50/50" placeholder="?" autocomplete="off" spellcheck="false"><span>${parts[1]}</span></div><p class="pron mt-2">${f.pron}</p></div>`;
+        const inp=document.getElementById('fi1');inp.focus();inp.onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();checkFillSingle();}};
     }
     document.getElementById('fill-progress-bar').style.width=(fillIdx/fillSentences.length*100)+'%';
     document.getElementById('fill-progress-text').textContent=fillIdx+' / '+fillSentences.length;
 }
 function checkFillSingle(){
     const inp=document.getElementById('fi1');const a=inp.value.trim().toLowerCase();const f=fillSentences[fillIdx];
+    if(a===''){inp.classList.add('wrong-input');setTimeout(()=>inp.classList.remove('wrong-input'),400);return;}
     const ok=a===f.blank;inp.readOnly=true;
     if(ok)inp.classList.add('correct-input');else inp.classList.add('wrong-input');
     const fb=document.createElement('div');fb.className='text-sm mt-1 '+(ok?'text-emerald-600 font-bold':'text-red-500 font-bold');
@@ -321,6 +304,7 @@ function checkFillSingle(){
 function checkFillTwo(){
     const i1=document.getElementById('fi1'),i2=document.getElementById('fi2');
     const a1=i1.value.trim().toLowerCase(),a2=i2.value.trim().toLowerCase();const f=fillSentences[fillIdx];
+    if(a1===''||a2===''){if(a1==='')i1.classList.add('wrong-input');else i2.classList.add('wrong-input');setTimeout(()=>{i1.classList.remove('wrong-input');i2.classList.remove('wrong-input');},400);return;}
     const ok=a1===f.blank&&a2===f.secondBlank;i1.readOnly=true;i2.readOnly=true;
     if(ok){i1.classList.add('correct-input');i2.classList.add('correct-input');}else{i1.classList.add('wrong-input');i2.classList.add('wrong-input');}
     const fb=document.createElement('div');fb.className='text-sm mt-1 '+(ok?'text-emerald-600 font-bold':'text-red-500 font-bold');
@@ -330,7 +314,7 @@ function checkFillTwo(){
 }
 function showFillResult(){
     const c=document.getElementById('fill-container');const p=Math.round((fillScore/fillSentences.length)*100);
-    c.innerHTML=`<div class="text-center answer-reveal py-4"><p class="text-5xl mb-2">${p>=75?'🏆':'✍️'}</p><p class="font-fredoka font-bold text-2xl gradient-text">${p===100?'🌟 ¡Perfecto!':p>=75?'🎉 ¡Muy bien!':'💪 ¡Sigue practicando!'}</p><p class="text-gray-600 mt-2">${fillScore} de ${fillSentences.length} correctas</p><button onclick="fillIdx=0;fillScore=0;document.getElementById('fill-progress-bar').style.width='0%';document.getElementById('fill-progress-text').textContent='0 / 8';renderFill();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-blue-500 hover:bg-blue-600 transition-all">Reintentar 🔄</button></div>`;
+    c.innerHTML=`<div class="text-center answer-reveal py-4"><p class="text-5xl mb-2">${p>=75?'🏆':'✍️'}</p><p class="font-fredoka font-bold text-2xl gradient-text">${p===100?'🌟 ¡Perfecto!':p>=75?'🎉 ¡Muy bien!':'💪 ¡Sigue practicando!'}</p><p class="text-gray-600 mt-2">${fillScore} de ${fillSentences.length} correctas</p><button onclick="fillIdx=0;fillScore=0;document.getElementById('fill-progress-bar').style.width='0%';document.getElementById('fill-progress-text').textContent='0 / 8';renderFill();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-blue-500 hover:bg-blue-600 transition-all">🔄 Reiniciar</button></div>`;
     if(p>=75)addConfetti(c);
 }
 
@@ -341,92 +325,56 @@ function renderTextFill(){
         const slot=textFillSlots.find(s=>s.id===p.id);
         return ' <input type="text" id="'+p.id+'" class="type-input w-24 text-center font-fredoka font-bold text-base py-0.5 px-2 rounded-lg border-2 border-violet-200 bg-violet-50/50 inline-block" placeholder="?" autocomplete="off" spellcheck="false" data-answer="'+slot.past+'" data-base="'+slot.base+'"> ';
     }).join('<br>');
-
-    const verbChips=textFillSlots.map(v=>
-        '<span class="inline-block px-2 py-1 bg-violet-100 rounded-lg text-sm font-bold text-violet-700 mr-1 mb-1">'+v.base+' → '+v.past+' <span class="pron">('+v.es+')</span></span>'
-    ).join('');
-
-    document.getElementById('text-fill-area').innerHTML=
-        '<div class="text-base text-gray-700 leading-loose">'+html+'</div>'+
-        '<div class="mt-4 pt-3 border-t border-violet-200"><p class="text-xs font-bold text-violet-500 mb-2">Verbos disponibles:</p><div class="flex flex-wrap">'+verbChips+'</div></div>';
+    const verbChips=textFillSlots.map(v=>'<span class="inline-block px-2 py-1 bg-violet-100 rounded-lg text-sm font-bold text-violet-700 mr-1 mb-1">'+v.base+' → '+v.past+' <span class="pron">('+v.es+')</span></span>').join('');
+    document.getElementById('text-fill-area').innerHTML='<div class="text-base text-gray-700 leading-loose">'+html+'</div><div class="mt-4 pt-3 border-t border-violet-200"><p class="text-xs font-bold text-violet-500 mb-2">Verbos disponibles:</p><div class="flex flex-wrap">'+verbChips+'</div></div>';
     document.getElementById('text-fill-result').innerHTML='';
     document.getElementById('text-fill-btn').classList.remove('hidden');
 }
 function checkTextFill(){
-    let count=0;let allOk=true;let firstError=true;
+    let count=0,allOk=true,firstError=true;
     textFillSlots.forEach(slot=>{
-        const inp=document.getElementById(slot.id);
-        if(!inp)return;
-        const user=inp.value.trim().toLowerCase();
-        const ok=user===slot.past;
+        const inp=document.getElementById(slot.id);if(!inp)return;
+        const user=inp.value.trim().toLowerCase();const ok=user===slot.past;
         inp.readOnly=true;
         if(ok){inp.classList.add('correct-input');count++;}
-        else{
-            allOk=false;inp.classList.add('wrong-input');
-            if(firstError){
-                const hint=document.createElement('span');
-                hint.className='text-xs text-red-500 font-bold ml-1 inline-block';
-                hint.textContent='→ '+slot.past+' ('+slot.base+')';
-                inp.parentNode.insertBefore(hint,inp.nextSibling);
-                firstError=false;
-            }
+        else{allOk=false;inp.classList.add('wrong-input');
+            if(firstError){const h=document.createElement('span');h.className='text-xs text-red-500 font-bold ml-1 inline-block';h.textContent='→ '+slot.past+' ('+slot.base+')';inp.parentNode.insertBefore(h,inp.nextSibling);firstError=false;}
         }
     });
     document.getElementById('text-fill-btn').classList.add('hidden');
     const r=document.getElementById('text-fill-result');
-    r.innerHTML='<div class="answer-reveal '+(allOk?'bg-gradient-to-r from-violet-400 to-purple-400 text-white':'bg-gray-300 text-gray-700')+' rounded-2xl p-5 inline-block"><p class="font-fredoka font-bold text-xl">'+(allOk?'🎉 ¡Texto completo!':'👍 '+count+' de 7 correctos')+'</p>'+(!allOk?'<p class="text-sm opacity-80 mt-1">Revisa las respuestas marcadas en rojo</p>':'')+'</div>';
+    r.innerHTML='<div class="answer-reveal '+(allOk?'bg-gradient-to-r from-violet-400 to-purple-400 text-white':'bg-gray-300 text-gray-700')+' rounded-2xl p-5 inline-block"><p class="font-fredoka font-bold text-xl">'+(allOk?'🎉 ¡Texto completo!':'👍 '+count+' de 7 correctos')+'</p>'+(!allOk?'<p class="text-sm opacity-80 mt-1">Revisa las respuestas en rojo</p>':'')+'</div>';
     if(allOk)addConfetti(r);
 }
+function restartTextFill(){renderTextFill();}
 
 // ====== PART IV: UNSCRAMBLE ======
 let uscIdx=0,uscScore=0,uscPhase='past';
 function renderUnscramble(){
     if(uscIdx>=unscrambleData.length){showUscResult();return;}
-    uscPhase='past';
-    const u=unscrambleData[uscIdx];
-    document.getElementById('usc-container').innerHTML=`
-        <div class="bg-white rounded-2xl p-5 border-2 border-rose-100">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="bg-rose-100 rounded-xl px-4 py-2 border border-rose-200">
-                    <p class="text-2xl font-fredoka font-bold text-rose-600 tracking-[.2em]">${u.scrambled}</p>
-                </div>
-                <span class="text-gray-300 text-xl">→</span>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="text-xs font-bold text-rose-600 mb-1 block">Past simple <span class="pron font-nunito text-rose-400">— pasado</span></label>
-                    <input type="text" id="usc-past" class="usc-input w-full text-lg font-fredoka font-bold py-2 px-3 rounded-xl border-2 border-rose-200 bg-rose-50/50" placeholder="?" autocomplete="off" spellcheck="false">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-emerald-600 mb-1 block">Base form <span class="pron font-nunito text-emerald-400">— base</span></label>
-                    <input type="text" id="usc-base" class="usc-input w-full text-lg font-fredoka font-bold py-2 px-3 rounded-xl border-2 border-emerald-200 bg-emerald-50/50" placeholder="?" autocomplete="off" spellcheck="false">
-                </div>
-            </div>
-            <div id="usc-feedback" class="mt-3"></div>
-        </div>`;
+    uscPhase='past';const u=unscrambleData[uscIdx];
+    document.getElementById('usc-container').innerHTML=`<div class="bg-white rounded-2xl p-5 border-2 border-rose-100"><div class="flex items-center gap-3 mb-4"><div class="bg-rose-100 rounded-xl px-4 py-2 border border-rose-200"><p class="text-2xl font-fredoka font-bold text-rose-600 tracking-[.2em]">${u.scrambled}</p></div><span class="text-gray-300 text-xl">→</span></div><div class="grid grid-cols-2 gap-3"><div><label class="text-xs font-bold text-rose-600 mb-1 block">Past simple <span class="pron font-nunito text-rose-400">— pasado</span></label><input type="text" id="usc-past" class="usc-input w-full text-lg font-fredoka font-bold py-2 px-3 rounded-xl border-2 border-rose-200 bg-rose-50/50" placeholder="?" autocomplete="off" spellcheck="false"></div><div><label class="text-xs font-bold text-emerald-600 mb-1 block">Base form <span class="pron font-nunito text-emerald-400">— base</span></label><input type="text" id="usc-base" class="usc-input w-full text-lg font-fredoka font-bold py-2 px-3 rounded-xl border-2 border-emerald-200 bg-emerald-50/50" placeholder="?" autocomplete="off" spellcheck="false"></div></div><div id="usc-feedback" class="mt-3"></div></div>`;
     document.getElementById('usc-progress-bar').style.width=(uscIdx/unscrambleData.length*100)+'%';
     document.getElementById('usc-progress-text').textContent=uscIdx+' / '+unscrambleData.length;
-    document.getElementById('usc-past').focus();
-    document.getElementById('usc-past').addEventListener('keydown',uscKeyHandler);
-    document.getElementById('usc-base').addEventListener('keydown',uscKeyHandler);
+    const pi=document.getElementById('usc-past'),bi=document.getElementById('usc-base');
+    pi.onkeydown=uscKeyHandler;bi.onkeydown=uscKeyHandler;pi.focus();
 }
 function uscKeyHandler(e){
     if(e.key!=='Enter')return;e.preventDefault();
     if(uscPhase==='past'){
-        const pastInp=document.getElementById('usc-past');
-        if(pastInp.value.trim()===''){pastInp.classList.add('wrong-input');setTimeout(()=>pastInp.classList.remove('wrong-input'),400);return;}
+        const pi=document.getElementById('usc-past');
+        if(pi.value.trim()===''){pi.classList.add('wrong-input');setTimeout(()=>pi.classList.remove('wrong-input'),400);return;}
         uscPhase='base';document.getElementById('usc-base').focus();
     }else{
-        const baseInp=document.getElementById('usc-base');
-        if(baseInp.value.trim()===''){baseInp.classList.add('wrong-input');setTimeout(()=>baseInp.classList.remove('wrong-input'),400);return;}
+        const bi=document.getElementById('usc-base');
+        if(bi.value.trim()===''){bi.classList.add('wrong-input');setTimeout(()=>bi.classList.remove('wrong-input'),400);return;}
         checkUnscramble();
     }
 }
 function checkUnscramble(){
     const pVal=document.getElementById('usc-past').value.trim().toLowerCase();
     const bVal=document.getElementById('usc-base').value.trim().toLowerCase();
-    const u=unscrambleData[uscIdx];
-    const pOk=pVal===u.past,bOk=bVal===u.base;
+    const u=unscrambleData[uscIdx];const pOk=pVal===u.past,bOk=bVal===u.base;
     document.getElementById('usc-past').readOnly=true;document.getElementById('usc-base').readOnly=true;
     if(pOk)document.getElementById('usc-past').classList.add('correct-input');else document.getElementById('usc-past').classList.add('wrong-input');
     if(bOk)document.getElementById('usc-base').classList.add('correct-input');else document.getElementById('usc-base').classList.add('wrong-input');
@@ -438,15 +386,12 @@ function checkUnscramble(){
 }
 function showUscResult(){
     const c=document.getElementById('usc-container');const p=Math.round((uscScore/unscrambleData.length)*100);
-    c.innerHTML=`<div class="text-center answer-reveal py-4"><p class="text-5xl mb-2">${p>=80?'🏆':'🧩'}</p><p class="font-fredoka font-bold text-2xl gradient-text-warm">${p===100?'🌟 ¡Descifrador maestro!':p>=60?'🎉 ¡Muy bien!':'💪 ¡Sigue practicando!'}</p><p class="text-gray-600 mt-2">${uscScore} de ${unscrambleData.length} correctos</p><button onclick="uscIdx=0;uscScore=0;document.getElementById('usc-progress-bar').style.width='0%';document.getElementById('usc-progress-text').textContent='0 / 6';renderUnscramble();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-rose-500 hover:bg-rose-600 transition-all">Reintentar 🔄</button></div>`;
+    c.innerHTML=`<div class="text-center answer-reveal py-4"><p class="text-5xl mb-2">${p>=80?'🏆':'🧩'}</p><p class="font-fredoka font-bold text-2xl gradient-text-warm">${p===100?'🌟 ¡Descifrador maestro!':p>=60?'🎉 ¡Muy bien!':'💪 ¡Sigue practicando!'}</p><p class="text-gray-600 mt-2">${uscScore} de ${unscrambleData.length} correctos</p><button onclick="uscIdx=0;uscScore=0;document.getElementById('usc-progress-bar').style.width='0%';document.getElementById('usc-progress-text').textContent='0 / 6';renderUnscramble();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-rose-500 hover:bg-rose-600 transition-all">🔄 Reiniciar</button></div>`;
     if(p>=80)addConfetti(c);
 }
 
 // ====== CONFETTI ======
-function addConfetti(parent){
-    const colors=['#059669','#0D9488','#D97706','#EA580C','#7C3AED','#2563EB','#EAB308'];
-    for(let i=0;i<25;i++){let p=document.createElement('div');p.className='confetti-piece';p.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];p.style.left=(15+Math.random()*70)+'%';p.style.top='20%';p.style.animationDelay=(Math.random()*.5)+'s';p.style.animationDuration=(.8+Math.random()*.8)+'s';let s=(5+Math.random()*8)+'px';p.style.width=s;p.style.height=s;p.style.borderRadius=Math.random()>.5?'50%':'2px';parent.style.position='relative';parent.appendChild(p);setTimeout(()=>p.remove(),2000);}
-}
+function addConfetti(parent){const colors=['#059669','#0D9488','#D97706','#EA580C','#7C3AED','#2563EB','#EAB308'];for(let i=0;i<25;i++){let p=document.createElement('div');p.className='confetti-piece';p.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];p.style.left=(15+Math.random()*70)+'%';p.style.top='20%';p.style.animationDelay=(Math.random()*.5)+'s';p.style.animationDuration=(.8+Math.random()*.8)+'s';let s=(5+Math.random()*8)+'px';p.style.width=s;p.style.height=s;p.style.borderRadius=Math.random()>.5?'50%':'2px';parent.style.position='relative';parent.appendChild(p);setTimeout(()=>p.remove(),2000);}}
 
 // ====== SCROLL ======
 const observer=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');});},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
