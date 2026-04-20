@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class: Simple Past Tense - Activities & Timeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5b4a9e 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .section-header.pre {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .section-header.during {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .section-header.post {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .timer {
+            background: rgba(255,255,255,0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .copy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin: 15px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 87, 108, 0.7); }
+            50% { box-shadow: 0 0 0 8px rgba(245, 87, 108, 0); }
+        }
+
+        .copy-badge .pencil {
+            font-size: 1.3em;
+        }
+
+        .activity-box {
+            background: white;
+            border: 2px dashed #667eea;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .activity-box h3 {
+            color: #5b4a9e;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .content-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .content-box h4 {
+            color: #5b4a9e;
+            margin-bottom: 12px;
+        }
+
+        /* Cards for PRE activity */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .word-card {
+            background: linear-gradient(135deg, #e0d5f7 0%, #d4c5f0 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #667eea;
+            position: relative;
+        }
+
+        .word-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .word-card .card-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #5b4a9e;
+        }
+
+        .structure-box {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%);
+            border: 3px solid #f9a825;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #5b4a9e;
+        }
+
+        /* Flashcards */
+        .flashcards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .flashcard {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flashcard:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .flashcard .emoji {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .flashcard .phrase {
+            font-weight: bold;
+            color: #5b4a9e;
+            font-size: 0.95em;
+        }
+
+        /* Timeline */
+        .timeline-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow-x: auto;
+        }
+
+        .timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 800px;
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            transform: translateY(-50%);
+        }
+
+        .timeline-point {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+            margin-bottom: 15px;
+        }
+
+        .timeline-label {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #5b4a9e;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .timeline-label.above {
+            margin-bottom: 20px;
+        }
+
+        .timeline-label.below {
+            margin-top: 20px;
+        }
+
+        .timeline-activity {
+            background: linear-gradient(135deg, #e0d5f7, #d4c5f0);
+            padding: 8px 15px;
+            border-radius: 15px;
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #5b4a9e;
+            font-weight: 600;
+        }
+
+        /* Interactive elements */
+        .en-word {
+            position: relative;
+            cursor: help;
+            border-bottom: 2px dotted #667eea;
+            color: #5b4a9e;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .en-word:hover {
+            background: #e0d5f7;
+            border-radius: 3px;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #1a202c;
+        }
+
+        .en-word:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            bottom: 135%;
+        }
+
+        .tooltip .pronunciation {
+            color: #ffd700;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tooltip .translation {
+            color: #90cdf4;
+            display: block;
+            font-style: italic;
+        }
+
+        .copy-instruction {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .copy-instruction .pencil-icon {
+            font-size: 1.8em;
+        }
+
+        .copy-instruction p {
+            color: #856404;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            border: none;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #667eea, transparent);
+            margin: 30px 0;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 8px 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-show {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .sentence-example {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .rule-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .rule-box strong {
+            color: #856404;
+        }
+
+        .sticky-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            display: inline-block;
+            transform: rotate(-2deg);
+            transition: all 0.3s;
+        }
+
+        .sticky-note:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        @media (max-width: 700px) {
+            .header h1 { font-size: 1.5em; }
+            .section-header { font-size: 1em; }
+            .tooltip { min-width: 150px; font-size: 0.75em; }
+            .timeline { min-width: 600px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Simple Past Tense</h1>
+            <p>Activities, Stories & Timeline</p>
+        </div>
+
+        <div class="content">
+
+            <!-- ==================== PRE ==================== -->
+            <div class="section-header pre">
+                <span>⏱️</span>
+                <span>PRE</span>
+                <div class="timer">⏱️ 15 minutes</div>
+            </div>
+
+            <div class="activity-box">
+                <h3>🎩 The Crazy Cap!</h3>
+                
+                <div class="content-box">
+                    <h4>📋 Sentence Structure:</h4>
+                    <div class="structure-box">
+                        <span class="en-word">Subject<span class="tooltip"><span class="pronunciation">/sábdyekt/</span><span class="translation">Sujeto</span></span></span> + <span class="en-word">verb<span class="tooltip"><span class="pronunciation">/vərb/</span><span class="translation">verbo</span></span></span> in <span class="en-word">simple<span class="tooltip"><span class="pronunciation">/símpl/</span><span class="translation">simple</span></span></span> <span class="en-word">past<span class="tooltip"><span class="pronunciation">/past/</span><span class="translation">pasado</span></span></span> <span class="en-word">tense<span class="tooltip"><span class="pronunciation">/tens/</span><span class="translation">tiempo</span></span></span> + <span class="en-word">complement<span class="tooltip"><span class="pronunciation">/kámpliment/</span><span class="translation">complemento</span></span></span> + <strong>.</strong>
+                    </div>
+                </div>
+
+                <h4 style="margin: 20px 0 10px; color: #5b4a9e;">🎴 Word Cards:</h4>
+                <div class="cards-container">
+                    <div class="word-card">
+                        <div class="card-text"><span class="en-word">brushed<span class="tooltip"><span class="pronunciation">/brásht/</span><span class="translation">cepilló</span></span></span></div>
+                    </div>
+                    <div class="word-card">
+                        <div class="card-text"><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span></div>
+                    </div>
+                    <div class="word-card">
+                        <div class="card-text"><span class="en-word">my<span class="tooltip"><span class="pronunciation">/mai/</span><span class="translation">mi</span></span></span> <span class="en-word">teeth<span class="tooltip"><span class="pronunciation">/títh/</span><span class="translation">dientes</span></span></span> <span class="en-word">after<span class="tooltip"><span class="pronunciation">/áfter/</span><span class="translation">después de</span></span></span> <span class="en-word">breakfast<span class="tooltip"><span class="pronunciation">/brékfast/</span><span class="translation">desayuno</span></span></span></div>
+                    </div>
+                    <div class="word-card">
+                        <div class="card-text"><span class="en-word">Douglas<span class="tooltip"><span class="pronunciation">/dáglas/</span><span class="translation">Douglas (nombre)</span></span></span></div>
+                    </div>
+                    <div class="word-card">
+                        <div class="card-text"><span class="en-word">his<span class="tooltip"><span class="pronunciation">/jís/</span><span class="translation">su</span></span></span> <span class="en-word">backpack<span class="tooltip"><span class="pronunciation">/bákpak/</span><span class="translation">mochila</span></span></span> <span class="en-word">last<span class="tooltip"><span class="pronunciation">/last/</span><span class="translation">pasado</span></span></span> <span class="en-word">night<span class="tooltip"><span class="pronunciation">/nait/</span><span class="translation">noche</span></span></span></div>
+                    </div>
+                    <div class="word-card">
+                        <div class="card-text"><span class="en-word">washed<span class="tooltip"><span class="pronunciation">/uásht/</span><span class="translation">lavó</span></span></span></div>
+                    </div>
+                    <div class="word-card">
+                        <div class="card-text"><span class="en-word">danced<span class="tooltip"><span class="pronunciation">/danst/</span><span class="translation">bailó</span></span></span></div>
+                    </div>
+                    <div class="word-card">
+                        <div class="card-text"><span class="en-word">Mary<span class="tooltip"><span class="pronunciation">/meri/</span><span class="translation">María (nombre)</span></span></span></div>
+                    </div>
+                    <div class="word-card">
+                        <div class="card-text"><span class="en-word">with<span class="tooltip"><span class="pronunciation">/uith/</span><span class="translation">con</span></span></span> <span class="en-word">her<span class="tooltip"><span class="pronunciation">/jər/</span><span class="translation">sus</span></span></span> <span class="en-word">friends<span class="tooltip"><span class="pronunciation">/frends/</span><span class="translation">amigos</span></span></span> at the <span class="en-word">party<span class="tooltip"><span class="pronunciation">/parti/</span><span class="translation">fiesta</span></span></span></div>
+                    </div>
+                </div>
+
+                <h4 style="margin: 20px 0 10px; color: #5b4a9e;">📸 Activity Flashcards:</h4>
+                <div class="flashcards-grid">
+                    <div class="flashcard">
+                        <div class="emoji">✍️</div>
+                        <div class="phrase"><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">studied<span class="tooltip"><span class="pronunciation">/stádid/</span><span class="translation">estudié</span></span></span></div>
+                    </div>
+                    <div class="flashcard">
+                        <div class="emoji">💻</div>
+                        <div class="phrase"><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">worked<span class="tooltip"><span class="pronunciation">/uérkt/</span><span class="translation">trabajé</span></span></span></div>
+                    </div>
+                    <div class="flashcard">
+                        <div class="emoji">⚽</div>
+                        <div class="phrase"><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">played<span class="tooltip"><span class="pronunciation">/pléid/</span><span class="translation">jugué</span></span></span></div>
+                    </div>
+                    <div class="flashcard">
+                        <div class="emoji">🎨</div>
+                        <div class="phrase"><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">painted<span class="tooltip"><span class="pronunciation">/péintid/</span><span class="translation">pinté</span></span></span></div>
+                    </div>
+                    <div class="flashcard">
+                        <div class="emoji">📺</div>
+                        <div class="phrase"><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">watched<span class="tooltip"><span class="pronunciation">/uátcht/</span><span class="translation">miré</span></span></span> <span class="en-word">TV<span class="tooltip"><span class="pronunciation">/tivi/</span><span class="translation">televisión</span></span></span></div>
+                    </div>
+                    <div class="flashcard">
+                        <div class="emoji">👨‍</div>
+                        <div class="phrase"><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">cooked<span class="tooltip"><span class="pronunciation">/cukt/</span><span class="translation">cociné</span></span></span></div>
+                    </div>
+                </div>
+
+                <div class="copy-instruction">
+                    <span class="pencil-icon">✏️</span>
+                    <div>
+                        <p>¡Copia esto en tu libreta! → <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">called<span class="tooltip"><span class="pronunciation">/cóld/</span><span class="translation">llamé</span></span></span> <span class="en-word">my<span class="tooltip"><span class="pronunciation">/mai/</span><span class="translation">mi</span></span></span> <span class="en-word">mom<span class="tooltip"><span class="pronunciation">/mam/</span><span class="translation">mamá</span></span></span> <span class="en-word">during<span class="tooltip"><span class="pronunciation">/diúring/</span><span class="translation">durante</span></span></span> <span class="en-word">lunch<span class="tooltip"><span class="pronunciation">/lanch/</span><span class="translation">almuerzo</span></span></span>.</p>
+                    </div>
+                </div>
+
+                <div class="rule-box">
+                    <strong>⚠️ Important:</strong> There is no special rule for third-person singular pronouns (<span class="en-word">he<span class="tooltip"><span class="pronunciation">/jí/</span><span class="translation">él</span></span></span>, <span class="en-word">she<span class="tooltip"><span class="pronunciation">/shí/</span><span class="translation">ella</span></span></span>, <span class="en-word">it<span class="tooltip"><span class="pronunciation">/it/</span><span class="translation">ello</span></span></span>). They follow the <strong>same structure</strong> as all pronouns (<span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">yo</span></span></span>, <span class="en-word">you<span class="tooltip"><span class="pronunciation">/yú/</span><span class="translation">tú/usted</span></span></span>, <span class="en-word">we<span class="tooltip"><span class="pronunciation">/uí/</span><span class="translation">nosotros</span></span></span>, <span class="en-word">they<span class="tooltip"><span class="pronunciation">/déi/</span><span class="translation">ellos</span></span></span>).
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ==================== DURING ==================== -->
+            <div class="section-header during">
+                <span>⏱️</span>
+                <span>DURING</span>
+                <div class="timer">⏱️ 15 minutes</div>
+            </div>
+
+            <div class="activity-box">
+                <h3>📖 Let's Make Up a Story</h3>
+
+                <div class="content-box">
+                    <h4>Starting sentence:</h4>
+                    <div class="sentence-example" style="font-size: 1.2em; text-align: center; background: linear-gradient(135deg, #e0d5f7, #d4c5f0);">
+                        <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">visited<span class="tooltip"><span class="pronunciation">/vísitid/</span><span class="translation">visité</span></span></span> <span class="en-word">my<span class="tooltip"><span class="pronunciation">/mai/</span><span class="translation">mi</span></span></span> <span class="en-word">grandma's<span class="tooltip"><span class="pronunciation">/grándmas/</span><span class="translation">de mi abuela</span></span></span> <span class="en-word">house<span class="tooltip"><span class="pronunciation">/jáus/</span><span class="translation">casa</span></span></span> <span class="en-word">yesterday<span class="tooltip"><span class="pronunciation">/yésterdei/</span><span class="translation">ayer</span></span></span>.
+                    </div>
+                </div>
+
+                <h4 style="margin: 20px 0 10px; color: #5b4a9e;">💡 Example continuations:</h4>
+                <div class="sentence-example">
+                    <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">watched<span class="tooltip"><span class="pronunciation">/uátcht/</span><span class="translation">miré</span></span></span> a <span class="en-word">movie<span class="tooltip"><span class="pronunciation">/múvi/</span><span class="translation">película</span></span></span> <span class="en-word">with<span class="tooltip"><span class="pronunciation">/uith/</span><span class="translation">con</span></span></span> <span class="en-word">my<span class="tooltip"><span class="pronunciation">/mai/</span><span class="translation">mis</span></span></span> <span class="en-word">cousins<span class="tooltip"><span class="pronunciation">/cásins/</span><span class="translation">primos</span></span></span>.
+                </div>
+                <div class="sentence-example">
+                    <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">helped<span class="tooltip"><span class="pronunciation">/jélpt/</span><span class="translation">ayudé</span></span></span> <span class="en-word">my<span class="tooltip"><span class="pronunciation">/mai/</span><span class="translation">mi</span></span></span> <span class="en-word">grandma<span class="tooltip"><span class="pronunciation">/grándma/</span><span class="translation">abuela</span></span></span> <span class="en-word">bake<span class="tooltip"><span class="pronunciation">/béik/</span><span class="translation">hornear</span></span></span> some <span class="en-word">cookies<span class="tooltip"><span class="pronunciation">/cukis/</span><span class="translation">galletas</span></span></span>.
+                </div>
+
+                <div class="copy-instruction">
+                    <span class="pencil-icon">✏️</span>
+                    <div>
+                        <p>¡Copia esto en tu libreta! → Write the complete story that your group creates in your notebook.</p>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ==================== POST ==================== -->
+            <div class="section-header post">
+                <span>⏱️</span>
+                <span>POST</span>
+                <div class="timer">⏱️ 15 minutes</div>
+            </div>
+
+            <div class="activity-box">
+                <h3>⏰ My Timeline</h3>
+
+                <div class="content-box">
+                    <h4>Think about activities you did in the past:</h4>
+                    <p>Write them on sticky notes and place them on the timeline.</p>
+                </div>
+
+                <div class="timeline-container">
+                    <div class="timeline">
+                        <div class="timeline-point">
+                            <div class="timeline-label below">
+                                <span class="en-word">Five<span class="tooltip"><span class="pronunciation">/faiv/</span><span class="translation">cinco</span></span></span> <span class="en-word">years<span class="tooltip"><span class="pronunciation">/yírs/</span><span class="translation">años</span></span></span> <span class="en-word">ago<span class="tooltip"><span class="pronunciation">/agóu/</span><span class="translation">hace</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                        </div>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label above">
+                                <span class="en-word">Last<span class="tooltip"><span class="pronunciation">/last/</span><span class="translation">pasado</span></span></span> <span class="en-word">year<span class="tooltip"><span class="pronunciation">/yír/</span><span class="translation">año</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                        </div>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label below">
+                                <span class="en-word">Last<span class="tooltip"><span class="pronunciation">/last/</span><span class="translation">pasado</span></span></span> <span class="en-word">month<span class="tooltip"><span class="pronunciation">/mánth/</span><span class="translation">mes</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                        </div>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label above">
+                                <span class="en-word">Two<span class="tooltip"><span class="pronunciation">/tú/</span><span class="translation">dos</span></span></span> <span class="en-word">weeks<span class="tooltip"><span class="pronunciation">/uíks/</span><span class="translation">semanas</span></span></span> <span class="en-word">ago<span class="tooltip"><span class="pronunciation">/agóu/</span><span class="translation">hace</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                        </div>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label below">
+                                <span class="en-word">Last<span class="tooltip"><span class="pronunciation">/last/</span><span class="translation">pasado</span></span></span> <span class="en-word">weekend<span class="tooltip"><span class="pronunciation">/uíkend/</span><span class="translation">fin de semana</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-activity">
+                                <span class="en-word">prepare<span class="tooltip"><span class="pronunciation">/pripér/</span><span class="translation">preparé</span></span></span> <span class="en-word">lasagna<span class="tooltip"><span class="pronunciation">/lasagna/</span><span class="translation">lasaña</span></span></span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label above">
+                                <span class="en-word">Yesterday<span class="tooltip"><span class="pronunciation">/yésterdei/</span><span class="translation">ayer</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-activity">
+                                <span class="en-word">visited<span class="tooltip"><span class="pronunciation">/vísitid/</span><span class="translation">visité</span></span></span> <span class="en-word">El<span class="tooltip"><span class="pronunciation">/el/</span><span class="translation">El</span></span></span> <span class="en-word">Tazumal<span class="tooltip"><span class="pronunciation">/tazumal/</span><span class="translation">Tazumal</span></span></span> <span class="en-word">Ruins<span class="tooltip"><span class="pronunciation">/rúins/</span><span class="translation">ruinas</span></span></span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label below">
+                                <span class="en-word">Present<span class="tooltip"><span class="pronunciation">/présent/</span><span class="translation">presente</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 style="margin: 20px 0 10px; color: #5b4a9e;">📝 Example story from timeline:</h4>
+                <div class="sentence-example">
+                    <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">visited<span class="tooltip"><span class="pronunciation">/vísitid/</span><span class="translation">visité</span></span></span> <span class="en-word">El<span class="tooltip"><span class="pronunciation">/el/</span><span class="translation">El</span></span></span> <span class="en-word">Tazumal<span class="tooltip"><span class="pronunciation">/tazumal/</span><span class="translation">Tazumal</span></span></span> <span class="en-word">Ruins<span class="tooltip"><span class="pronunciation">/rúins/</span><span class="translation">ruinas</span></span></span> <span class="en-word">yesterday<span class="tooltip"><span class="pronunciation">/yésterdei/</span><span class="translation">ayer</span></span></span>. <span class="en-word">It<span class="tooltip"><span class="pronunciation">/it/</span><span class="translation">Fue</span></span></span> <span class="en-word">was<span class="tooltip"><span class="pronunciation">/uás/</span><span class="translation">fue</span></span></span> a <span class="en-word">family<span class="tooltip"><span class="pronunciation">/fámili/</span><span class="translation">familiar</span></span></span> <span class="en-word">trip<span class="tooltip"><span class="pronunciation">/trip/</span><span class="translation">viaje</span></span></span>. <span class="en-word">Last<span class="tooltip"><span class="pronunciation">/last/</span><span class="translation">Pasado</span></span></span> <span class="en-word">weekend<span class="tooltip"><span class="pronunciation">/uíkend/</span><span class="translation">fin de semana</span></span></span>, <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">yo</span></span></span> <span class="en-word">learned<span class="tooltip"><span class="pronunciation">/lérnd/</span><span class="translation">aprendí</span></span></span> how to <span class="en-word">prepare<span class="tooltip"><span class="pronunciation">/pripér/</span><span class="translation">preparar</span></span></span> <span class="en-word">lasagna<span class="tooltip"><span class="pronunciation">/lasagna/</span><span class="translation">lasaña</span></span></span>. <span class="en-word">Two<span class="tooltip"><span class="pronunciation">/tú/</span><span class="translation">Dos</span></span></span> <span class="en-word">weeks<span class="tooltip"><span class="pronunciation">/uíks/</span><span class="translation">semanas</span></span></span> <span class="en-word">ago<span class="tooltip"><span class="pronunciation">/agóu/</span><span class="translation">hace</span></span></span>...
+                </div>
+
+                <div class="copy-instruction">
+                    <span class="pencil-icon">✏️</span>
+                    <div>
+                        <p>¡Copia esto en tu libreta! → Create your own timeline with activities from your past and write a story about it.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Add any interactive functionality if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Flashcard click effect
+            const flashcards = document.querySelectorAll('.flashcard');
+            flashcards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            });
+
+            // Word card click effect
+            const wordCards = document.querySelectorAll('.word-card');
+            wordCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.background = 'linear-gradient(135deg, #d4c5f0 0%, #c8b5e8 100%)';
+                    setTimeout(() => {
+                        this.style.background = '';
+                    }, 300);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
