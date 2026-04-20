@@ -132,6 +132,7 @@
             margin-bottom: 12px;
         }
 
+        /* Cards for PRE activity */
         .cards-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -147,6 +148,7 @@
             cursor: pointer;
             transition: all 0.3s;
             border: 2px solid #667eea;
+            position: relative;
         }
 
         .word-card:hover {
@@ -172,6 +174,7 @@
             color: #5b4a9e;
         }
 
+        /* Flashcards */
         .flashcards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -210,223 +213,83 @@
             font-size: 0.95em;
         }
 
-        /* Drag and Drop Styles */
-        .drag-container {
+        /* Timeline */
+        .timeline-container {
             margin: 30px 0;
             padding: 20px;
             background: #f8f9fa;
             border-radius: 15px;
+            overflow-x: auto;
         }
 
-        .draggable-items {
+        .timeline {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 30px;
-            min-height: 60px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            border: 2px dashed #ccc;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 800px;
+            position: relative;
+            padding: 40px 20px;
         }
 
-        .draggable-item {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: move;
-            font-weight: bold;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-            user-select: none;
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            transform: translateY(-50%);
         }
 
-        .draggable-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .draggable-item.dragging {
-            opacity: 0.5;
-            transform: scale(0.95);
-        }
-
-        .drop-zones {
+        .timeline-point {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-        }
-
-        .drop-zone {
-            background: white;
-            border: 3px dashed #667eea;
-            border-radius: 10px;
-            padding: 15px;
-            min-height: 60px;
-            display: flex;
             align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
         }
 
-        .drop-zone.drag-over {
-            background: #e0d5f7;
-            border-color: #5b4a9e;
-            transform: scale(1.02);
-        }
-
-        .drop-zone .number {
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
             background: #667eea;
-            color: white;
-            width: 30px;
-            height: 30px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+            margin-bottom: 15px;
         }
 
-        .drop-zone .dropped-item {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-            color: white;
-            padding: 8px 15px;
+        .timeline-label {
+            background: white;
+            padding: 10px 15px;
             border-radius: 20px;
             font-weight: bold;
-            cursor: move;
+            color: #5b4a9e;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 120px;
         }
 
-        .btn {
-            border: none;
-            padding: 12px 28px;
-            border-radius: 25px;
-            font-size: 1em;
-            cursor: pointer;
-            margin: 8px 5px;
-            transition: all 0.3s;
-            font-weight: bold;
-            color: white;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-check {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-reset {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-        }
-
-        /* Quiz Styles */
-        .quiz-container {
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-            padding: 25px;
-            border-radius: 15px;
-            margin: 25px 0;
-            border: 3px solid #e17055;
-        }
-
-        .quiz-container h4 {
-            color: #d63031;
+        .timeline-label.above {
             margin-bottom: 20px;
-            font-size: 1.3em;
-            text-align: center;
         }
 
-        .quiz-question {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 15px 0;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .quiz-question p {
-            font-weight: bold;
-            color: #2d3436;
-            margin-bottom: 15px;
-            font-size: 1.1em;
-        }
-
-        .quiz-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .quiz-option {
-            background: #f8f9fa;
-            padding: 12px 18px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .quiz-option:hover {
-            background: #e0d5f7;
-            border-color: #667eea;
-            transform: translateX(5px);
-        }
-
-        .quiz-option.selected {
-            background: #667eea;
-            color: white;
-            border-color: #5b4a9e;
-        }
-
-        .quiz-option.correct {
-            background: #00b894;
-            color: white;
-            border-color: #00a383;
-        }
-
-        .quiz-option.incorrect {
-            background: #d63031;
-            color: white;
-            border-color: #c0392b;
-        }
-
-        .quiz-option input[type="radio"] {
-            cursor: pointer;
-        }
-
-        .score-display {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
+        .timeline-label.below {
             margin-top: 20px;
-            text-align: center;
-            font-size: 1.2em;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            display: none;
         }
 
-        .score-display.show {
-            display: block;
-            animation: slideDown 0.5s;
+        .timeline-activity {
+            background: linear-gradient(135deg, #e0d5f7, #d4c5f0);
+            padding: 8px 15px;
+            border-radius: 15px;
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #5b4a9e;
+            font-weight: 600;
         }
 
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .score-display .emoji {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-
+        /* Interactive elements */
         .en-word {
             position: relative;
             cursor: help;
@@ -518,6 +381,27 @@
             margin: 30px 0;
         }
 
+        .btn {
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 8px 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-show {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
         .sentence-example {
             background: white;
             padding: 15px;
@@ -539,40 +423,26 @@
             color: #856404;
         }
 
-        .feedback-msg {
-            padding: 12px;
+        .sticky-note {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 15px;
             border-radius: 8px;
-            margin-top: 10px;
-            font-weight: bold;
-            display: none;
+            margin: 10px 0;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            display: inline-block;
+            transform: rotate(-2deg);
+            transition: all 0.3s;
         }
 
-        .feedback-msg.show {
-            display: block;
-            animation: fadeIn 0.3s;
-        }
-
-        .feedback-msg.correct {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .feedback-msg.incorrect {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .sticky-note:hover {
+            transform: rotate(0deg) scale(1.05);
         }
 
         @media (max-width: 700px) {
             .header h1 { font-size: 1.5em; }
             .section-header { font-size: 1em; }
             .tooltip { min-width: 150px; font-size: 0.75em; }
+            .timeline { min-width: 600px; }
         }
     </style>
 </head>
@@ -673,71 +543,6 @@
                 </div>
             </div>
 
-            <!-- Quiz PRE -->
-            <div class="quiz-container">
-                <h4>🎮 Quick Quiz: Simple Past Tense</h4>
-                
-                <div class="quiz-question" data-correct="b">
-                    <p>1. What is the past tense of "study"?</p>
-                    <div class="quiz-options">
-                        <label class="quiz-option">
-                            <input type="radio" name="q1" value="a">
-                            <span>studyed</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q1" value="b">
-                            <span>studied</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q1" value="c">
-                            <span>studying</span>
-                        </label>
-                    </div>
-                    <div class="feedback-msg"></div>
-                </div>
-
-                <div class="quiz-question" data-correct="a">
-                    <p>2. Choose the correct sentence:</p>
-                    <div class="quiz-options">
-                        <label class="quiz-option">
-                            <input type="radio" name="q2" value="a">
-                            <span>I watched TV yesterday.</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q2" value="b">
-                            <span>I watch TV yesterday.</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q2" value="c">
-                            <span>I watching TV yesterday.</span>
-                        </label>
-                    </div>
-                    <div class="feedback-msg"></div>
-                </div>
-
-                <div class="quiz-question" data-correct="c">
-                    <p>3. What is the past tense of "go"?</p>
-                    <div class="quiz-options">
-                        <label class="quiz-option">
-                            <input type="radio" name="q3" value="a">
-                            <span>goed</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q3" value="b">
-                            <span>gone</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q3" value="c">
-                            <span>went</span>
-                        </label>
-                    </div>
-                    <div class="feedback-msg"></div>
-                </div>
-
-                <button class="btn btn-check" onclick="checkQuiz('pre')">Check Answers</button>
-                <div class="score-display" id="scorePre"></div>
-            </div>
-
             <hr class="section-divider">
 
             <!-- ==================== DURING ==================== -->
@@ -773,52 +578,6 @@
                 </div>
             </div>
 
-            <!-- Quiz DURING -->
-            <div class="quiz-container">
-                <h4>🎮 Story Builder Quiz</h4>
-                
-                <div class="quiz-question" data-correct="b">
-                    <p>1. Which sentence correctly continues the story?</p>
-                    <div class="quiz-options">
-                        <label class="quiz-option">
-                            <input type="radio" name="q4" value="a">
-                            <span>Tomorrow I will go to the park.</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q4" value="b">
-                            <span>Then I played soccer with my friends.</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q4" value="c">
-                            <span>I am eating lunch now.</span>
-                        </label>
-                    </div>
-                    <div class="feedback-msg"></div>
-                </div>
-
-                <div class="quiz-question" data-correct="a">
-                    <p>2. Choose the correct past tense verb:</p>
-                    <div class="quiz-options">
-                        <label class="quiz-option">
-                            <input type="radio" name="q5" value="a">
-                            <span>She cooked dinner last night.</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q5" value="b">
-                            <span>She cook dinner last night.</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q5" value="c">
-                            <span>She cooking dinner last night.</span>
-                        </label>
-                    </div>
-                    <div class="feedback-msg"></div>
-                </div>
-
-                <button class="btn btn-check" onclick="checkQuiz('during')">Check Answers</button>
-                <div class="score-display" id="scoreDuring"></div>
-            </div>
-
             <hr class="section-divider">
 
             <!-- ==================== POST ==================== -->
@@ -829,58 +588,75 @@
             </div>
 
             <div class="activity-box">
-                <h3>⏰ My Timeline - Order the Story!</h3>
+                <h3>⏰ My Timeline</h3>
 
                 <div class="content-box">
-                    <h4>📝 Instructions:</h4>
-                    <p>Drag and drop the sentences in chronological order (from oldest to most recent).</p>
+                    <h4>Think about activities you did in the past:</h4>
+                    <p>Write them on sticky notes and place them on the timeline.</p>
                 </div>
 
-                <div class="drag-container">
-                    <h4 style="margin-bottom: 15px; color: #5b4a9e;">📌 Drag these sentences to the correct order:</h4>
-                    
-                    <div class="draggable-items" id="draggableItems">
-                        <div class="draggable-item" draggable="true" data-id="1">
-                            <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">learned<span class="tooltip"><span class="pronunciation">/lérnd/</span><span class="translation">aprendí</span></span></span> to <span class="en-word">swim<span class="tooltip"><span class="pronunciation">/suim/</span><span class="translation">nadar</span></span></span>
+                <div class="timeline-container">
+                    <div class="timeline">
+                        <div class="timeline-point">
+                            <div class="timeline-label below">
+                                <span class="en-word">Five<span class="tooltip"><span class="pronunciation">/faiv/</span><span class="translation">cinco</span></span></span> <span class="en-word">years<span class="tooltip"><span class="pronunciation">/yírs/</span><span class="translation">años</span></span></span> <span class="en-word">ago<span class="tooltip"><span class="pronunciation">/agóu/</span><span class="translation">hace</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
                         </div>
-                        <div class="draggable-item" draggable="true" data-id="2">
-                            <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">visited<span class="tooltip"><span class="pronunciation">/vísitid/</span><span class="translation">visité</span></span></span> <span class="en-word">El<span class="tooltip"><span class="pronunciation">/el/</span><span class="translation">El</span></span></span> <span class="en-word">Tazumal<span class="tooltip"><span class="pronunciation">/tazumal/</span><span class="translation">Tazumal</span></span></span> <span class="en-word">Ruins<span class="tooltip"><span class="pronunciation">/rúins/</span><span class="translation">ruinas</span></span></span>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label above">
+                                <span class="en-word">Last<span class="tooltip"><span class="pronunciation">/last/</span><span class="translation">pasado</span></span></span> <span class="en-word">year<span class="tooltip"><span class="pronunciation">/yír/</span><span class="translation">año</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
                         </div>
-                        <div class="draggable-item" draggable="true" data-id="3">
-                            <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">prepared<span class="tooltip"><span class="pronunciation">/pripérd/</span><span class="translation">preparé</span></span></span> <span class="en-word">lasagna<span class="tooltip"><span class="pronunciation">/lasagna/</span><span class="translation">lasaña</span></span></span>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label below">
+                                <span class="en-word">Last<span class="tooltip"><span class="pronunciation">/last/</span><span class="translation">pasado</span></span></span> <span class="en-word">month<span class="tooltip"><span class="pronunciation">/mánth/</span><span class="translation">mes</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
                         </div>
-                        <div class="draggable-item" draggable="true" data-id="4">
-                            <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">started<span class="tooltip"><span class="pronunciation">/stártid/</span><span class="translation">empecé</span></span></span> <span class="en-word">school<span class="tooltip"><span class="pronunciation">/scúl/</span><span class="translation">escuela</span></span></span>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label above">
+                                <span class="en-word">Two<span class="tooltip"><span class="pronunciation">/tú/</span><span class="translation">dos</span></span></span> <span class="en-word">weeks<span class="tooltip"><span class="pronunciation">/uíks/</span><span class="translation">semanas</span></span></span> <span class="en-word">ago<span class="tooltip"><span class="pronunciation">/agóu/</span><span class="translation">hace</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                        </div>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label below">
+                                <span class="en-word">Last<span class="tooltip"><span class="pronunciation">/last/</span><span class="translation">pasado</span></span></span> <span class="en-word">weekend<span class="tooltip"><span class="pronunciation">/uíkend/</span><span class="translation">fin de semana</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-activity">
+                                <span class="en-word">prepare<span class="tooltip"><span class="pronunciation">/pripér/</span><span class="translation">preparé</span></span></span> <span class="en-word">lasagna<span class="tooltip"><span class="pronunciation">/lasagna/</span><span class="translation">lasaña</span></span></span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label above">
+                                <span class="en-word">Yesterday<span class="tooltip"><span class="pronunciation">/yésterdei/</span><span class="translation">ayer</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-activity">
+                                <span class="en-word">visited<span class="tooltip"><span class="pronunciation">/vísitid/</span><span class="translation">visité</span></span></span> <span class="en-word">El<span class="tooltip"><span class="pronunciation">/el/</span><span class="translation">El</span></span></span> <span class="en-word">Tazumal<span class="tooltip"><span class="pronunciation">/tazumal/</span><span class="translation">Tazumal</span></span></span> <span class="en-word">Ruins<span class="tooltip"><span class="pronunciation">/rúins/</span><span class="translation">ruinas</span></span></span>
+                            </div>
+                        </div>
+
+                        <div class="timeline-point">
+                            <div class="timeline-label below">
+                                <span class="en-word">Present<span class="tooltip"><span class="pronunciation">/présent/</span><span class="translation">presente</span></span></span>
+                            </div>
+                            <div class="timeline-dot"></div>
                         </div>
                     </div>
+                </div>
 
-                    <h4 style="margin: 20px 0 15px; color: #5b4a9e;">📍 Drop in order (oldest to newest):</h4>
-                    
-                    <div class="drop-zones">
-                        <div class="drop-zone" data-order="1">
-                            <div class="number">1</div>
-                            <span style="color: #999; font-style: italic;">Drop here (Five years ago)</span>
-                        </div>
-                        <div class="drop-zone" data-order="2">
-                            <div class="number">2</div>
-                            <span style="color: #999; font-style: italic;">Drop here (Last year)</span>
-                        </div>
-                        <div class="drop-zone" data-order="3">
-                            <div class="number">3</div>
-                            <span style="color: #999; font-style: italic;">Drop here (Last weekend)</span>
-                        </div>
-                        <div class="drop-zone" data-order="4">
-                            <div class="number">4</div>
-                            <span style="color: #999; font-style: italic;">Drop here (Yesterday)</span>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 20px; text-align: center;">
-                        <button class="btn btn-check" onclick="checkTimeline()">Check Order</button>
-                        <button class="btn btn-reset" onclick="resetTimeline()">Reset</button>
-                    </div>
-
-                    <div class="feedback-msg" id="timelineFeedback"></div>
+                <h4 style="margin: 20px 0 10px; color: #5b4a9e;">📝 Example story from timeline:</h4>
+                <div class="sentence-example">
+                    <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">visited<span class="tooltip"><span class="pronunciation">/vísitid/</span><span class="translation">visité</span></span></span> <span class="en-word">El<span class="tooltip"><span class="pronunciation">/el/</span><span class="translation">El</span></span></span> <span class="en-word">Tazumal<span class="tooltip"><span class="pronunciation">/tazumal/</span><span class="translation">Tazumal</span></span></span> <span class="en-word">Ruins<span class="tooltip"><span class="pronunciation">/rúins/</span><span class="translation">ruinas</span></span></span> <span class="en-word">yesterday<span class="tooltip"><span class="pronunciation">/yésterdei/</span><span class="translation">ayer</span></span></span>. <span class="en-word">It<span class="tooltip"><span class="pronunciation">/it/</span><span class="translation">Fue</span></span></span> <span class="en-word">was<span class="tooltip"><span class="pronunciation">/uás/</span><span class="translation">fue</span></span></span> a <span class="en-word">family<span class="tooltip"><span class="pronunciation">/fámili/</span><span class="translation">familiar</span></span></span> <span class="en-word">trip<span class="tooltip"><span class="pronunciation">/trip/</span><span class="translation">viaje</span></span></span>. <span class="en-word">Last<span class="tooltip"><span class="pronunciation">/last/</span><span class="translation">Pasado</span></span></span> <span class="en-word">weekend<span class="tooltip"><span class="pronunciation">/uíkend/</span><span class="translation">fin de semana</span></span></span>, <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">yo</span></span></span> <span class="en-word">learned<span class="tooltip"><span class="pronunciation">/lérnd/</span><span class="translation">aprendí</span></span></span> how to <span class="en-word">prepare<span class="tooltip"><span class="pronunciation">/pripér/</span><span class="translation">preparar</span></span></span> <span class="en-word">lasagna<span class="tooltip"><span class="pronunciation">/lasagna/</span><span class="translation">lasaña</span></span></span>. <span class="en-word">Two<span class="tooltip"><span class="pronunciation">/tú/</span><span class="translation">Dos</span></span></span> <span class="en-word">weeks<span class="tooltip"><span class="pronunciation">/uíks/</span><span class="translation">semanas</span></span></span> <span class="en-word">ago<span class="tooltip"><span class="pronunciation">/agóu/</span><span class="translation">hace</span></span></span>...
                 </div>
 
                 <div class="copy-instruction">
@@ -891,259 +667,33 @@
                 </div>
             </div>
 
-            <!-- Quiz POST -->
-            <div class="quiz-container">
-                <h4>🎮 Timeline Challenge</h4>
-                
-                <div class="quiz-question" data-correct="b">
-                    <p>1. Which time expression is used for the most recent past?</p>
-                    <div class="quiz-options">
-                        <label class="quiz-option">
-                            <input type="radio" name="q6" value="a">
-                            <span>Five years ago</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q6" value="b">
-                            <span>Yesterday</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q6" value="c">
-                            <span>Last month</span>
-                        </label>
-                    </div>
-                    <div class="feedback-msg"></div>
-                </div>
-
-                <div class="quiz-question" data-correct="a">
-                    <p>2. Put in order: "I / pizza / cooked / last night"</p>
-                    <div class="quiz-options">
-                        <label class="quiz-option">
-                            <input type="radio" name="q7" value="a">
-                            <span>I cooked pizza last night.</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q7" value="b">
-                            <span>I last night cooked pizza.</span>
-                        </label>
-                        <label class="quiz-option">
-                            <input type="radio" name="q7" value="c">
-                            <span>Last night I pizza cooked.</span>
-                        </label>
-                    </div>
-                    <div class="feedback-msg"></div>
-                </div>
-
-                <button class="btn btn-check" onclick="checkQuiz('post')">Check Answers</button>
-                <div class="score-display" id="scorePost"></div>
-            </div>
-
         </div>
     </div>
 
     <script>
-        // Drag and Drop functionality
-        let draggedItem = null;
-
+        // Add any interactive functionality if needed
         document.addEventListener('DOMContentLoaded', function() {
-            const draggableItems = document.querySelectorAll('.draggable-item');
-            const dropZones = document.querySelectorAll('.drop-zone');
-
-            draggableItems.forEach(item => {
-                item.addEventListener('dragstart', dragStart);
-                item.addEventListener('dragend', dragEnd);
+            // Flashcard click effect
+            const flashcards = document.querySelectorAll('.flashcard');
+            flashcards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
             });
 
-            dropZones.forEach(zone => {
-                zone.addEventListener('dragover', dragOver);
-                zone.addEventListener('dragleave', dragLeave);
-                zone.addEventListener('drop', dragDrop);
+            // Word card click effect
+            const wordCards = document.querySelectorAll('.word-card');
+            wordCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.background = 'linear-gradient(135deg, #d4c5f0 0%, #c8b5e8 100%)';
+                    setTimeout(() => {
+                        this.style.background = '';
+                    }, 300);
+                });
             });
-        });
-
-        function dragStart(e) {
-            draggedItem = this;
-            setTimeout(() => this.classList.add('dragging'), 0);
-            e.dataTransfer.effectAllowed = 'move';
-        }
-
-        function dragEnd() {
-            this.classList.remove('dragging');
-            draggedItem = null;
-        }
-
-        function dragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            this.classList.add('drag-over');
-        }
-
-        function dragLeave() {
-            this.classList.remove('drag-over');
-        }
-
-        function dragDrop(e) {
-            e.preventDefault();
-            this.classList.remove('drag-over');
-            
-            if (draggedItem) {
-                // Clear existing content
-                this.innerHTML = '';
-                
-                // Add number
-                const number = document.createElement('div');
-                number.className = 'number';
-                number.textContent = this.dataset.order;
-                this.appendChild(number);
-                
-                // Add dropped item
-                const droppedItem = draggedItem.cloneNode(true);
-                droppedItem.className = 'dropped-item';
-                droppedItem.draggable = true;
-                droppedItem.addEventListener('dragstart', dragStart);
-                droppedItem.addEventListener('dragend', dragEnd);
-                this.appendChild(droppedItem);
-                
-                // Remove from original location
-                draggedItem.remove();
-            }
-        }
-
-        function checkTimeline() {
-            const dropZones = document.querySelectorAll('.drop-zone');
-            const correctOrder = ['4', '1', '3', '2']; // started school, learned to swim, prepared lasagna, visited ruins
-            const userOrder = [];
-            let allFilled = true;
-
-            dropZones.forEach(zone => {
-                const droppedItem = zone.querySelector('.dropped-item');
-                if (droppedItem) {
-                    userOrder.push(droppedItem.dataset.id);
-                } else {
-                    allFilled = false;
-                }
-            });
-
-            const feedback = document.getElementById('timelineFeedback');
-            
-            if (!allFilled) {
-                feedback.className = 'feedback-msg incorrect show';
-                feedback.textContent = '⚠️ Please fill all the positions!';
-                return;
-            }
-
-            if (JSON.stringify(userOrder) === JSON.stringify(correctOrder)) {
-                feedback.className = 'feedback-msg correct show';
-                feedback.innerHTML = '✅ Perfect! You ordered the timeline correctly!<br><small>Started school → Learned to swim → Prepared lasagna → Visited ruins</small>';
-            } else {
-                feedback.className = 'feedback-msg incorrect show';
-                feedback.textContent = '❌ Not quite right. Think about the time expressions: Five years ago → Last year → Last weekend → Yesterday';
-            }
-        }
-
-        function resetTimeline() {
-            const draggableContainer = document.getElementById('draggableItems');
-            const dropZones = document.querySelectorAll('.drop-zone');
-            
-            // Reset drop zones
-            dropZones.forEach(zone => {
-                zone.innerHTML = `<div class="number">${zone.dataset.order}</div><span style="color: #999; font-style: italic;">Drop here</span>`;
-            });
-            
-            // Reset draggable items
-            const items = [
-                { id: '1', text: '<span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">learned<span class="tooltip"><span class="pronunciation">/lérnd/</span><span class="translation">aprendí</span></span></span> to <span class="en-word">swim<span class="tooltip"><span class="pronunciation">/suim/</span><span class="translation">nadar</span></span></span>' },
-                { id: '2', text: '<span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">visited<span class="tooltip"><span class="pronunciation">/vísitid/</span><span class="translation">visité</span></span></span> <span class="en-word">El<span class="tooltip"><span class="pronunciation">/el/</span><span class="translation">El</span></span></span> <span class="en-word">Tazumal<span class="tooltip"><span class="pronunciation">/tazumal/</span><span class="translation">Tazumal</span></span></span> <span class="en-word">Ruins<span class="tooltip"><span class="pronunciation">/rúins/</span><span class="translation">ruinas</span></span></span>' },
-                { id: '3', text: '<span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">prepared<span class="tooltip"><span class="pronunciation">/pripérd/</span><span class="translation">preparé</span></span></span> <span class="en-word">lasagna<span class="tooltip"><span class="pronunciation">/lasagna/</span><span class="translation">lasaña</span></span></span>' },
-                { id: '4', text: '<span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">started<span class="tooltip"><span class="pronunciation">/stártid/</span><span class="translation">empecé</span></span></span> <span class="en-word">school<span class="tooltip"><span class="pronunciation">/scúl/</span><span class="translation">escuela</span></span></span>' }
-            ];
-            
-            draggableContainer.innerHTML = '';
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'draggable-item';
-                div.draggable = true;
-                div.dataset.id = item.id;
-                div.innerHTML = item.text;
-                div.addEventListener('dragstart', dragStart);
-                div.addEventListener('dragend', dragEnd);
-                draggableContainer.appendChild(div);
-            });
-            
-            document.getElementById('timelineFeedback').className = 'feedback-msg';
-            document.getElementById('timelineFeedback').textContent = '';
-        }
-
-        // Quiz functionality
-        function checkQuiz(section) {
-            const questions = document.querySelectorAll(`#${section === 'pre' ? '.quiz-container:first-of-type' : section === 'during' ? '.quiz-container:nth-of-type(2)' : '.quiz-container:last-of-type'} .quiz-question`);
-            let score = 0;
-            let answered = 0;
-
-            questions.forEach(question => {
-                const selected = question.querySelector('input[type="radio"]:checked');
-                const correct = question.dataset.correct;
-                const feedback = question.querySelector('.feedback-msg');
-                
-                if (selected) {
-                    answered++;
-                    if (selected.value === correct) {
-                        score++;
-                        question.querySelectorAll('.quiz-option').forEach(opt => {
-                            opt.classList.remove('selected', 'incorrect');
-                            if (opt.querySelector('input').value === correct) {
-                                opt.classList.add('correct');
-                            }
-                        });
-                        feedback.className = 'feedback-msg correct show';
-                        feedback.textContent = '✅ Correct!';
-                    } else {
-                        question.querySelectorAll('.quiz-option').forEach(opt => {
-                            opt.classList.remove('selected', 'correct');
-                            if (opt.querySelector('input').value === correct) {
-                                opt.classList.add('correct');
-                            } else if (opt.querySelector('input').checked) {
-                                opt.classList.add('incorrect');
-                            }
-                        });
-                        feedback.className = 'feedback-msg incorrect show';
-                        feedback.textContent = '❌ Incorrect. The correct answer is highlighted in green.';
-                    }
-                }
-            });
-
-            const scoreDisplay = document.getElementById(`score${section.charAt(0).toUpperCase() + section.slice(1)}`);
-            scoreDisplay.className = 'score-display show';
-            
-            let emoji = '😔';
-            let message = 'Keep practicing!';
-            const percentage = (score / questions.length) * 100;
-            
-            if (percentage === 100) {
-                emoji = '🎉';
-                message = 'Perfect score! Excellent work!';
-            } else if (percentage >= 67) {
-                emoji = '😊';
-                message = 'Great job! You understand the topic well.';
-            } else if (percentage >= 50) {
-                emoji = '🙂';
-                message = 'Good effort! Review the material and try again.';
-            }
-            
-            scoreDisplay.innerHTML = `
-                <div class="emoji">${emoji}</div>
-                <p><strong>Score: ${score}/${questions.length}</strong></p>
-                <p>${message}</p>
-            `;
-        }
-
-        // Add click handlers for quiz options
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.quiz-option')) {
-                const option = e.target.closest('.quiz-option');
-                const question = option.closest('.quiz-question');
-                question.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
-                option.classList.add('selected');
-            }
         });
     </script>
 </body>
