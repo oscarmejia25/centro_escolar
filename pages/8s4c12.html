@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <para name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✏️ Verb "Be" — Negative & Contractions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=undefined" rel="stylesheet">
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <script>
+        tailwind.config={theme:{extend:{fontFamily:{'fredoka':['Fredoka','sans-serif'],'nunito':['Nunito','sans-serif']}}}}
+    </script>
+    <style>
+        body{font-family:'Nunito',sans-serif;background:linear-gradient(180deg,#F5F3FF 0%,#FDE68A22 40%,#FBCFEF 60%,#EDE9FE 100%);min-height:100vh}
+        h1,h2,h3,h4{font-family:'Fredoka',sans-serif}
+        .float-item{position:absolute;font-size:1.5rem;opacity:.06;animation:floatItem 20s infinite ease-in-out;pointer-events:none}
+        @keyframes floatItem{0%,100%{transform:translateY(0) rotate(0deg)}33%{transform:translateY(-20px) rotate(8deg)}66%{transform:translateY(-8px) rotate(-5deg)}}
+        @keyframes bounce-slow{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+        .bounce-1{animation:bounce-slow 3s ease-in-out infinite}.bounce-2{animation:bounce-slow 3s ease-in-out infinite .4s}.bounce-3{animation:bounce-slow 3s ease-in-out infinite .8s}
+        .gradient-text{background:linear-gradient(135deg,#8B5CF6,#6366F1,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .gradient-text-warm{background:linear-gradient(135deg,#D97706,#EA580C,#DC2626);-webkit-background-clip:text;-webkit-text-fill-color:background-clip:text}
+        .section-fade{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.25,.46,.45,.94)}.section-fade.visible{opacity:1;transform:translateY(0)}
+        .scroll-indicator{animation:scrollBounce 2s ease-in-out infinite}
+        @keyframes scrollBounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(10px);opacity:1}}
+        .pron{color:#94A3B8;font-style:italic;font-size:.68rem;line-height:1.2}
+        .trans{color:#CBD5E1;font-size:.63rem;line-height:1.2}
+        .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+        .progress-fill{transition:width .5s cubic-bezier(.25,.46,.45,.94)}
+        @keyframes popIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+        .answer-reveal{animation:popIn .6s cubic-bezier(.175,.885,.32,1.275) forwards}
+        @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg) scale(1);opacity:1}100%{transform:translateY(120px) rotate(720deg) scale(0);opacity:0}
+        .confetti-piece{position:absolute;pointer-events:none;animation:confettiFall 1.2s ease-out forwards}
+        @keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:transform:translateX(-8px)}40%{transform:transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+        .type-input{transition:all .3s ease}
+        .type-input:focus{outline:none;box-shadow:0 0 0 3px rgba(139,92,246,.3);border-color:#8B5CF6}
+        .type-input.correct-input{border-color:#22C55E!important;background:#F0FDF4!important;box-shadow:0 0 0 3px rgba(34,197,94,.2)!important}
+        .type-input.wrong-input{border-color:#EF4444!important;background:#FEF2F2!important;box-shadow:0 0 0 3px rgba(239,68,68,.2)!important;animation:wrongShake .4s ease}
+        .match-btn{transition:all .2s ease;cursor:pointer;user-select:none}
+        .match-btn:hover{transform:scale(1.03);box-shadow:0 4px 15px -3px rgba(0,0,0,.12)}
+        .match-btn:active{transform:scale(.97)}
+        .match-btn.selected{border-color:#8B5CF6!important;background:#EEF2FF!important;box-shadow:0 0 0 3px rgba(139,92,246,.2)!important}
+        .match-btn.matched{opacity:.4;pointer-events:none;border-color:#22C55E!important;background:#F0FDF4!important}
+        .match-btn.wrong-match{animation:wrongShake .4s ease}
+        .sentence-card{transition:all .25s ease;cursor:pointer}
+        .sentence-card:hover{transform:translateY(-3px);box-shadow:0 8px 25px -5px rgba(0,0,0,.12)}
+        .sentence-card.placed{pointer-events:none;opacity:.4}
+        .sentence-card.correct-reveal{border-color:#22C55E!important;background:#F0FDF4!important}
+        .sentence-card.wrong-reveal{border-color:#EF4444!important;background:#FEF2F2!important;animation:wrongShake .4s ease}
+        .restart-btn{transition:all .2s ease}.restart-btn:hover{transform:scale(1.05)}.restart-btn:active{transform:scale(.95)}
+        .usc-input{transition:all .3s ease}
+        .usc-input:focus{outline:none;box-shadow:0 0 0 3px rgba(139,92,246,.2);border-color:#8B5CF6}
+        .usc-input.correct-input{border-color:#22C55E!important;background:#F0FDF4!important;box-shadow:0 0 0 3px rgba(34,197,94,.2)!important}
+        .usc-input.wrong-input{border-color:#EF4444!important;background:#FEF2F2!important;box-shadow:0 0 0 3px rgba(239,68,68,.2)!important;animation:wrongShake .4s ease}
+        .no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+    </style>
+</head>
+<body class="no-scrollbar">
+
+<header class="relative overflow-hidden pt-12 pb-16 px-6">
+    <span class="float-item top-8 left-[5%]" style="animation-delay:0s">✏️</span>
+    <span class="float-item top-16 right-[8%]" style="animation-delay:3s">📖</span>
+    <span class="float-item top-36 left-[15%]" style="animation-delay:6s">✏️</span>
+    <span class="float-item top-12 right-[22%]" style="animation-delay:2s">📖</span>
+    <span class="float-item bottom-8 left-[30%]" style="animation-delay:9s">📝</span>
+    <span class="float-item bottom-16 right-[12%]" style="animation-delay:4s">📝</span>
+    <span class="float-item top-28 left-[58%]" style="animation-delay:7s">🔄</span>
+    <span class="float-item bottom-10 left-[72%]" style="animation-delay:5s">📖</span>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+        <div class="flex justify-center gap-4 mb-6">
+            <span class="text-5xl md:text-6xl bounce-1 inline-block">✏️</span>
+            <span class="text-5xl md:text-6xl bounce-2 inline-block">📖</span>
+            <span class="text-5xl md:text-6xl bounce-3 inline-block">✨</span>
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold gradient-text leading-tight mb-3">Verb "Be" — Negative & Contracciones</h1>
+        <p class="text-lg md:text-xl text-purple-800/60 font-semibold max-w-lg mx-auto leading-relaxed">
+            Aprende las contracciones del verbo <strong class="purple-600">"be"</strong> —  y cópialo las oraciones negativas
+        </p>
+        <div class="mt-8 scroll-indicator text-purple-500/40"><span class="iconify inline-block text-2xl" data-icon="lucide:chevrons-down"></span></div>
+    </div>
+</header>
+
+<main class="max-w-3xl mx-auto px-5 pb-24 space-y-16">
+
+    <!-- ====== ¿Qué son las contracciones? ===== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5"><span class="text-3xl">📋</span><h2 class="text-2xl md:text-3xl font-bold text-purple-700">¿Qué son las contracciones?</h2></div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-purple-200 shadow-sm">
+            <p class="text-base text-gray-700 leading-relaxed mb-4">
+                Las contracciones son versiones cortas de las oraciones negativas. En lugar de decir "I am not a pilot", decimos:
+            </p>
+            <div class="bg-purple-50 rounded-2xl p-5 border border-purple-200 mb-4 text-center">
+                <p class="text-2xl font-fredoka font-bold text-purple-700">"I'm not a pilot."</p>
+                <p class="text-base text-gray-500 mt-1"><span class="pron">ai'm not a pái-lot — yo no soy piloto</span></p>
+            </div>
+            <div class="bg-violet-50 rounded-2xl p-5 border border-violet-200 mb-4 text-center">
+                <p class="text-2xl font-fredoka font-bold text-violet-700">She isn't a pilot.</p>
+                <p class="text-base text-gray-500 mt-1"><span class="shi isnt a pái-lot — ella no es piloto</span></p>
+            </div>
+            <p class="text-base text-gray-700 leading-relaxed mb-4">
+                Se usan con el signo <strong class="n't</strong> <span class="pron">— not — not</span> y un apóstrofo (<strong class="purple-600">contracción</strong> <span class="pron">— con-trak-sión</span>) del verbo "be". ¡Es la forma más usada al hablar!
+            </p>
+            <div class="bg-pink-50 rounded-xl p-4 border border-pink-200">
+                <p class="font-fredoka font-bold text-pink-700 text-sm mb-2">⚠️ ¡Atención!</p>
+                <p class="text-sm text-gray-600">"am" <span class="pron">— am</span> solo se contrae con "I". No puedes decir "He isn't" o "She amn't".</p>
+                <div class="mt-2 bg-white rounded-xl p-3 border border-pink-100 text-sm text-gray-700">
+                    <p class="✅ <strong>I'm not a pilot.</strong> <span class="pron">— ai not a pái-lot</span></p>
+                    <p class="❌ <strong>He isn't a pilot.</strong> <span class="pron">— ji isnt a pái-lot</span></p>
+                    <p class="❌ <strong>She amn't a pilot.</strong> <span class="pron">— shi am-nt a pái-lot</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== Las 3 reglas ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5"><span class="text-3xl">📐</span><h2 class="text-2xl md:text-3xl font-bold text-indigo-700">Las 3 reglas mágicas <span class="pron font-nunito text-indigo-400">— 3 riilz}</span></h2></div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-indigo-200 shadow-sm">
+            <div class="space-y-4">
+                <div class="bg-indigo-50 rounded-2xl p-5 border border-indigo-200">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="bg-indigo-500 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center">1</span>
+                        <h4 class="font-fredoka font-bold text-indigo-700">Paso 1: Identifica el sujeto</h4>
+                        <p class="text-base text-gray-700 mt-2">¿Quién habla? → es "yo", "tú", "él", "ella"... → eso es el sujeto</p>
+                    </div>
+                </div>
+                <div class="bg-amber-50 rounded-2xl p-5 border border-amber-200">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="bg-amber-500 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center">2</span>
+                        <h4 class="font-fredoka font-bold text-amber-700">Agrega "n't"</h4>
+                        <p class="text-base text-gray-700 mt-2">
+                            "I am a pilot" → "I <strong>n't</strong> a pilot." <span class="pron">— ai not a pái-lot</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-violet-50 rounded-2xl p-5 border border-violet-200">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="bg-violet-500 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center">3</span>
+                        <h4 class="font-fredoka font-bold text-violet-700">Reemplaza con la contracción</h4>
+                        <p class="text-base text-gray-700 mt-2">
+                            "She is a pilot." → "She <strong>n't</strong> a pilot." <span class="pron">— shi nt a pái-lot</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 rounded-2xl p-5 border border-emerald-200">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="bg-emerald-500 text-white text-xs font-bold rounded-full w-7 h-7 flex items-center justify-center">✓</span>
+                        <h4 class="font-fredoka font-bold text-emerald-700">¡Copia en tu libreta!</h4>
+                        <p class="text-sm text-gray-600 mt-2">Las contracciones se usan mucho al <strong>hablar y escribir</strong>. ¡Cópielas en tu cuaderno para recordarlas!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== DEFINICIONES (para copiar) ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5"><span class="text-3xl📝</span><h2 class="text-2xl md:text-3xl font-bold text-purple-700">Para copiar en tu libreta <span class="pron font-nunito text-purple-400">— Definitiones y ejemplos</span></h2></div>
+        <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-purple-200 shadow-sm">
+            <p class="text-base text-gray-600 mb-5">Las siguientes son las definiciones y oraciones que debes copiar en tu libreta, tal como lo indica tu libro:</p>
+
+            <!-- Definition -->
+            <div class="bg-purple-50 rounded-2xl p-5 border border-purple-200 mb-5">
+                <h4 class="font-fredoka font-bold text-purple-700 mb-3">📌 Definición de "contracción"</h4>
+                <p class="text-base text-gray-700 leading-relaxed mb-3">
+                    Una <strong class="purple-600">contracción</strong> <span class="pron">— con-trák-sión</span> es una forma corta de decir una oración negativa. Se forma con el verbo "be" + n't: "I'm not a pilot" = "Yo no soy piloto".
+                </p>
+            </div>
+
+            <!-- 8 sentences -->
+            <div class="bg-white rounded-2xl p-5 border-2 border-purple-100 mb-4">
+                <h4 class="font-fredoka font-bold text-purple-700 mb-4 text-center">📝 Oraciones para copiar en tu libreta</h4>
+
+                <div class="space-y-3" id="sentence-list">
+                    <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                        <p class="text-base font-bold text-purple-700 mb-1">1. Carlos works at an office.</p>
+                        <div class="bg-purple-100 rounded-xl p-3 border border-purple-200 mt-2">
+                            <p class="font-fredoka font-bold text-purple-700">Él ____ un doctor.</p>
+                            <p class="text-2xl font-fredoka font-bold text-emerald-600">✅</p>
+                            <p class="text-sm text-gray-500 mt-1"><span class="pron">— el no es un dóctor</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                        <p class="text-base font-bold text-purple-700 mb-1">2. My sister ____ a police officer.</p>
+                        <div class="bg-purple-100 rounded-xl p-3 border border-purple-200 mt-2">
+                            <p class="text-2xl font-fredoka font-bold text-emerald-600">✅</p>
+                            <p class="text-sm text-gray-500 mt-1"><span class="</span></span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                        <p class="text-base font-bold text-purple-700 mb-1">3. You ____ an astronaut.</p>
+                        <div class="bg-purple-100 rounded-xl p-3 border border-purple-200 mt-2">
+                            <p class="text-2xl font-fredoka font-bold text-emerald-600">✅</p>
+                            <p class="text-sm text-gray-500 mt-1"><span class="no-scrollbar" style="overflow:hidden;height:1.8rem;overflow:hidden;white-space:nowrap;">No eres un astronaut</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                        <p class="text-base font-bold text-purple-700 mb-1">4. Maria and Lucas ____ architects.</p>
+                        <div class="bg-purple-100 rounded-xl p-3 border border-purple-200 mt-2">
+                            <p class="text-2xl font-fredo font-bold text-emerald-600">✅</p>
+                            <p class="text-sm text-gray-500 mt-1"><span class="no-scrollbar" style="overflow:hidden;height:1.8rem;white-space:nowrap;">Son arquitectos</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                        <p class="text-base font-bold text-purple-700 mb-1">5. My uncle ____ a taxi driver.</p>
+                        <div class="bg-purple-100 rounded-xl p-3 border-purple-200 mt-2">
+                            <p class="text-2xl font-fredo font-bold text-emerald-600">✅</p>
+                            <p class="text-sm text-gray-500 mt-1"><span class="no-scrollbar" style="overflow:hidden;height:1.8rem;white-space:nowrap;">Mi tío es conductor de taxi</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                        <p class="text-base font-bold text-purple-700 mb-1">6. I ____ an eye doctor.</p>
+                        <div class="bg-purple-100 rounded-xl p-3 border-purple-200 mt-2">
+                            <p class="text-2xl font-fredoka font-bold text-emerald-600">✅</p>
+                            <p class="text-sm text-gray-500 mt-1"><span class="no-scrollbar" style="overflow:hidden;height:1.8rem;white-space:nowrap;">Soy doctor/a de ojos</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                        <p class="text-base font-bold text-purple-700 mb-1">7. They ____ pilots.</p>
+                        <div class="bg-purple-100 rounded-xl p-3 border-purple-200 mt-2">
+                            <p class="text-2xl font-fredo font-bold text-emerald-600">✅</p>
+                            <p class="text-sm text-gray-500 mt-1"><span class="none">No, no son pilotos</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
+                        <p class="text-base font-bold text-purple-700 mb-1">8. We ____ firefighters.</p>
+                        <div class="bg-purple-100 rounded-xl p-3 border-purple-200 mt-2">
+                            <p class="text-5xl font-fredo font-bold text-emerald-600">✅</p>
+                            <p class="text-sm text-gray-500 mt-1"><span class="none" style="overflow:hidden;height:1.5rem;white-space:nowrap;">No somos bomberos</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== DICTATION RACING ====== -->
+    <section class="section-fade">
+        <div class="flex items-center gap-3 mb-5"><span class="text-3xl⏱️</span><h2 class="text-2xl md:text-3xl font-bold text-rose-700">Dictation Racing Time! <span class="pron font-nunito text-rose-400">— ¡Carrera de dictado!</span></h2></div>
+        <div class="background:linear-gradient(135deg,#FFF7ED 0%,#FEF3C7 100%);border-2 border-rose-200 rounded-3xl p-6 md:p-8 shadow-md">
+            <p class="text-base text-gray-700 leading-relaxed mb-4">
+                En casa, un adulto lee una oración y los niños escriben lo que falta. ¡El primero en escribir todo correctamente gana!
+            </p>
+            <div class="bg-rose-50 rounded-2xl p-5 border border-rose-200 mb-4">
+                <p class="font-fredoka font-bold text-rose-700 text-sm mb-2">📋 Instrucciones para casa:</p>
+                <div class="text-sm text-gray-600 space-y-2">
+                    <p>1. Un adulto lee una oración con un espacio en blanco</p>
+                    <p>2. Los niños esciben lo que falta en sus cuadernos</p>
+                    <p>3. Se verifica la respuesta del primer niño en completar todo</p>
+                    <p>El primer niño en terminar todo gana la carrera</p>
+                    <div class="bg-rose-100 rounded-xl p-3 border border-rose-100 text-sm text-gray-700">
+                        <p class="⏱️" class="font-fredoka font-bold text-5xl text-landscape-ls text-rose-600 tracking-[.12em]">
+                            _______ _______
+                        </p>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Llena con las palabras que faltan y tráelo aquí la respuesta correcta</p>
+                </div>
+            </div>
+
+            <!-- Sentence list to copy -->
+            <div class="bg-white rounded-2xl p-5 border-2 border-rose-100 mb-4">
+                <div class="space-y-2">
+                    <div class="bg-rose-50 rounded-xl p-4 border border-rose-100">
+                        <p class="font-fido font-bold text-rose-700 text-sm mb-1">1. Carlos works at an office.</p>
+                        <div class="bg-rose-100 rounded-xl p-3 border border-rose-100 mt-2">
+                            <p class="font-fredo font-bold text-emerald-600 text-xl">✅ He isn't a doctor.</p>
+                        </div>
+                    </div>
+                    <div class="bg-rose-50 rounded-xl p-4 border border-rose-100">
+                        <p class="font-fido font-bold text-rose-700 text-sm mb-1">2. My sister ____ a police officer.</p>
+                        <div class="bg-rose-100 rounded-xl p-3 border border-rose-100 mt-2">
+                            <p class="font-fido font-bold text-emerald-600 text-xl">✅ She isn't a police officer.</p>
+                        </div>
+                    </div>
+                    <div class="bg-rose-50 rounded-xl p-4 border border-rose-100">
+                        <p class="font-fido font-bold text-rose-700 text-sm mb-1">3. You ____ an astronaut.</p>
+                        <div class="rgba(255,255,255,255,.7) rounded-xl p-3 border-2 border-rose-100 mt-2 inline-block">
+                            <p class="font-fido font-bold text-emerald-600 text-xl">✅ You aren't an astronaut.</p>
+                        </div>
+                    </div>
+                    <div class="bg-rose-50 rounded-xl p-4 border-2 border-rose-100">
+                        <p class="font-fido font-bold text-700 text-sm mb-1">4. Maria and Lucas ____ architects.</p>
+                        <div class="bg-overflow-hidden rounded-xl p-3 border-2 border-rose-100 mt-2 inline-block">
+                            <p class="font-fido font-bold text-emerald-600 text-xl">✅ They are architects.</p>
+                        </div>
+                    </div>
+                    <div class="bg-rose-50 rounded-xl p-4 border-2 border-rose-100">
+                        <p class="font-fido font-bold text-700 text-sm mb-1">5. My uncle ____ a taxi driver.</p>
+                        <div class="bg-overflow-hidden rounded-xl p-3 border-2 border-rose-100 mt-2 inline-block">
+                            <p class="font-fido font-bold text-emerald-600 text-xl">✅ He isn't a taxi driver.</p>
+                        </div>
+                    </div>
+                    <div class="bg-rose-50 rounded-xl p-4 border-2 border-rose-100">
+                        <p class="font-fido font-bold text-700 text-sm mb-1">6. I ____ an eye doctor.</p>
+                        <div class="bg-overflow-hidden rounded-xl p-3 border-2 border-rose-100 mt-2 inline-block">
+                            <p class="font-fido font-bold text-emerald-600 text-xl">✅ I'm not an eye doctor.</p>
+                        </div>
+                    </div>
+                    <div class="bg-rose-50 rounded-2xl p-4 border-2 border-rose-100">
+                        <p class="font-fido font-bold text-700 text-sm mb-1">7. They ____ pilots.</p>
+                        <div class="bg-overflow-hidden rounded-xl p-3 border-2 border-rose-100 mt-2 inline-block">
+                            <p class="font-fido font-bold text-emerald-600 text-xl">✅ They aren't pilots.</p>
+                        </div>
+                    </div>
+                    <div class="bg-rose-50 rounded-2xl p-4 border-2 border-rose-100">
+                        <p class="font-fido font-bold text-700 text-sm mb-1">8. We ____ firefighters.</p>
+                        <div class="bg-overflow-hidden rounded-xl p-3 border-2 border-rose-100 mt-2 inline-block">
+                            <p class="font-fido font-bold text-emerald-600 text-xl">✅ We aren't firefighters.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SENTENCE FILL GAME ====== -->
+    <section class="section-fade" id="game-section">
+        <div class="fill-section-scroll no-scrollbar">
+            <div class="flex items-center gap-3 mb-5"><span class="text-3xl🎮</span><h2 class="text-2xl md:text-3xl font-bold text-rose-700">Part 2 — Fill-in-the-Blank! <span class="pron font-nunito text-rose-400">— ¡Completa los espacios!</span></h2></div>
+            <div class="bg-white/70 backdrop-blur-sm rounded-3xl p-6 md:p-8 border-2 border-rose-200 shadow-md">
+                <p class="text-base text-gray-600 mb-2">Arrastra cada oración a su espacio vacío con la contracción correcta</p>
+                <p class="text-sm text-gray-400 mb-5">Presiona Enter para verificar</p>
+                <div class="mb-5"><div class="flex justify-between text-sm font-semibold mb-1"><span class="text-gray-500">Progreso</span><span id="sentence-progress-text" class="text-rose-600">0 / 8</span></div><div class="h-3 bg-gray-200 rounded-full overflow-hidden"><div id="sentence-progress-bar" class="progress-fill h-3 bg-gradient-to-r from-rose-400 to-pink-400 rounded-full" style="width:0%"></div></div></div></div>
+                <div id="sentence-game-area"></div>
+                <div id="sentence-result" class="mt-6 text-center"></div>
+            </div>
+        </section>
+
+</main>
+
+<footer class="text-center py-10 px-6 border-t border-rose-200/50">
+        <p class="text-rose-400 font-semibold text-sm">✏️ ¡Las contracciones se aprenden con práctica! ¡Cópialas en tu cuaderno! ✨</p>
+    </footer>
+
+<script>
+const sentences = [
+    {sentence:'Carlos works at an office.',gap:'isn\'t',answer:'isn\'t'},
+    {sentence:'My sister ____ a police officer.',gap:'isn\'t'},
+    {sentence:'You ____ an astronaut.',gap:'aren\'t'},
+    {sentence:'Maria and Lucas ____ architects.',gap:'are'},
+    {sentence:'My uncle ____ a taxi driver.',gap:'isn\'t'},
+    {sentence:'I ____ an eye doctor.',gap:'am not'},
+    {sentence:'They ____ pilots.',gap:'aren\'t'},
+    {sentence:'We ____ firefighters.',gap:'aren\'t'},
+];
+
+let senIdx=0,score=0;
+function renderSentenceGame(){
+    senIdx=0;score=0;
+    const container=document.getElementById('sentence-game-area');
+    // Shuffle the order
+    const shuffled=[...sentences].sort(()=>Math.random()-.5);
+    container.innerHTML=shuffled.map((s,i)=>{
+        const gap=s.gap;
+        return `<div class="sentence-card" id="sen-card-${i}">
+            <div class="flex items-center gap-2 mb-1">
+                <span class="text-sm font-fredoka font-bold text-purple-700">${i+1}. ${s.sentence.split('____')[0]}____ ${s.sentence.split('____')[1]}</span></div>
+            </div>
+            <div class="bg-purple-50 rounded-2xl p-3 border border-purple-200 mt-2">
+                <input type="text" id="sen-input-${i}" class="usc-input w-full text-lg font-fido font-bold py-2 px-3 rounded-xl border-2 border-purple-200 bg-purple-50/50" placeholder="Escribe aquí..." autocomplete="none" spellcheck="false">
+            </div>
+            <div class="hidden" id="sen-reveal-${i}">
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-lg font-fido font-bold text-emerald-600">✅</span>
+                    <p class="text-sm text-gray-500 mt-1"><span class="no-scrollbar" style="overflow:hidden;height:1.5rem;white-space:nowrap;">${s.gap}</span></p>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('sentence-progress-bar').style.width='0%';
+    document.getElementById('sentence-progress-text').textContent='0 / 8';
+    document.getElementById('sentence-result').innerHTML='';
+    document.getElementById('sentence-btn').classList.remove('hidden');
+
+    document.querySelectorAll('[id^="sen-input-]').forEach(inp=>{
+        inp.addEventListener('keydown',function(e){
+            if(e.key==='Enter'){e.preventDefault();checkSentence();}
+        });
+    });
+}
+
+function checkSentence(){
+        const inp=document.getElementById('sen-input-'+senIdx);
+        const s=sentences[senIdx];
+        const val=inp.value.trim().toLowerCase().replace(/[^\w\u2019]/g,''); // Smart quote characters → spaces
+        const ok=val===s.gap;
+        inp.readOnly=true;
+        if(ok){inp.classList.add('correct-input');senScore++;document.getElementById('sen-reveal-'+senIdx).classList.remove('hidden');senIdx++;
+            document.getElementById('sen-reveal-'+senIdx).innerHTML=`<div class="text-sm font-bold text-emerald-600 mt-1">✅ ¡Correcto!</div>`+
+                (document.getElementById('sen-reveal-'+senIdx).querySelector('.no-scrollbar').style.overflow='hidden','height:1.5rem','white-space':'nowrap');
+            }else{
+                inp.classList.add('wrong-input');
+                document.getElementById('sen-reveal-'+senIdx).classList.remove('hidden');
+                const fb=document.createElement('span');fb.className='text-sm font-bold text-red-500 font-bold mt-2';
+                fb.innerHTML='<span class="no-scrollbar" style="overflow:hidden;height:1.5rem;white-space:nowrap;">❌ Respuesta: <strong>'+s.gap+'</strong></div>';
+                inp.closest('.sentence-card').appendChild(fb);
+            }
+            if(senIdx>=sentences.length){showSentenceResult();}
+            document.getElementById('sentence-progress-bar').style.width=((senIdx)/sentences.length*100)+'%';
+            document.getElementById('sentence-progress-text').textContent=senIdx+' / '+sentences.length;
+    }
+
+    function showSentenceResult(){
+        const c=document.getElementById('sentence-game-area');
+        const p=Math.round((senScore/sentences.length)*100);
+        c.innerHTML=`
+            <div class="text-center answer-reveal py-4">
+                <p class="text-4xl mb-2">${p>=80?'🏆':'✅'}<span class="text-3xl">¡Excelente trabajo!</span></p>
+                <p class="text-gray-600 mt-1">¡${senScore} de '+sentences.length} correctas</p>
+                <button onclick="senIdx=0;score=0;document.getElementById('sentence-progress-bar').style.width='0%';document.getElementById('sentence-progress-text').textContent='0 / 8';renderSentenceGame();" class="mt-4 px-6 py-2.5 rounded-xl font-fredoka font-bold text-white bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-500 hover:from-rose-600 hover:to-pink-600 transition-all">🔄 Volver a escribir</button>
+        </div>`;
+        if(p>=80)addConfetti(c);
+    }
+    </section>
+
+    <div class="text-center mt-6 px-4"><span class="text-rose-400 font-semibold text-sm">✏️ ¡Las contracciones se aprenden copiándolas en tu cuaderno! ✨</div>
+
+    <script>
+    const observer=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible');});},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+    document.querySelectorAll('.section-fade').forEach(el=>observer.observe(el));
+    document.addEventListener('DOMContentLoaded',()=>{renderSentenceGame();});
+    </script>
+    </script>
+</body>
+</html>
