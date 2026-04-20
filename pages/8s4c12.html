@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clase 2: Verb Be - Negative Forms & Contractions</title>
+    <title>Class 2: Verb Be - Negative Forms & Contractions</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -28,20 +28,19 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5b4a9e 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: 2.2em;
+            margin-bottom: 5px;
         }
 
         .header p {
-            font-size: 1.2em;
+            font-size: 1.1em;
             opacity: 0.9;
         }
 
@@ -49,175 +48,354 @@
             padding: 30px;
         }
 
-        .section {
-            margin-bottom: 30px;
-            padding: 25px;
-            border-radius: 15px;
-            background: #f8f9fa;
-            border-left: 5px solid #667eea;
-        }
-
-        .section h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.8em;
+        /* Section Headers */
+        .section-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .icon {
-            font-size: 1.2em;
-        }
-
-        .grammar-box {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .contraction-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin: 20px 0;
-        }
-
-        .contraction-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-            overflow: hidden;
+            font-weight: bold;
+            font-size: 1.3em;
         }
 
-        .contraction-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .contraction-card h3 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .contraction-card .examples {
-            font-size: 0.9em;
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        .contraction-card.active .examples {
-            opacity: 1;
-            max-height: 200px;
-            margin-top: 10px;
-        }
-
-        .example-sentence {
-            background: #e7e9ff;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .example-sentence:hover {
-            background: #d4d8ff;
-            transform: translateX(5px);
-        }
-
-        .example-sentence .translation {
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .example-sentence:hover .translation {
-            display: block;
-        }
-
-        .notebook-alert {
+        .section-header.pre {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
+        }
+
+        .section-header.during {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .section-header.post {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .timer {
+            background: rgba(255,255,255,0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 5px;
+        }
+
+        .copy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin: 15px 0;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(245, 87, 108, 0.7); }
-            50% { box-shadow: 0 0 0 10px rgba(245, 87, 108, 0); }
+            50% { box-shadow: 0 0 0 8px rgba(245, 87, 108, 0); }
         }
 
-        .notebook-alert .icon {
-            font-size: 2em;
+        .copy-badge .pencil {
+            font-size: 1.3em;
         }
 
-        .activity-section {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            padding: 30px;
+        /* Content boxes */
+        .content-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .content-box h3 {
+            color: #5b4a9e;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+        }
+
+        .content-box p, .content-box li {
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .content-box ul {
+            margin-left: 20px;
+        }
+
+        /* Activity description box */
+        .activity-box {
+            background: white;
+            border: 2px dashed #667eea;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .activity-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        /* Sentence table */
+        .sentence-table {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sentence-table th {
+            background: #e0d5f7;
+            padding: 12px;
+            font-size: 1em;
+        }
+
+        .sentence-table td {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .sentence-table tr:nth-child(even) td {
+            background: #f5f3ff;
+        }
+
+        /* Keep in mind box */
+        .keep-mind {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%);
+            border: 2px solid #f9a825;
+            padding: 20px;
             border-radius: 15px;
-            margin-top: 30px;
+            margin: 20px 0;
+            text-align: center;
         }
 
-        .activity-section h2 {
+        .keep-mind .lightbulb {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .keep-mind h4 {
+            color: #f57f17;
+            margin-bottom: 8px;
+        }
+
+        /* Contraction diagram */
+        .contraction-diagram {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .contraction-column {
+            text-align: center;
+        }
+
+        .circle-label {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin: 0 auto 15px;
             color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .circle-am { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .circle-is { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .circle-are { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+        .contraction-examples {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 180px;
+        }
+
+        .contraction-examples p {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95em;
+        }
+
+        .contraction-examples p:last-child {
+            border-bottom: none;
+        }
+
+        /* Highlighted grammar */
+        .grammar-highlight {
+            background: linear-gradient(120deg, #ffeaa7 0%, #ffeaa7 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 88%;
+            padding: 2px 5px;
+            font-weight: bold;
+            color: #5b4a9e;
+        }
+
+        /* Interactive sentences with tooltips */
+        .interactive-sentence {
+            background: white;
+            padding: 12px 18px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .interactive-sentence:hover {
+            background: #f0edff;
+            transform: translateX(8px);
+        }
+
+        .interactive-sentence .translation {
+            color: #888;
+            font-size: 0.85em;
+            margin-top: 4px;
+            display: none;
+            font-style: italic;
+        }
+
+        .interactive-sentence:hover .translation {
+            display: block;
+        }
+
+        /* Tooltip Styles */
+        .en-word {
+            position: relative;
+            cursor: help;
+            border-bottom: 2px dotted #667eea;
+            color: #5b4a9e;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .en-word:hover {
+            background: #e0d5f7;
+            border-radius: 3px;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #1a202c;
+        }
+
+        .en-word:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            bottom: 135%;
+        }
+
+        .tooltip .pronunciation {
+            color: #ffd700;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tooltip .translation {
+            color: #90cdf4;
+            display: block;
+            font-style: italic;
+        }
+
+        /* Worksheet Section */
+        .worksheet-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .worksheet-section h3 {
+            color: #5b4a9e;
+            margin-bottom: 5px;
+        }
+
+        .worksheet-section .subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.95em;
         }
 
         .exercise-item {
             background: white;
-            padding: 20px;
-            margin: 15px 0;
+            padding: 18px;
+            margin: 12px 0;
             border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .exercise-item:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
         }
 
         .exercise-item p {
-            margin-bottom: 10px;
             font-weight: 600;
             color: #333;
-        }
-
-        .blank-space {
-            display: inline-block;
-            min-width: 150px;
-            border-bottom: 3px solid #667eea;
-            margin: 0 5px;
-            text-align: center;
-            color: #667eea;
-            font-weight: bold;
-            padding: 0 10px;
+            margin-bottom: 10px;
+            line-height: 1.6;
         }
 
         .input-answer {
             border: 2px solid #667eea;
-            border-radius: 5px;
+            border-radius: 8px;
             padding: 8px 15px;
             font-size: 1em;
-            margin: 0 5px;
-            min-width: 120px;
+            min-width: 130px;
             transition: all 0.3s;
+            font-family: inherit;
         }
 
         .input-answer:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+            border-color: #5b4a9e;
         }
 
         .input-answer.correct {
@@ -230,401 +408,528 @@
             background: #fee2e2;
         }
 
+        /* Buttons */
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 28px;
             border-radius: 25px;
             font-size: 1em;
             cursor: pointer;
-            margin: 10px 5px;
+            margin: 8px 5px;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            font-weight: bold;
+            color: white;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
 
         .btn-check {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
 
         .btn-show {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
         }
 
+        .btn-retry {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Answer key */
         .answer-key {
             display: none;
             background: #d1fae5;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-top: 20px;
             border: 2px solid #10b981;
         }
 
         .answer-key.show {
             display: block;
-            animation: slideDown 0.5s;
+            animation: slideDown 0.5s ease;
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .rule-box {
+        .answer-key h4 {
+            color: #059669;
+            margin-bottom: 12px;
+        }
+
+        .answer-key ol {
+            margin-left: 20px;
+            line-height: 2.2;
+        }
+
+        /* Score display */
+        .score-display {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .score-display .emoji {
+            font-size: 2em;
+        }
+
+        /* Divider */
+        .section-divider {
+            border: none;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #667eea, transparent);
+            margin: 30px 0;
+        }
+
+        /* Note copy instruction */
+        .copy-instruction {
             background: #fff3cd;
             border: 2px solid #ffc107;
             padding: 15px;
             border-radius: 10px;
             margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .rule-box strong {
+        .copy-instruction .pencil-icon {
+            font-size: 1.8em;
+        }
+
+        .copy-instruction p {
             color: #856404;
+            font-weight: 600;
         }
 
-        .highlight {
-            background: linear-gradient(120deg, #ffeaa7 0%, #ffeaa7 100%);
-            background-repeat: no-repeat;
-            background-size: 100% 40%;
-            background-position: 0 88%;
-            padding: 0 5px;
-            font-weight: bold;
-        }
-
-        .interactive-demo {
-            background: white;
+        /* Board simulation */
+        .board {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
             padding: 20px;
             border-radius: 10px;
-            margin: 20px 0;
-        }
-
-        .demo-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .demo-select {
-            padding: 10px;
-            border: 2px solid #667eea;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-        }
-
-        .demo-result {
-            font-size: 1.3em;
-            padding: 15px;
-            background: #f0f4ff;
-            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Georgia', serif;
             text-align: center;
             min-height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.2em;
         }
 
-        @media (max-width: 600px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-            .contraction-grid {
-                grid-template-columns: 1fr;
+        .board .blank {
+            border-bottom: 2px solid white;
+            min-width: 120px;
+            display: inline-block;
+            margin: 0 5px;
+            text-align: center;
+            color: #ffd700;
+        }
+
+        /* Card flip */
+        .index-card {
+            width: 180px;
+            height: 120px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin: 10px;
+            display: inline-block;
+        }
+
+        .index-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .index-card.flipped .index-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .index-card-front, .index-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .index-card-front {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .index-card-back {
+            background: white;
+            color: #333;
+            transform: rotateY(180deg);
+            border: 2px solid #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .header h1 { font-size: 1.5em; }
+            .contraction-diagram { flex-direction: column; align-items: center; }
+            .section-header { font-size: 1em; }
+            .tooltip {
+                min-width: 150px;
+                font-size: 0.75em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- HEADER -->
         <div class="header">
-            <h1>📚 Class 2: Verb Be</h1>
-            <p>Negative Forms & Contractions / Formas Negativas y Contracciones</p>
+            <h1>📚 Practice - Class 2</h1>
+            <p>The Verb Be: Negative Forms & Contractions</p>
         </div>
 
         <div class="content">
-            <!-- Introduction -->
-            <div class="section">
-                <h2><span class="icon">🎯</span> Learning Objective / Objetivo de Aprendizaje</h2>
-                <p>Aprenderemos a usar el verbo <strong>"to be"</strong> en su forma negativa con contracciones. Al final de la clase podrás decir lo que las personas <strong>NO SON</strong> de manera natural.</p>
+
+            <!-- ==================== PRE ==================== -->
+            <div class="section-header pre">
+                <span>⏱️</span>
+                <span>PRE</span>
+                <div class="timer">⏱️ 15 minutes</div>
             </div>
 
-            <!-- Grammar Explanation -->
-            <div class="section">
-                <h2><span class="icon">📖</span> Grammar Explanation / Explicación Gramatical</h2>
-                
-                <div class="grammar-box">
-                    <h3>¿Qué son las contracciones negativas?</h3>
-                    <p>Son formas acortadas que combinan el verbo "to be" con "not". En lugar de decir "I am not", decimos <strong>"I'm not"</strong>. [[1]]</p>
-                    
-                    <div class="rule-box">
-                        <strong>💡 Regla importante:</strong> Las contracciones negativas se forman de dos maneras:
-                        <ul style="margin-top: 10px; margin-left: 20px;">
-                            <li><strong>Forma 1:</strong> verbo + n't → isn't, aren't</li>
-                            <li><strong>Forma 2:</strong> verbo contraído + not → he's not, they're not</li>
-                        </ul>
+            <div class="activity-box">
+                <h3>🏃 Dictation Racing Time!</h3>
+
+                <div class="content-box">
+                    <h4>📋 Instrucciones para el docente:</h4>
+                    <ul>
+                        <li>Divide la clase en <strong>dos o cuatro grupos diferentes</strong> (según el tamaño de tu clase).</li>
+                        <li>Pide a un voluntario por grupo y entrégales un marcador o tiza.</li>
+                        <li>Si hay un estudiante con discapacidad, proporciónales una pizarra individual (mini board).</li>
+                        <li>Pide a los voluntarios que se paren frente a la pizarra y escuchen cuidadosamente.</li>
+                        <li>Lee las siguientes oraciones (los voluntarios deberán escribir la forma correcta del verbo "be").</li>
+                        <li>Cuando terminen, verifica la ortografía y precisión.</li>
+                        <li>Continúa con diferentes voluntarios y oraciones.</li>
+                        <li>Puedes usar las oraciones de abajo o crear tus propios ejemplos. <strong>Recuerda omitir la forma del verbo "be" al leer las oraciones.</strong></li>
+                    </ul>
+                </div>
+
+                <h4 style="margin: 20px 0 10px; color: #5b4a9e;">📝 Oraciones para dictado:</h4>
+
+                <div class="board">
+                    <span class="en-word">We<span class="tooltip"><span class="pronunciation">/uí/</span><span class="translation">Nosotros</span></span></span> <span class="blank">__________</span> <span class="en-word">architects<span class="tooltip"><span class="pronunciation">/árquitekts/</span><span class="translation">arquitectos</span></span></span>.
+                </div>
+
+                <table class="sentence-table">
+                    <tr><th>Sentences</th></tr>
+                    <tr><td><strong><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">am<span class="tooltip"><span class="pronunciation">/am/</span><span class="translation">soy/estoy</span></span></span></strong> an <span class="en-word">actress<span class="tooltip"><span class="pronunciation">/áctres/</span><span class="translation">actriz</span></span></span>.</td></tr>
+                    <tr><td><strong><span class="en-word">She<span class="tooltip"><span class="pronunciation">/shí/</span><span class="translation">Ella</span></span></span> <span class="en-word">is<span class="tooltip"><span class="pronunciation">/is/</span><span class="translation">es/está</span></span></span></strong> a <span class="en-word">firefighter<span class="tooltip"><span class="pronunciation">/fáyerfáiter/</span><span class="translation">bombero</span></span></span>.</td></tr>
+                    <tr><td><strong><span class="en-word">You<span class="tooltip"><span class="pronunciation">/yú/</span><span class="translation">Tú/Usted</span></span></span> <span class="en-word">are<span class="tooltip"><span class="pronunciation">/ar/</span><span class="translation">eres/estás</span></span></span></strong> an <span class="en-word">accountant<span class="tooltip"><span class="pronunciation">/acaúntant/</span><span class="translation">contador</span></span></span>.</td></tr>
+                    <tr><td><strong><span class="en-word">He<span class="tooltip"><span class="pronunciation">/jí/</span><span class="translation">Él</span></span></span> <span class="en-word">is<span class="tooltip"><span class="pronunciation">/is/</span><span class="translation">es/está</span></span></span></strong> a <span class="en-word">waiter<span class="tooltip"><span class="pronunciation">/uéiter/</span><span class="translation">mesero</span></span></span>.</td></tr>
+                    <tr><td><strong><span class="en-word">We<span class="tooltip"><span class="pronunciation">/uí/</span><span class="translation">Nosotros</span></span></span> <span class="en-word">are<span class="tooltip"><span class="pronunciation">/ar/</span><span class="translation">somos/estamos</span></span></span></strong> <span class="en-word">vets<span class="tooltip"><span class="pronunciation">/vets/</span><span class="translation">veterinarios</span></span></span>.</td></tr>
+                </table>
+
+                <div class="interactive-sentence" onclick="this.querySelector('.translation').style.display = this.querySelector('.translation').style.display === 'block' ? 'none' : 'block'">
+                    <strong><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">am<span class="tooltip"><span class="pronunciation">/am/</span><span class="translation">soy/estoy</span></span></span></strong> an <span class="en-word">actress<span class="tooltip"><span class="pronunciation">/áctres/</span><span class="translation">actriz</span></span></span>.
+                    <div class="translation" style="display:block;">→ Yo soy una actriz.</div>
+                </div>
+                <div class="interactive-sentence" onclick="this.querySelector('.translation').style.display = this.querySelector('.translation').style.display === 'block' ? 'none' : 'block'">
+                    <strong><span class="en-word">She<span class="tooltip"><span class="pronunciation">/shí/</span><span class="translation">Ella</span></span></span> <span class="en-word">is<span class="tooltip"><span class="pronunciation">/is/</span><span class="translation">es/está</span></span></span></strong> a <span class="en-word">firefighter<span class="tooltip"><span class="pronunciation">/fáyerfáiter/</span><span class="translation">bombero</span></span></span>.
+                    <div class="translation" style="display:block;">→ Ella es una bombera.</div>
+                </div>
+                <div class="interactive-sentence" onclick="this.querySelector('.translation').style.display = this.querySelector('.translation').style.display === 'block' ? 'none' : 'block'">
+                    <strong><span class="en-word">You<span class="tooltip"><span class="pronunciation">/yú/</span><span class="translation">Tú/Usted</span></span></span> <span class="en-word">are<span class="tooltip"><span class="pronunciation">/ar/</span><span class="translation">eres/estás</span></span></span></strong> an <span class="en-word">accountant<span class="tooltip"><span class="pronunciation">/acaúntant/</span><span class="translation">contador</span></span></span>.
+                    <div class="translation" style="display:block;">→ Tú eres un contador.</div>
+                </div>
+                <div class="interactive-sentence" onclick="this.querySelector('.translation').style.display = this.querySelector('.translation').style.display === 'block' ? 'none' : 'block'">
+                    <strong><span class="en-word">He<span class="tooltip"><span class="pronunciation">/jí/</span><span class="translation">Él</span></span></span> <span class="en-word">is<span class="tooltip"><span class="pronunciation">/is/</span><span class="translation">es/está</span></span></span></strong> a <span class="en-word">waiter<span class="tooltip"><span class="pronunciation">/uéiter/</span><span class="translation">mesero</span></span></span>.
+                    <div class="translation" style="display:block;">→ Él es un mesero.</div>
+                </div>
+                <div class="interactive-sentence" onclick="this.querySelector('.translation').style.display = this.querySelector('.translation').style.display === 'block' ? 'none' : 'block'">
+                    <strong><span class="en-word">We<span class="tooltip"><span class="pronunciation">/uí/</span><span class="translation">Nosotros</span></span></span> <span class="en-word">are<span class="tooltip"><span class="pronunciation">/ar/</span><span class="translation">somos/estamos</span></span></span></strong> <span class="en-word">vets<span class="tooltip"><span class="pronunciation">/vets/</span><span class="translation">veterinarios</span></span></span>.
+                    <div class="translation" style="display:block;">→ Nosotros somos veterinarios.</div>
+                </div>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ==================== DURING ==================== -->
+            <div class="section-header during">
+                <span>⏱️</span>
+                <span>DURING</span>
+                <div class="timer">⏱️ 15 minutes</div>
+            </div>
+
+            <div class="activity-box">
+                <h3>📝 Negative Sentences and Contractions</h3>
+
+                <div class="content-box">
+                    <h4>📋 Actividad con tarjetas de índice:</h4>
+                    <ul>
+                        <li>Antes de clase, prepara <strong>tres tarjetas de índice</strong> con el verbo "to be" en forma presente (<span class="grammar-highlight">am, is, are</span>) y otra con la palabra <strong>"not"</strong>.</li>
+                        <li>Escribe en la pizarra: <strong>She _______ a doctor.</strong></li>
+                        <li>Pide a los estudiantes la forma del verbo "be" que debe ir en el espacio. Luego, pega la tarjeta con <strong>"is"</strong> en el espacio.</li>
+                        <li>Después, muestra la tarjeta <strong>"not"</strong> y pregunta dónde incluir la palabra para formar una oración negativa.</li>
+                        <li>Escucha las ideas de los estudiantes y explica que al formar oraciones negativas, la palabra <strong>"not"</strong> va justo después de cualquier forma del verbo "be".</li>
+                    </ul>
+                </div>
+
+                <div class="board">
+                    <span class="en-word">She<span class="tooltip"><span class="pronunciation">/shí/</span><span class="translation">Ella</span></span></span> <span style="color: #ffd700; border-bottom: 2px solid white; padding: 0 15px;">is not</span> a <span class="en-word">doctor<span class="tooltip"><span class="pronunciation">/dáctor/</span><span class="translation">doctor/médico</span></span></span>.
+                </div>
+
+                <!-- Index Cards Interactive -->
+                <h4 style="margin: 20px 0 10px; color: #5b4a9e;">🎴 Tarjetas de Índice (haz click para voltear):</h4>
+                <div style="text-align: center;">
+                    <div class="index-card" onclick="this.classList.toggle('flipped')">
+                        <div class="index-card-inner">
+                            <div class="index-card-front"><span class="en-word">AM<span class="tooltip"><span class="pronunciation">/am/</span><span class="translation">soy/estoy</span></span></span></div>
+                            <div class="index-card-back">am</div>
+                        </div>
+                    </div>
+                    <div class="index-card" onclick="this.classList.toggle('flipped')">
+                        <div class="index-card-inner">
+                            <div class="index-card-front"><span class="en-word">IS<span class="tooltip"><span class="pronunciation">/is/</span><span class="translation">es/está</span></span></span></div>
+                            <div class="index-card-back">is</div>
+                        </div>
+                    </div>
+                    <div class="index-card" onclick="this.classList.toggle('flipped')">
+                        <div class="index-card-inner">
+                            <div class="index-card-front"><span class="en-word">ARE<span class="tooltip"><span class="pronunciation">/ar/</span><span class="translation">eres/estás</span></span></span></div>
+                            <div class="index-card-back">are</div>
+                        </div>
+                    </div>
+                    <div class="index-card" onclick="this.classList.toggle('flipped')">
+                        <div class="index-card-inner">
+                            <div class="index-card-front"><span class="en-word">NOT<span class="tooltip"><span class="pronunciation">/nat/</span><span class="translation">no</span></span></span></div>
+                            <div class="index-card-back">not</div>
+                        </div>
                     </div>
                 </div>
 
-                <h3 style="margin: 20px 0; color: #667eea;">Click en las tarjetas para ver ejemplos:</h3>
-                <div class="contraction-grid">
-                    <div class="contraction-card" onclick="toggleCard(this)">
-                        <h3>I'm not</h3>
-                        <p>I am not</p>
-                        <div class="examples">
-                            <p><strong>Ejemplos:</strong></p>
-                            <p>I'm not a teacher.<br>(Yo no soy maestro)</p>
-                            <p>I'm not tired.<br>(Yo no estoy cansado)</p>
+                <div class="copy-instruction">
+                    <span class="pencil-icon">✏️</span>
+                    <div>
+                        <p>¡Copia esto en tu libreta! → "When making negative sentences, the word <strong>not</strong> goes right after any form of the verb be."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-box">
+                <h3>📖 Introduciendo las Contracciones</h3>
+
+                <div class="content-box">
+                    <h4>📚 Explicación:</h4>
+                    <ul>
+                        <li>Introduce las <strong>formas contraídas</strong> y explica que el verbo "be" puede contraerse con el sujeto o con la palabra "not".</li>
+                        <li><strong>Recuerda destacar que "am" solo puede contraerse con el pronombre sujeto</strong> → I'm (no "I amn't").</li>
+                        <li>Las contracciones se forman combinando dos palabras y eliminando letras, reemplazadas por un apóstrofe (').</li>
+                    </ul>
+                </div>
+
+                <div class="copy-instruction">
+                    <span class="pencil-icon">✏️</span>
+                    <div>
+                        <p>¡Copia esto en tu libreta! → "The verb be can be contracted with either the subject or the word 'not'. Remember: <strong>am</strong> can only be contracted with the subject pronoun."</p>
+                    </div>
+                </div>
+
+                <!-- Contraction Diagram -->
+                <h4 style="margin: 20px 0 10px; color: #5b4a9e; text-align: center;">VERB BE: NEGATIVE STATEMENTS AND CONTRACTIONS</h4>
+
+                <div class="contraction-diagram">
+                    <div class="contraction-column">
+                        <div class="circle-label circle-am"><span class="en-word">AM<span class="tooltip"><span class="pronunciation">/am/</span><span class="translation">soy/estoy</span></span></span></div>
+                        <div class="contraction-examples">
+                            <p><strong><span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">am<span class="tooltip"><span class="pronunciation">/am/</span><span class="translation">soy/estoy</span></span></span> <span class="en-word">not<span class="tooltip"><span class="pronunciation">/nat/</span><span class="translation">no</span></span></span></strong> a <span class="en-word">teacher<span class="tooltip"><span class="pronunciation">/tícher/</span><span class="translation">maestro</span></span></span>.</p>
+                            <p><strong><span class="en-word">I'm<span class="tooltip"><span class="pronunciation">/aim/</span><span class="translation">Yo soy/estoy</span></span></span> <span class="en-word">not<span class="tooltip"><span class="pronunciation">/nat/</span><span class="translation">no</span></span></span></strong> a <span class="en-word">teacher<span class="tooltip"><span class="pronunciation">/tícher/</span><span class="translation">maestro</span></span></span>.</p>
                         </div>
                     </div>
 
-                    <div class="contraction-card" onclick="toggleCard(this)">
-                        <h3>isn't</h3>
-                        <p>is not</p>
-                        <div class="examples">
-                            <p><strong>Ejemplos:</strong></p>
-                            <p>She isn't a doctor.<br>(Ella no es doctora)</p>
-                            <p>He isn't happy.<br>(Él no está feliz)</p>
+                    <div class="contraction-column">
+                        <div class="circle-label circle-is"><span class="en-word">IS<span class="tooltip"><span class="pronunciation">/is/</span><span class="translation">es/está</span></span></span></div>
+                        <div class="contraction-examples">
+                            <p><strong><span class="en-word">She<span class="tooltip"><span class="pronunciation">/shí/</span><span class="translation">Ella</span></span></span> <span class="en-word">is<span class="tooltip"><span class="pronunciation">/is/</span><span class="translation">es/está</span></span></span> <span class="en-word">not<span class="tooltip"><span class="pronunciation">/nat/</span><span class="translation">no</span></span></span></strong> a <span class="en-word">pilot<span class="tooltip"><span class="pronunciation">/páilot/</span><span class="translation">piloto</span></span></span>.</p>
+                            <p><strong><span class="en-word">She's<span class="tooltip"><span class="pronunciation">/shis/</span><span class="translation">Ella es/está</span></span></span> <span class="en-word">not<span class="tooltip"><span class="pronunciation">/nat/</span><span class="translation">no</span></span></span></strong> a <span class="en-word">pilot<span class="tooltip"><span class="pronunciation">/páilot/</span><span class="translation">piloto</span></span></span>.</p>
+                            <p><strong><span class="en-word">She<span class="tooltip"><span class="pronunciation">/shí/</span><span class="translation">Ella</span></span></span> <span class="en-word">isn't<span class="tooltip"><span class="pronunciation">/ízent/</span><span class="translation">no es/no está</span></span></span></strong> a <span class="en-word">pilot<span class="tooltip"><span class="pronunciation">/páilot/</span><span class="translation">piloto</span></span></span>.</p>
                         </div>
                     </div>
 
-                    <div class="contraction-card" onclick="toggleCard(this)">
-                        <h3>aren't</h3>
-                        <p>are not</p>
-                        <div class="examples">
-                            <p><strong>Ejemplos:</strong></p>
-                            <p>We aren't students.<br>(Nosotros no somos estudiantes)</p>
-                            <p>They aren't here.<br>(Ellos no están aquí)</p>
+                    <div class="contraction-column">
+                        <div class="circle-label circle-are"><span class="en-word">ARE<span class="tooltip"><span class="pronunciation">/ar/</span><span class="translation">eres/estás</span></span></span></div>
+                        <div class="contraction-examples">
+                            <p><strong><span class="en-word">You<span class="tooltip"><span class="pronunciation">/yú/</span><span class="translation">Tú/Usted</span></span></span> <span class="en-word">are<span class="tooltip"><span class="pronunciation">/ar/</span><span class="translation">eres/estás</span></span></span> <span class="en-word">not<span class="tooltip"><span class="pronunciation">/nat/</span><span class="translation">no</span></span></span></strong> a <span class="en-word">vet<span class="tooltip"><span class="pronunciation">/vet/</span><span class="translation">veterinario</span></span></span>.</p>
+                            <p><strong><span class="en-word">You're<span class="tooltip"><span class="pronunciation">/yur/</span><span class="translation">Tú eres/estás</span></span></span> <span class="en-word">not<span class="tooltip"><span class="pronunciation">/nat/</span><span class="translation">no</span></span></span></strong> a <span class="en-word">vet<span class="tooltip"><span class="pronunciation">/vet/</span><span class="translation">veterinario</span></span></span>.</p>
+                            <p><strong><span class="en-word">You<span class="tooltip"><span class="pronunciation">/yú/</span><span class="translation">Tú/Usted</span></span></span> <span class="en-word">aren't<span class="tooltip"><span class="pronunciation">/arént/</span><span class="translation">no eres/no estás</span></span></span></strong> a <span class="en-word">vet<span class="tooltip"><span class="pronunciation">/vet/</span><span class="translation">veterinario</span></span></span>.</p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Examples Section -->
-            <div class="section">
-                <h2><span class="icon">💡</span> Examples / Ejemplos</h2>
-                <p>Pasa el mouse sobre cada oración para ver la traducción:</p>
-                
-                <div class="example-sentence">
-                    <strong>She isn't a pilot.</strong>
-                    <div class="translation">→ Ella no es piloto.</div>
+                <div class="keep-mind">
+                    <div class="lightbulb">💡</div>
+                    <h4>Keep in mind!</h4>
+                    <p><strong>Emphasize the pronunciation of the different forms of contractions.</strong></p>
+                    <p style="margin-top: 8px; color: #666;">Enfatiza la pronunciación de las diferentes formas de contracciones.</p>
                 </div>
 
-                <div class="example-sentence">
-                    <strong>You aren't a vet.</strong>
-                    <div class="translation">→ Tú no eres veterinario.</div>
-                </div>
-
-                <div class="example-sentence">
-                    <strong>He's not a waiter.</strong>
-                    <div class="translation">→ Él no es mesero.</div>
-                </div>
-
-                <div class="example-sentence">
-                    <strong>We aren't pilots.</strong>
-                    <div class="translation">→ Nosotros no somos pilotos.</div>
-                </div>
-
-                <div class="example-sentence">
-                    <strong>I'm not an actress.</strong>
-                    <div class="translation">→ Yo no soy actriz.</div>
-                </div>
-            </div>
-
-            <!-- Interactive Demo -->
-            <div class="section">
-                <h2><span class="icon">🎮</span> Interactive Practice / Práctica Interactiva</h2>
-                <p>Crea tus propias oraciones negativas:</p>
-                
-                <div class="interactive-demo">
-                    <div class="demo-controls">
-                        <select class="demo-select" id="subject">
-                            <option value="">Select subject:</option>
-                            <option value="I">I (Yo)</option>
-                            <option value="You">You (Tú)</option>
-                            <option value="He">He (Él)</option>
-                            <option value="She">She (Ella)</option>
-                            <option value="We">We (Nosotros)</option>
-                            <option value="They">They (Ellos)</option>
-                        </select>
-
-                        <select class="demo-select" id="verb">
-                            <option value="">Select verb:</option>
-                            <option value="am">am</option>
-                            <option value="is">is</option>
-                            <option value="are">are</option>
-                        </select>
-
-                        <select class="demo-select" id="negative">
-                            <option value="">Select negative:</option>
-                            <option value="not">not</option>
-                        </select>
-
-                        <select class="demo-select" id="profession">
-                            <option value="">Select profession:</option>
-                            <option value="a doctor">doctor</option>
-                            <option value="a teacher">teacher</option>
-                            <option value="a student">student</option>
-                            <option value="a pilot">pilot</option>
-                            <option value="an engineer">engineer</option>
-                        </select>
-
-                        <button class="btn" onclick="generateSentence()">Generate</button>
+                <div class="content-box" style="margin-top: 20px;">
+                    <h4>🗣️ Lee las oraciones en voz alta y practica:</h4>
+                    <div class="interactive-sentence" onclick="this.querySelector('.translation').style.display = this.querySelector('.translation').style.display === 'block' ? 'none' : 'block'">
+                        <strong><span class="en-word">I'm<span class="tooltip"><span class="pronunciation">/aim/</span><span class="translation">Yo soy/estoy</span></span></span> <span class="en-word">not<span class="tooltip"><span class="pronunciation">/nat/</span><span class="translation">no</span></span></span></strong> a <span class="en-word">teacher<span class="tooltip"><span class="pronunciation">/tícher/</span><span class="translation">maestro</span></span></span>.
+                        <div class="translation">→ Yo no soy maestro. (Pronuncia: /aim nat/)</div>
                     </div>
-
-                    <div class="demo-result" id="demoResult">
-                        Your sentence will appear here...
+                    <div class="interactive-sentence" onclick="this.querySelector('.translation').style.display = this.querySelector('.translation').style.display === 'block' ? 'none' : 'block'">
+                        <strong><span class="en-word">She<span class="tooltip"><span class="pronunciation">/shí/</span><span class="translation">Ella</span></span></span> <span class="en-word">isn't<span class="tooltip"><span class="pronunciation">/ízent/</span><span class="translation">no es/no está</span></span></span></strong> a <span class="en-word">pilot<span class="tooltip"><span class="pronunciation">/páilot/</span><span class="translation">piloto</span></span></span>.
+                        <div class="translation">→ Ella no es piloto. (Pronuncia: /shí ízent/)</div>
+                    </div>
+                    <div class="interactive-sentence" onclick="this.querySelector('.translation').style.display = this.querySelector('.translation').style.display === 'block' ? 'none' : 'block'">
+                        <strong><span class="en-word">You<span class="tooltip"><span class="pronunciation">/yú/</span><span class="translation">Tú/Usted</span></span></span> <span class="en-word">aren't<span class="tooltip"><span class="pronunciation">/arént/</span><span class="translation">no eres/no estás</span></span></span></strong> a <span class="en-word">vet<span class="tooltip"><span class="pronunciation">/vet/</span><span class="translation">veterinario</span></span></span>.
+                        <div class="translation">→ Tú no eres veterinario. (Pronuncia: /yú arént/)</div>
+                    </div>
+                    <div class="interactive-sentence" onclick="this.querySelector('.translation').style.display = this.querySelector('.translation').style.display === 'block' ? 'none' : 'block'">
+                        <strong><span class="en-word">He's<span class="tooltip"><span class="pronunciation">/jís/</span><span class="translation">Él es/está</span></span></span> <span class="en-word">not<span class="tooltip"><span class="pronunciation">/nat/</span><span class="translation">no</span></span></span></strong> a <span class="en-word">waiter<span class="tooltip"><span class="pronunciation">/uéiter/</span><span class="translation">mesero</span></span></span>.
+                        <div class="translation">→ Él no es mesero. (Pronuncia: /jís nat/)</div>
                     </div>
                 </div>
             </div>
 
-            <!-- IMPORTANT: What to copy -->
-            <div class="notebook-alert">
-                <span class="icon">📓</span>
-                <div>
-                    <strong>¡IMPORTANTE! Copia en tu libreta:</strong>
-                    <p>Debes copiar TODA la sección "Part II" que aparece abajo. Es obligatorio.</p>
-                </div>
+            <hr class="section-divider">
+
+            <!-- ==================== POST ==================== -->
+            <div class="section-header post">
+                <span>⏱️</span>
+                <span>POST</span>
+                <div class="timer">⏱️ 15 minutes</div>
             </div>
 
-            <!-- PART II Activity -->
-            <div class="activity-section">
-                <h2>📝 Part II (Class 2) - WORKSHEET</h2>
-                <p style="color: white; margin: 15px 0; font-size: 1.1em;">
-                    <strong>Instructions:</strong> Write the simple present of the verb <strong>"be"</strong> in the negative form. Use contractions.<br>
-                    <em>(Escribe el presente simple del verbo "be" en forma negativa. Usa contracciones)</em>
-                </p>
+            <div class="activity-box">
+                <h3>📄 Worksheet 4: The Verb Be (Part II)</h3>
 
-                <div class="exercise-item">
-                    <p>1. Carlos works at an office. He <span class="blank-space">__________</span> a doctor.</p>
-                    <input type="text" class="input-answer" id="ans1" placeholder="Your answer">
-                </div>
-
-                <div class="exercise-item">
-                    <p>2. Maria and I bake cakes and cook delicious food. We <span class="blank-space">__________</span> police officers.</p>
-                    <input type="text" class="input-answer" id="ans2" placeholder="Your answer">
-                </div>
-
-                <div class="exercise-item">
-                    <p>3. I work at a school. I <span class="blank-space">__________</span> a firefighter.</p>
-                    <input type="text" class="input-answer" id="ans3" placeholder="Your answer">
-                </div>
-
-                <div class="exercise-item">
-                    <p>4. Samuel and Valeria work at the police station. They <span class="blank-space">__________</span> astronauts.</p>
-                    <input type="text" class="input-answer" id="ans4" placeholder="Your answer">
-                </div>
-
-                <div class="exercise-item">
-                    <p>5. My mom works at the bank. She <span class="blank-space">__________</span> a taxi driver.</p>
-                    <input type="text" class="input-answer" id="ans5" placeholder="Your answer">
-                </div>
-
-                <div class="exercise-item">
-                    <p>6. You work at the restaurant. You <span class="blank-space">__________</span> an optician.</p>
-                    <input type="text" class="input-answer" id="ans6" placeholder="Your answer">
-                </div>
-
-                <div class="exercise-item">
-                    <p>7. Carolina works in the courtroom. She <span class="blank-space">__________</span> a firefighter.</p>
-                    <input type="text" class="input-answer" id="ans7" placeholder="Your answer">
-                </div>
-
-                <div class="exercise-item">
-                    <p>8. We work at the fire station. We <span class="blank-space">__________</span> pilots.</p>
-                    <input type="text" class="input-answer" id="ans8" placeholder="Your answer">
-                </div>
-
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="btn btn-check" onclick="checkAnswers()">✓ Check Answers / Verificar</button>
-                    <button class="btn btn-show" onclick="toggleAnswerKey()">👁 Show/Hide Answers</button>
-                </div>
-
-                <div class="answer-key" id="answerKey">
-                    <h3 style="color: #059669; margin-bottom: 15px;">Answer Key / Clave de Respuestas:</h3>
-                    <ol style="margin-left: 20px; line-height: 2;">
-                        <li>He <strong>isn't</strong> a doctor. (o he's not)</li>
-                        <li>We <strong>aren't</strong> police officers. (o we're not)</li>
-                        <li>I <strong>'m not</strong> a firefighter.</li>
-                        <li>They <strong>aren't</strong> astronauts. (o they're not)</li>
-                        <li>She <strong>isn't</strong> a taxi driver. (o she's not)</li>
-                        <li>You <strong>aren't</strong> an optician. (o you're not)</li>
-                        <li>She <strong>isn't</strong> a firefighter. (o she's not)</li>
-                        <li>We <strong>aren't</strong> pilots. (o we're not)</li>
-                    </ol>
-                </div>
-            </div>
-
-            <!-- Summary -->
-            <div class="section">
-                <h2><span class="icon">✨</span> Summary / Resumen</h2>
-                <div class="grammar-box">
-                    <h3>Key Points / Puntos Clave:</h3>
-                    <ul style="margin-left: 20px; line-height: 2;">
-                        <li><span class="highlight">I am not</span> → I'm not (única forma)</li>
-                        <li><span class="highlight">He/She/It is not</span> → isn't o he's not/she's not/it's not</li>
-                        <li><span class="highlight">You/We/They are not</span> → aren't o you're not/we're not/they're not</li>
-                        <li>El apóstrofe (') reemplaza las letras que se eliminan</li>
-                        <li>Ambas formas son correctas: "isn't" y "he's not" [[2]]</li>
+                <div class="content-box">
+                    <h4>📋 Instrucciones:</h4>
+                    <ul>
+                        <li>Dirige a los estudiantes al <strong>Unit 1 Worksheet 4 (Part II)</strong>.</li>
+                        <li>Pide a los estudiantes que <strong>completen los espacios en blanco</strong> escribiendo el presente simple del verbo "be" en la <strong>forma negativa usando contracciones</strong>.</li>
+                        <li>Pide a diferentes voluntarios que lean las oraciones.</li>
+                        <li>Recuerda a los estudiantes sobre la <strong>diferencia al decir las contracciones</strong>.</li>
+                        <li>Pide a los estudiantes que escriban <strong>dos ejemplos</strong> de oraciones en sus cuadernos usando el verbo "be" en presente simple en forma negativa.</li>
+                        <li>Pide a los estudiantes que se <strong>junten en parejas</strong> para compartir y comparar sus oraciones.</li>
+                        <li>Proporciona retroalimentación cuando sea posible y necesario.</li>
                     </ul>
                 </div>
             </div>
 
-            <div class="notebook-alert" style="margin-top: 30px;">
-                <span class="icon">✏️</span>
+            <div class="copy-instruction">
+                <span class="pencil-icon">✏️</span>
                 <div>
-                    <strong>Recordatorio:</strong>
-                    <p>No olvides copiar toda la sección <strong>Part II</strong> en tu libreta. ¡Es muy importante para tu aprendizaje!</p>
+                    <p><strong>¡MUY IMPORTANTE!</strong> Copia toda la actividad "Part II" que aparece abajo en tu libreta. Es obligatorio.</p>
                 </div>
             </div>
+
+            <!-- ==================== PART II WORKSHEET ==================== -->
+            <div class="worksheet-section">
+                <h3>📋 Part II (Class 2)</h3>
+                <p class="subtitle">
+                    <strong>Instructions:</strong> Write the simple present of the verb <span class="grammar-highlight">be</span> in the negative form. Use contractions.<br>
+                    <em>(Escribe el presente simple del verbo "be" en forma negativa. Usa contracciones)</em>
+                </p>
+
+                <div class="copy-badge">
+                    <span class="pencil">✏️</span>
+                    <span>Copia toda esta actividad en tu libreta</span>
+                </div>
+
+                <div class="exercise-item">
+                    <p>1. <span class="en-word">Carlos<span class="tooltip"><span class="pronunciation">/kárlous/</span><span class="translation">Carlos (nombre)</span></span></span> <span class="en-word">works<span class="tooltip"><span class="pronunciation">/uérks/</span><span class="translation">trabaja</span></span></span> at an <span class="en-word">office<span class="tooltip"><span class="pronunciation">/ófis/</span><span class="translation">oficina</span></span></span>. <span class="en-word">He<span class="tooltip"><span class="pronunciation">/jí/</span><span class="translation">Él</span></span></span> <span class="blank-space">__________</span> a <span class="en-word">doctor<span class="tooltip"><span class="pronunciation">/dáctor/</span><span class="translation">doctor/médico</span></span></span>.</p>
+                    <input type="text" class="input-answer" id="ans1" placeholder="Escribe tu respuesta">
+                </div>
+
+                <div class="exercise-item">
+                    <p>2. <span class="en-word">Maria<span class="tooltip"><span class="pronunciation">/maría/</span><span class="translation">María (nombre)</span></span></span> and <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">bake<span class="tooltip"><span class="pronunciation">/béik/</span><span class="translation">horneamos</span></span></span> <span class="en-word">cakes<span class="tooltip"><span class="pronunciation">/kéiks/</span><span class="translation">pasteles</span></span></span> and <span class="en-word">cook<span class="tooltip"><span class="pronunciation">/cuc/</span><span class="translation">cocinamos</span></span></span> <span class="en-word">delicious<span class="tooltip"><span class="pronunciation">/dilíshas/</span><span class="translation">delicioso</span></span></span> <span class="en-word">food<span class="tooltip"><span class="pronunciation">/fúd/</span><span class="translation">comida</span></span></span>. <span class="en-word">We<span class="tooltip"><span class="pronunciation">/uí/</span><span class="translation">Nosotros</span></span></span> <span class="blank-space">__________</span> <span class="en-word">police<span class="tooltip"><span class="pronunciation">/polís/</span><span class="translation">policía</span></span></span> <span class="en-word">officers<span class="tooltip"><span class="pronunciation">/ófisers/</span><span class="translation">oficiales</span></span></span>.</p>
+                    <input type="text" class="input-answer" id="ans2" placeholder="Escribe tu respuesta">
+                </div>
+
+                <div class="exercise-item">
+                    <p>3. <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="en-word">work<span class="tooltip"><span class="pronunciation">/uérk/</span><span class="translation">trabajo</span></span></span> at a <span class="en-word">school<span class="tooltip"><span class="pronunciation">/scúl/</span><span class="translation">escuela</span></span></span>. <span class="en-word">I<span class="tooltip"><span class="pronunciation">/ái/</span><span class="translation">Yo</span></span></span> <span class="blank-space">__________</span> a <span class="en-word">firefighter<span class="tooltip"><span class="pronunciation">/fáyerfáiter/</span><span class="translation">bombero</span></span></span>.</p>
+                    <input type="text" class="input-answer" id="ans3" placeholder="Escribe tu respuesta">
+                </div>
+
+                <div class="exercise-item">
+                    <p>4. <span class="en-word">Samuel<span class="tooltip"><span class="pronunciation">/sámiuel/</span><span class="translation">Samuel (nombre)</span></span></span> and <span class="en-word">Valeria<span class="tooltip"><span class="pronunciation">/valéria/</span><span class="translation">Valeria (nombre)</span></span></span> <span class="en-word">work<span class="tooltip"><span class="pronunciation">/uérk/</span><span class="translation">trabajan</span></span></span> at the <span class="en-word">police<span class="tooltip"><span class="pronunciation">/polís/</span><span class="translation">policía</span></span></span> <span class="en-word">station<span class="tooltip"><span class="pronunciation">/stéishon/</span><span class="translation">estación</span></span></span>. <span class="en-word">They<span class="tooltip"><span class="pronunciation">/déi/</span><span class="translation">Ellos</span></span></span> <span class="blank-space">__________</span> <span class="en-word">astronauts<span class="tooltip"><span class="pronunciation">/ástronots/</span><span class="translation">astronautas</span></span></span>.</p>
+                    <input type="text" class="input-answer" id="ans4" placeholder="Escribe tu respuesta">
+                </div>
+
+                <div class="exercise-item">
+                    <p>5. <span class="en-word">My<span class="tooltip"><span class="pronunciation">/mai/</span><span class="translation">Mi</span></span></span> <span class="en-word">mom<span class="tooltip"><span class="pronunciation">/mam/</span><span class="translation">mamá</span></span></span> <span class="en-word">works<span class="tooltip"><span class="pronunciation">/uérks/</span><span class="translation">trabaja</span></span></span> at the <span class="en-word">bank<span class="tooltip"><span class="pronunciation">/bank/</span><span class="translation">banco</span></span></span>. <span class="en-word">She<span class="tooltip"><span class="pronunciation">/shí/</span><span class="translation">Ella</span></span></span> <span class="blank-space">__________</span> a <span class="en-word">taxi<span class="tooltip"><span class="pronunciation">/táxi/</span><span class="translation">taxi</span></span></span> <span class="en-word">driver<span class="tooltip"><span class="pronunciation">/dráiver/</span><span class="translation">conductor</span></span></span>.</p>
+                    <input type="text" class="input-answer" id="ans5" placeholder="Escribe tu respuesta">
+                </div>
+
+                <div class="exercise-item">
+                    <p>6. <span class="en-word">You<span class="tooltip"><span class="pronunciation">/yú/</span><span class="translation">Tú/Usted</span></span></span> <span class="en-word">work<span class="tooltip"><span class="pronunciation">/uérk/</span><span class="translation">trabajas</span></span></span> at the <span class="en-word">restaurant<span class="tooltip"><span class="pronunciation">/réstorant/</span><span class="translation">restaurante</span></span></span>. <span class="en-word">You<span class="tooltip"><span class="pronunciation">/yú/</span><span class="translation">Tú/Usted</span></span></span> <span class="blank-space">__________</span> an <span class="en-word">optician<span class="tooltip"><span class="pronunciation">/optíshian/</span><span class="translation">óptico</span></span></span>.</p>
+                    <input type="text" class="input-answer" id="ans6" placeholder="Escribe tu respuesta">
+                </div>
+
+                <div class="exercise-item">
+                    <p>7. <span class="en-word">Carolina<span class="tooltip"><span class="pronunciation">/carolina/</span><span class="translation">Carolina (nombre)</span></span></span> <span class="en-word">works<span class="tooltip"><span class="pronunciation">/uérks/</span><span class="translation">trabaja</span></span></span> in the <span class="en-word">courtroom<span class="tooltip"><span class="pronunciation">/córrtum/</span><span class="translation">sala del tribunal</span></span></span>. <span class="en-word">She<span class="tooltip"><span class="pronunciation">/shí/</span><span class="translation">Ella</span></span></span> <span class="blank-space">__________</span> a <span class="en-word">firefighter<span class="tooltip"><span class="pronunciation">/fáyerfáiter/</span><span class="translation">bombero</span></span></span>.</p>
+                    <input type="text" class="input-answer" id="ans7" placeholder="Escribe tu respuesta">
+                </div>
+
+                <div class="exercise-item">
+                    <p>8. <span class="en-word">We<span class="tooltip"><span class="pronunciation">/uí/</span><span class="translation">Nosotros</span></span></span> <span class="en-word">work<span class="tooltip"><span class="pronunciation">/uérk/</span><span class="translation">trabajamos</span></span></span> at the <span class="en-word">fire<span class="tooltip"><span class="pronunciation">/fáyer/</span><span class="translation">fuego</span></span></span> <span class="en-word">station<span class="tooltip"><span class="pronunciation">/stéishon/</span><span class="translation">estación</span></span></span>. <span class="en-word">We<span class="tooltip"><span class="pronunciation">/uí/</span><span class="translation">Nosotros</span></span></span> <span class="blank-space">__________</span> <span class="en-word">pilots<span class="tooltip"><span class="pronunciation">/páilots/</span><span class="translation">pilotos</span></span></span>.</p>
+                    <input type="text" class="input-answer" id="ans8" placeholder="Escribe tu respuesta">
+                </div>
+
+                <div style="text-align: center; margin-top: 25px;">
+                    <button class="btn btn-check" onclick="checkAnswers()">✓ Check Answers / Verificar</button>
+                    <button class="btn btn-show" onclick="toggleAnswerKey()">👁 Show/Hide Answers</button>
+                    <button class="btn btn-retry" onclick="retryAll()">🔄 Retry / Reintentar</button>
+                </div>
+
+                <div class="answer-key" id="answerKey">
+                    <h4>📝 Answer Key / Clave de Respuestas:</h4>
+                    <ol>
+                        <li>He <strong>isn't</strong> <span class="en-word">a<span class="tooltip"><span class="pronunciation">/a/</span><span class="translation">un/una</span></span></span> <span class="en-word">doctor<span class="tooltip"><span class="pronunciation">/dáctor/</span><span class="translation">doctor</span></span></span>. <em>(o: he's not)</em></li>
+                        <li>We <strong>aren't</strong> <span class="en-word">police<span class="tooltip"><span class="pronunciation">/polís/</span><span class="translation">policía</span></span></span> <span class="en-word">officers<span class="tooltip"><span class="pronunciation">/ófisers/</span><span class="translation">oficiales</span></span></span>. <em>(o: we're not)</em></li>
+                        <li>I <strong>'m not</strong> <span class="en-word">a<span class="tooltip"><span class="pronunciation">/a/</span><span class="translation">un/una</span></span></span> <span class="en-word">firefighter<span class="tooltip"><span class="pronunciation">/fáyerfáiter/</span><span class="translation">bombero</span></span></span>. <em>(o: am not)</em></li>
+                        <li>They <strong>aren't</strong> <span class="en-word">astronauts<span class="tooltip"><span class="pronunciation">/ástronots/</span><span class="translation">astronautas</span></span></span>. <em>(o: they're not)</em></li>
+                        <li>She <strong>isn't</strong> <span class="en-word">a<span class="tooltip"><span class="pronunciation">/a/</span><span class="translation">un/una</span></span></span> <span class="en-word">taxi<span class="tooltip"><span class="pronunciation">/táxi/</span><span class="translation">taxi</span></span></span> <span class="en-word">driver<span class="tooltip"><span class="pronunciation">/dráiver/</span><span class="translation">conductor</span></span></span>. <em>(o: she's not)</em></li>
+                        <li>You <strong>aren't</strong> <span class="en-word">an<span class="tooltip"><span class="pronunciation">/an/</span><span class="translation">un/una</span></span></span> <span class="en-word">optician<span class="tooltip"><span class="pronunciation">/optíshian/</span><span class="translation">óptico</span></span></span>. <em>(o: you're not)</em></li>
+                        <li>She <strong>isn't</strong> <span class="en-word">a<span class="tooltip"><span class="pronunciation">/a/</span><span class="translation">un/una</span></span></span> <span class="en-word">firefighter<span class="tooltip"><span class="pronunciation">/fáyerfáiter/</span><span class="translation">bombero</span></span></span>. <em>(o: she's not)</em></li>
+                        <li>We <strong>aren't</strong> <span class="en-word">pilots<span class="tooltip"><span class="pronunciation">/páilots/</span><span class="translation">pilotos</span></span></span>. <em>(o: we're not)</em></li>
+                    </ol>
+                </div>
+
+                <div id="scoreContainer"></div>
+            </div>
+
+            <div class="copy-badge" style="width: 100%; justify-content: center; margin-top: 20px;">
+                <span class="pencil">✏️</span>
+                <span>No olvides copiar toda la Part II en tu libreta</span>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // Toggle card expansion
-        function toggleCard(card) {
-            card.classList.toggle('active');
-        }
-
-        // Generate sentence demo
-        function generateSentence() {
-            const subject = document.getElementById('subject').value;
-            const verb = document.getElementById('verb').value;
-            const negative = document.getElementById('negative').value;
-            const profession = document.getElementById('profession').value;
-
-            if (!subject || !verb || !profession) {
-                document.getElementById('demoResult').innerHTML = 
-                    '<span style="color: #ef4444;">Please select all options!</span>';
-                return;
-            }
-
-            let contraction = '';
-            
-            if (subject === 'I') {
-                contraction = "I'm not";
-            } else if (subject === 'He' || subject === 'She') {
-                contraction = subject + " isn't";
-            } else if (subject === 'You' || subject === 'We' || subject === 'They') {
-                contraction = subject + " aren't";
-            }
-
-            document.getElementById('demoResult').innerHTML = 
-                `<strong>${contraction} ${profession}.</strong>`;
-        }
-
-        // Check answers
         function checkAnswers() {
             const answers = {
                 'ans1': ["isn't", "is not", "he's not"],
@@ -643,7 +948,7 @@
             for (let id in answers) {
                 const input = document.getElementById(id);
                 const userAnswer = input.value.toLowerCase().trim();
-                
+
                 if (answers[id].includes(userAnswer)) {
                     input.classList.remove('incorrect');
                     input.classList.add('correct');
@@ -654,25 +959,45 @@
                 }
             }
 
-            // Show score
-            const scoreDiv = document.createElement('div');
-            scoreDiv.style.cssText = 'background: white; padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center; font-size: 1.2em;';
-            scoreDiv.innerHTML = `<strong>Score: ${correct}/${total}</strong><br>${correct === total ? '🎉 Excellent!' : 'Keep practicing!'}`;
-            
-            const existingScore = document.querySelector('.score-display');
-            if (existingScore) existingScore.remove();
-            
-            scoreDiv.classList.add('score-display');
-            document.querySelector('.activity-section').appendChild(scoreDiv);
+            const scoreContainer = document.getElementById('scoreContainer');
+            let emoji = '😔';
+            let message = 'Keep practicing!';
+
+            if (correct === total) {
+                emoji = '🎉';
+                message = '¡Perfecto! ¡Todas correctas!';
+            } else if (correct >= 6) {
+                emoji = '😊';
+                message = '¡Muy bien! Casi perfecto.';
+            } else if (correct >= 4) {
+                emoji = '🙂';
+                message = '¡Buen intento! Sigue practicando.';
+            }
+
+            scoreContainer.innerHTML = `
+                <div class="score-display">
+                    <div class="emoji">${emoji}</div>
+                    <p><strong>Score: ${correct}/${total}</strong></p>
+                    <p>${message}</p>
+                </div>
+            `;
         }
 
-        // Toggle answer key
         function toggleAnswerKey() {
             const answerKey = document.getElementById('answerKey');
             answerKey.classList.toggle('show');
         }
 
-        // Add enter key support for inputs
+        function retryAll() {
+            for (let i = 1; i <= 8; i++) {
+                const input = document.getElementById('ans' + i);
+                input.value = '';
+                input.classList.remove('correct', 'incorrect');
+            }
+            document.getElementById('scoreContainer').innerHTML = '';
+        }
+
+        // Enter key support
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 checkAnswers();
