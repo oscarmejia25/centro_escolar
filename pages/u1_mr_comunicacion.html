@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimiento Circular Uniforme - Física Interactiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0d0f0e;
+            --bg2: #141816;
+            --card: #1a1e1c;
+            --card-hover: #222826;
+            --border: #2a302d;
+            --fg: #e8ece9;
+            --fg-muted: #8a9490;
+            --accent: #f0a500;
+            --accent2: #ff6b35;
+            --accent-glow: rgba(240, 165, 0, 0.15);
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --info: #3498db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Fondo atmosférico */
+        .bg-atmosphere {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-atmosphere .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            animation: orbFloat 20s ease-in-out infinite alternate;
+        }
+        .bg-atmosphere .orb:nth-child(1) {
+            width: 600px; height: 600px;
+            background: var(--accent);
+            top: -200px; left: -100px;
+        }
+        .bg-atmosphere .orb:nth-child(2) {
+            width: 400px; height: 400px;
+            background: var(--accent2);
+            bottom: -100px; right: -50px;
+            animation-delay: -7s;
+        }
+        .bg-atmosphere .orb:nth-child(3) {
+            width: 300px; height: 300px;
+            background: #2ecc71;
+            top: 50%; left: 50%;
+            animation-delay: -14s;
+            opacity: 0.06;
+        }
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -30px) scale(1.1); }
+            100% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navegación */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(13, 15, 14, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+        }
+        nav .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        nav .logo {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        nav .logo i { font-size: 1.3rem; }
+        nav .nav-links {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+        }
+        nav .nav-links a {
+            color: var(--fg-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.25s;
+        }
+        nav .nav-links a:hover {
+            color: var(--fg);
+            background: var(--card);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 24px 60px;
+            position: relative;
+        }
+        .hero-content { max-width: 800px; }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(240, 165, 0, 0.25);
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 100px;
+            margin-bottom: 28px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.2rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--fg-muted);
+            max-width: 600px;
+            margin: 0 auto 36px;
+            font-weight: 200;
+        }
+        .hero-cta {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #000;
+            box-shadow: 0 4px 20px rgba(240, 165, 0, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(240, 165, 0, 0.4);
+        }
+        .btn-secondary {
+            background: var(--card);
+            color: var(--fg);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--card-hover);
+            border-color: var(--accent);
+        }
+
+        /* Canvas orbital en hero */
+        #heroCanvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* Secciones */
+        section {
+            padding: 100px 0;
+            position: relative;
+        }
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .section-desc {
+            color: var(--fg-muted);
+            font-size: 1.05rem;
+            max-width: 650px;
+            margin-bottom: 50px;
+            font-weight: 200;
+        }
+
+        /* Tarjetas de concepto */
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .concept-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 28px;
+            transition: all 0.35s;
+            position: relative;
+            overflow: hidden;
+        }
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+        .concept-card:hover {
+            border-color: rgba(240, 165, 0, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+        .concept-card:hover::before { opacity: 1; }
+        .concept-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: var(--accent-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .concept-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .concept-card p {
+            color: var(--fg-muted);
+            font-size: 0.9rem;
+            font-weight: 200;
+            margin-bottom: 16px;
+        }
+        .formula-box {
+            background: rgba(240, 165, 0, 0.08);
+            border: 1px solid rgba(240, 165, 0, 0.15);
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--accent);
+            text-align: center;
+            font-weight: 600;
+        }
+        .formula-num {
+            font-size: 0.7rem;
+            color: var(--fg-muted);
+            font-family: 'Outfit', sans-serif;
+            text-align: right;
+            margin-top: 6px;
+        }
+
+        /* Simulador interactivo */
+        .sim-section {
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .sim-layout {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 30px;
+            align-items: start;
+        }
+        @media (max-width: 800px) {
+            .sim-layout { grid-template-columns: 1fr; }
+        }
+        .sim-canvas-wrap {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+        #simCanvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .sim-overlay {
+            position: absolute;
+            bottom: 16px; left: 16px;
+            display: flex;
+            gap: 8px;
+        }
+        .sim-overlay button {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            color: var(--fg);
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .sim-overlay button:hover {
+            background: rgba(240, 165, 0, 0.2);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .sim-controls {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+        }
+        .sim-controls h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sim-controls h3 i { color: var(--accent); }
+        .control-group {
+            margin-bottom: 22px;
+        }
+        .control-group label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--fg-muted);
+            margin-bottom: 8px;
+        }
+        .control-group label span {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            font-weight: 600;
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(240, 165, 0, 0.4);
+        }
+        .sim-readout {
+            background: rgba(240, 165, 0, 0.06);
+            border: 1px solid rgba(240, 165, 0, 0.12);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+        .sim-readout h4 {
+            font-size: 0.78rem;
+            color: var(--fg-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .readout-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.88rem;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .readout-row:last-child { border-bottom: none; }
+        .readout-row .rlabel { color: var(--fg-muted); }
+        .readout-row .rvalue {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--fg);
+            font-weight: 600;
+        }
+
+        /* Ejemplo resuelto */
+        .example-block {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+            margin-bottom: 30px;
+        }
+        .example-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .example-header .badge {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+        .example-header h3 { font-weight: 700; }
+        .example-data {
+            background: rgba(240, 165, 0, 0.06);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 24px;
+        }
+        .example-data p {
+            font-size: 0.92rem;
+            margin-bottom: 4px;
+        }
+        .example-data strong { color: var(--accent); }
+        .step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 18px;
+            align-items: flex-start;
+        }
+        .step-num {
+            flex-shrink: 0;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: var(--accent-glow);
+            border: 1px solid rgba(240, 165, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-content p {
+            font-size: 0.92rem;
+            color: var(--fg-muted);
+            margin-bottom: 8px;
+        }
+        .step-formula {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            color: var(--fg);
+            border: 1px solid var(--border);
+        }
+        .step-formula .result {
+            color: var(--success);
+            font-weight: 600;
+        }
+        .conclusion-box {
+            background: rgba(46, 204, 113, 0.08);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-top: 24px;
+        }
+        .conclusion-box h4 {
+            color: var(--success);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .conclusion-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        .conclusion-box li {
+            font-size: 0.88rem;
+            color: var(--fg-muted);
+            padding: 3px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .conclusion-box li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-size: 0.7rem;
+        }
+
+        /* Ejercicios de tarea */
+        .exercise-block {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .exercise-block .ex-number {
+            position: absolute;
+            top: -14px;
+            left: 28px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 800;
+            font-size: 0.8rem;
+            padding: 4px 16px;
+            border-radius: 8px;
+        }
+        .exercise-data {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+        .exercise-data p {
+            font-size: 0.92rem;
+            margin-bottom: 2px;
+        }
+        .exercise-data strong { color: var(--accent); }
+        .exercise-tasks {
+            margin-bottom: 24px;
+        }
+        .exercise-tasks li {
+            font-size: 0.92rem;
+            color: var(--fg-muted);
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        .exercise-tasks li::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 14px;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .input-group label {
+            font-size: 0.8rem;
+            color: var(--fg-muted);
+            font-weight: 600;
+        }
+        .input-group input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: var(--fg);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.92rem;
+            outline: none;
+            transition: border-color 0.25s;
+        }
+        .input-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        .input-group input.correct {
+            border-color: var(--success);
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.15);
+        }
+        .input-group input.incorrect {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+        }
+        .input-feedback {
+            font-size: 0.75rem;
+            min-height: 18px;
+            font-weight: 600;
+        }
+        .input-feedback.correct-fb { color: var(--success); }
+        .input-feedback.incorrect-fb { color: var(--error); }
+        .exercise-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #000;
+        }
+        .btn-check:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(240,165,0,0.3); }
+        .btn-hint {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--fg-muted);
+        }
+        .btn-hint:hover { border-color: var(--accent); color: var(--accent); }
+        .hint-text {
+            display: none;
+            background: rgba(52, 152, 219, 0.08);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 16px;
+            font-size: 0.88rem;
+            color: var(--info);
+        }
+        .hint-text.show { display: block; }
+
+        /* Juego */
+        .game-section {
+            background: linear-gradient(180deg, var(--bg) 0%, #121610 50%, var(--bg) 100%);
+            border-top: 1px solid var(--border);
+        }
+        .game-container {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .game-header {
+            background: linear-gradient(135deg, rgba(240,165,0,0.1), rgba(255,107,53,0.1));
+            border-bottom: 1px solid var(--border);
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .game-header h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .game-header h3 i { color: var(--accent); }
+        .game-stats {
+            display: flex;
+            gap: 20px;
+        }
+        .game-stat {
+            text-align: center;
+        }
+        .game-stat .stat-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .game-stat .stat-label {
+            font-size: 0.7rem;
+            color: var(--fg-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .game-body {
+            padding: 36px 32px;
+        }
+        .game-start-screen, .game-over-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .game-start-screen h4, .game-over-screen h4 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+        .game-start-screen p, .game-over-screen p {
+            color: var(--fg-muted);
+            margin-bottom: 28px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .game-over-screen .final-score {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin: 16px 0;
+        }
+        .game-question {
+            display: none;
+        }
+        .game-question.active { display: block; }
+        .gq-problem {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+        }
+        .gq-problem p {
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+        .gq-problem .gq-ask {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.05rem;
+            margin-top: 10px;
+        }
+        .gq-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 500px) {
+            .gq-options { grid-template-columns: 1fr; }
+        }
+        .gq-option {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        .gq-option:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+        .gq-option.selected {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+        .gq-option.correct-answer {
+            border-color: var(--success) !important;
+            background: rgba(46, 204, 113, 0.15) !important;
+            color: var(--success);
+        }
+        .gq-option.wrong-answer {
+            border-color: var(--error) !important;
+            background: rgba(231, 76, 60, 0.15) !important;
+            color: var(--error);
+        }
+        .gq-option.disabled { pointer-events: none; }
+        .gq-feedback {
+            display: none;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .gq-feedback.show { display: block; }
+        .gq-feedback.correct-fb {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.25);
+            color: var(--success);
+        }
+        .gq-feedback.wrong-fb {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.25);
+            color: var(--error);
+        }
+        .game-progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .game-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+        .game-timer-bar {
+            height: 3px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .game-timer-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 2px;
+            transition: width 0.1s linear, background 0.3s;
+        }
+        .game-timer-fill.warning { background: var(--accent); }
+        .game-timer-fill.danger { background: var(--error); }
+        .btn-next-q {
+            display: none;
+            margin-left: auto;
+        }
+        .btn-next-q.show { display: inline-flex; }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 80px; right: 24px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            animation: toastIn 0.3s ease;
+            min-width: 260px;
+        }
+        .toast.success { border-color: rgba(46,204,113,0.3); }
+        .toast.success i { color: var(--success); }
+        .toast.error { border-color: rgba(231,76,60,0.3); }
+        .toast.error i { color: var(--error); }
+        .toast.info { border-color: rgba(52,152,219,0.3); }
+        .toast.info i { color: var(--info); }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(40px); }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--fg-muted);
+            font-size: 0.82rem;
+        }
+
+        /* Scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            nav .nav-links { display: none; }
+            .hero h1 { font-size: 2rem; }
+            .example-block, .exercise-block { padding: 24px 18px; }
+            .game-body { padding: 24px 18px; }
+            .game-header { padding: 18px; }
+            .input-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Fondo atmosférico -->
+<div class="bg-atmosphere">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Navegación -->
+<nav>
+    <div class="nav-inner">
+        <div class="logo"><i class="fas fa-atom"></i> FisicaLab</div>
+        <ul class="nav-links">
+            <li><a href="#conceptos">Conceptos</a></li>
+            <li><a href="#simulador">Simulador</a></li>
+            <li><a href="#ejemplo">Ejemplo</a></li>
+            <li><a href="#tarea">Tarea</a></li>
+            <li><a href="#juego">Juego</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-content">
+        <div class="hero-badge"><i class="fas fa-circle-notch fa-spin"></i> Unidad 1 - Cinemática</div>
+        <h1>Movimiento Circular <span class="highlight">Uniforme</span></h1>
+        <p>Explora las magnitudes que describen el movimiento de los objetos que giran: velocidad angular, velocidad lineal, aceleración centrípeta y fuerza centrípeta.</p>
+        <div class="hero-cta">
+            <a href="#conceptos" class="btn btn-primary"><i class="fas fa-play"></i> Comenzar</a>
+            <a href="#juego" class="btn btn-secondary"><i class="fas fa-gamepad"></i> Ir al Juego</a>
+        </div>
+    </div>
+</section>
+
+<!-- Conceptos -->
+<section id="conceptos">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-book-open"></i> Fundamentos</div>
+            <h2 class="section-title">Magnitudes del MCU</h2>
+            <p class="section-desc">En el movimiento circular uniforme, un objeto recorre una trayectoria circular con rapidez constante. A continuación, las cuatro magnitudes clave.</p>
+        </div>
+        <div class="concepts-grid">
+            <div class="concept-card reveal">
+                <div class="concept-icon"><i class="fas fa-sync-alt"></i></div>
+                <h3>Velocidad Angular (ω)</h3>
+                <p>Mide la rapidez con la que cambia el ángulo barrido por el radio. Se expresa en radianes por segundo (rad/s).</p>
+                <div class="formula-box">ω = 2π / T</div>
+                <div class="formula-num">Ecuación 1.1</div>
+            </div>
+            <div class="concept-card reveal">
+                <div class="concept-icon"><i class="fas fa-arrow-right"></i></div>
+                <h3>Velocidad Lineal (v)</h3>
+                <p>Es la rapidez tangencial del objeto en la trayectoria circular. Depende de la velocidad angular y del radio.</p>
+                <div class="formula-box">v = ω · r</div>
+                <div class="formula-num">Ecuación 1.2</div>
+            </div>
+            <div class="concept-card reveal">
+                <div class="concept-icon"><i class="fas fa-compress-arrows-alt"></i></div>
+                <h3>Aceleración Centrípeta (aₙ)</h3>
+                <p>Aunque la rapidez es constante, la dirección cambia, produciendo una aceleración dirigida hacia el centro de la circunferencia.</p>
+                <div class="formula-box">aₙ = ω² · r = v² / r</div>
+                <div class="formula-num">Ecuación 1.3</div>
+            </div>
+            <div class="concept-card reveal">
+                <div class="concept-icon"><i class="fas fa-bullseye"></i></div>
+                <h3>Fuerza Centrípeta (Fₙ)</h3>
+                <p>Es la fuerza neta que mantiene al objeto en su trayectoria circular, siempre apuntando hacia el centro.</p>
+                <div class="formula-box">Fₙ = m · ω² · r = m · v² / r</div>
+                <div class="formula-num">Ecuación 1.4</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Simulador -->
+<section id="simulador" class="sim-section">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-flask"></i> Laboratorio</div>
+            <h2 class="section-title">Simulador Interactivo</h2>
+            <p class="section-desc">Ajusta los parámetros y observa cómo cambian las magnitudes del movimiento circular en tiempo real.</p>
+        </div>
+        <div class="sim-layout reveal">
+            <div class="sim-canvas-wrap">
+                <canvas id="simCanvas" width="600" height="500"></canvas>
+                <div class="sim-overlay">
+                    <button id="simPlayBtn" title="Play/Pausa"><i class="fas fa-pause"></i></button>
+                    <button id="simResetBtn" title="Reiniciar"><i class="fas fa-undo"></i></button>
+                </div>
+            </div>
+            <div class="sim-controls">
+                <h3><i class="fas fa-sliders-h"></i> Parámetros</h3>
+                <div class="control-group">
+                    <label>Radio (r) <span id="radiusVal">0.20 m</span></label>
+                    <input type="range" id="radiusSlider" min="5" max="50" value="20" step="1">
+                </div>
+                <div class="control-group">
+                    <label>Periodo (T) <span id="periodVal">1.00 s</span></label>
+                    <input type="range" id="periodSlider" min="20" max="300" value="100" step="5">
+                </div>
+                <div class="control-group">
+                    <label>Masa (m) <span id="massVal">0.020 kg</span></label>
+                    <input type="range" id="massSlider" min="1" max="100" value="20" step="1">
+                </div>
+                <div class="sim-readout">
+                    <h4>Magnitudes calculadas</h4>
+                    <div class="readout-row"><span class="rlabel">ω</span><span class="rvalue" id="roOmega">6.28 rad/s</span></div>
+                    <div class="readout-row"><span class="rlabel">v</span><span class="rvalue" id="roV">1.26 m/s</span></div>
+                    <div class="readout-row"><span class="rlabel">aₙ</span><span class="rvalue" id="roAn">7.90 m/s²</span></div>
+                    <div class="readout-row"><span class="rlabel">Fₙ</span><span class="rvalue" id="roFn">0.158 N</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ejemplo Resuelto -->
+<section id="ejemplo">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-pencil-alt"></i> Ejemplo Resuelto</div>
+            <h2 class="section-title">Ejemplo 1</h2>
+            <p class="section-desc">Un objeto de masa 0.02 kg gira en una circunferencia de radio 0.20 m con un periodo de 1.00 s. Calcula todas las magnitudes.</p>
+        </div>
+        <div class="example-block reveal">
+            <div class="example-header">
+                <span class="badge">Ejemplo 1</span>
+                <h3>Calculo completo del MCU</h3>
+            </div>
+            <div class="example-data">
+                <p><strong>Datos:</strong></p>
+                <p>r = 0.20 m &nbsp;|&nbsp; m = 0.02 kg &nbsp;|&nbsp; T = 1.00 s</p>
+            </div>
+
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <p>Calculamos la <strong>velocidad angular</strong> con ω = 2π / T:</p>
+                    <div class="step-formula">ω = 2π / 1.00 = <span class="result">6.28 rad/s</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <p>Calculamos la <strong>velocidad lineal</strong> con v = ω · r:</p>
+                    <div class="step-formula">v = 6.28 × 0.20 = <span class="result">1.26 m/s</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <p>Calculamos la <strong>aceleración centrípeta</strong> con aₙ = ω² · r:</p>
+                    <div class="step-formula">aₙ = (6.28)² × 0.20 = 39.48 × 0.20 = <span class="result">7.90 m/s²</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <p>Calculamos la <strong>fuerza centrípeta</strong> con Fₙ = m · aₙ:</p>
+                    <div class="step-formula">Fₙ = 0.02 × 7.90 = <span class="result">0.158 N</span></div>
+                </div>
+            </div>
+
+            <div class="conclusion-box">
+                <h4><i class="fas fa-check-circle"></i> Hemos corroborado que</h4>
+                <ul>
+                    <li>La relación v = ωr se cumple: 1.26 = 6.28 × 0.20</li>
+                    <li>La fuerza centrípeta mantiene al objeto en su trayectoria circular: Fₙ = 0.158 N dirigida al centro</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ejercicios de Tarea -->
+<section id="tarea">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-clipboard-list"></i> Tarea</div>
+            <h2 class="section-title">Ejercicios Propuestos</h2>
+            <p class="section-desc">Resuelve los siguientes dos ejercicios siguiendo el mismo procedimiento del Ejemplo 1. Ingresa tus resultados y verifica si son correctos.</p>
+        </div>
+
+        <!-- Ejercicio 1 -->
+        <div class="exercise-block reveal" id="ex1Block">
+            <div class="ex-number">Ejercicio 1</div>
+            <h3 style="margin-top:8px;margin-bottom:16px;font-weight:700;">Plataforma de juegos</h3>
+            <div class="exercise-data">
+                <p><strong>Datos:</strong></p>
+                <p>r = 0.50 m &nbsp;|&nbsp; m = 0.05 kg &nbsp;|&nbsp; T = 0.80 s</p>
+            </div>
+            <p style="font-size:0.92rem;color:var(--fg-muted);margin-bottom:16px;">Calcula las cuatro magnitudes del movimiento circular:</p>
+            <ul class="exercise-tasks" style="list-style:none;padding:0;margin-bottom:24px;">
+                <li>Velocidad angular ω (rad/s)</li>
+                <li>Velocidad lineal v (m/s)</li>
+                <li>Aceleracion centripeta aₙ (m/s²)</li>
+                <li>Fuerza centripeta Fₙ (N)</li>
+            </ul>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>ω (rad/s)</label>
+                    <input type="number" step="any" id="ex1_omega" placeholder="Ej: 7.85">
+                    <div class="input-feedback" id="fb_ex1_omega"></div>
+                </div>
+                <div class="input-group">
+                    <label>v (m/s)</label>
+                    <input type="number" step="any" id="ex1_v" placeholder="Ej: 3.93">
+                    <div class="input-feedback" id="fb_ex1_v"></div>
+                </div>
+                <div class="input-group">
+                    <label>aₙ (m/s²)</label>
+                    <input type="number" step="any" id="ex1_an" placeholder="Ej: 30.84">
+                    <div class="input-feedback" id="fb_ex1_an"></div>
+                </div>
+                <div class="input-group">
+                    <label>Fₙ (N)</label>
+                    <input type="number" step="any" id="ex1_fn" placeholder="Ej: 1.54">
+                    <div class="input-feedback" id="fb_ex1_fn"></div>
+                </div>
+            </div>
+            <div class="exercise-actions">
+                <button class="btn btn-check" onclick="checkExercise(1)"><i class="fas fa-check"></i> Verificar</button>
+                <button class="btn btn-hint" onclick="toggleHint(1)"><i class="fas fa-lightbulb"></i> Pista</button>
+                <button class="btn btn-hint" onclick="showSolution(1)"><i class="fas fa-eye"></i> Solucion</button>
+            </div>
+            <div class="hint-text" id="hint1">Recuerda: primero calcula ω con ω = 2π/T. Luego usa ω para encontrar v, aₙ y finalmente Fₙ.</div>
+            <div class="hint-text" id="sol1" style="display:none;background:rgba(240,165,0,0.08);border-color:rgba(240,165,0,0.2);color:var(--accent);">
+                <strong>Solucion:</strong> ω = 7.85 rad/s | v = 3.93 m/s | aₙ = 30.84 m/s² | Fₙ = 1.54 N
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="exercise-block reveal" id="ex2Block">
+            <div class="ex-number">Ejercicio 2</div>
+            <h3 style="margin-top:8px;margin-bottom:16px;font-weight:700;">Rueda de la fortuna</h3>
+            <div class="exercise-data">
+                <p><strong>Datos:</strong></p>
+                <p>r = 0.15 m &nbsp;|&nbsp; m = 0.10 kg &nbsp;|&nbsp; T = 1.50 s</p>
+            </div>
+            <p style="font-size:0.92rem;color:var(--fg-muted);margin-bottom:16px;">Calcula las cuatro magnitudes del movimiento circular:</p>
+            <ul class="exercise-tasks" style="list-style:none;padding:0;margin-bottom:24px;">
+                <li>Velocidad angular ω (rad/s)</li>
+                <li>Velocidad lineal v (m/s)</li>
+                <li>Aceleracion centripeta aₙ (m/s²)</li>
+                <li>Fuerza centripeta Fₙ (N)</li>
+            </ul>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>ω (rad/s)</label>
+                    <input type="number" step="any" id="ex2_omega" placeholder="Ej: 4.19">
+                    <div class="input-feedback" id="fb_ex2_omega"></div>
+                </div>
+                <div class="input-group">
+                    <label>v (m/s)</label>
+                    <input type="number" step="any" id="ex2_v" placeholder="Ej: 0.63">
+                    <div class="input-feedback" id="fb_ex2_v"></div>
+                </div>
+                <div class="input-group">
+                    <label>aₙ (m/s²)</label>
+                    <input type="number" step="any" id="ex2_an" placeholder="Ej: 2.63">
+                    <div class="input-feedback" id="fb_ex2_an"></div>
+                </div>
+                <div class="input-group">
+                    <label>Fₙ (N)</label>
+                    <input type="number" step="any" id="ex2_fn" placeholder="Ej: 0.263">
+                    <div class="input-feedback" id="fb_ex2_fn"></div>
+                </div>
+            </div>
+            <div class="exercise-actions">
+                <button class="btn btn-check" onclick="checkExercise(2)"><i class="fas fa-check"></i> Verificar</button>
+                <button class="btn btn-hint" onclick="toggleHint(2)"><i class="fas fa-lightbulb"></i> Pista</button>
+                <button class="btn btn-hint" onclick="showSolution(2)"><i class="fas fa-eye"></i> Solucion</button>
+            </div>
+            <div class="hint-text" id="hint2">Sigue el orden: ω → v → aₙ → Fₙ. Cada resultado se usa en el siguiente calculo.</div>
+            <div class="hint-text" id="sol2" style="display:none;background:rgba(240,165,0,0.08);border-color:rgba(240,165,0,0.2);color:var(--accent);">
+                <strong>Solucion:</strong> ω = 4.19 rad/s | v = 0.63 m/s | aₙ = 2.63 m/s² | Fₙ = 0.263 N
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Juego Interactivo -->
+<section id="juego" class="game-section">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-gamepad"></i> Desafio Final</div>
+            <h2 class="section-title">Juego de MCU</h2>
+            <p class="section-desc">Pon a prueba lo que aprendiste. Resuelve 10 problemas de movimiento circular antes de que se agote el tiempo. Cada respuesta correcta suma puntos.</p>
+        </div>
+        <div class="game-container reveal">
+            <div class="game-header">
+                <h3><i class="fas fa-trophy"></i> Desafio Circular</h3>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <div class="stat-val" id="gameScore">0</div>
+                        <div class="stat-label">Puntos</div>
+                    </div>
+                    <div class="game-stat">
+                        <div class="stat-val" id="gameLives">3</div>
+                        <div class="stat-label">Vidas</div>
+                    </div>
+                    <div class="game-stat">
+                        <div class="stat-val" id="gameLevel">-</div>
+                        <div class="stat-label">Nivel</div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-body">
+                <!-- Pantalla de inicio -->
+                <div class="game-start-screen" id="gameStartScreen">
+                    <h4>Listo para el desafio?</h4>
+                    <p>Se te presentaran 10 problemas de movimiento circular uniforme. Elige la respuesta correcta entre 4 opciones. Tienes 15 segundos por pregunta y 3 vidas.</p>
+                    <button class="btn btn-primary" onclick="startGame()"><i class="fas fa-rocket"></i> Iniciar Juego</button>
+                </div>
+
+                <!-- Pantalla de pregunta -->
+                <div class="game-question" id="gameQuestionScreen">
+                    <div class="game-progress-bar">
+                        <div class="game-progress-fill" id="gameProgressFill" style="width:0%"></div>
+                    </div>
+                    <div class="game-timer-bar">
+                        <div class="game-timer-fill" id="gameTimerFill" style="width:100%"></div>
+                    </div>
+                    <div class="gq-problem" id="gqProblem"></div>
+                    <div class="gq-options" id="gqOptions"></div>
+                    <div class="gq-feedback" id="gqFeedback"></div>
+                    <button class="btn btn-primary btn-next-q" id="btnNextQ" onclick="nextQuestion()"><i class="fas fa-arrow-right"></i> Siguiente</button>
+                </div>
+
+                <!-- Pantalla de fin -->
+                <div class="game-over-screen" id="gameOverScreen" style="display:none;">
+                    <h4 id="gameOverTitle">Desafio Completado</h4>
+                    <div class="final-score" id="finalScore">0</div>
+                    <p id="gameOverMsg">puntos obtenidos</p>
+                    <button class="btn btn-primary" onclick="startGame()" style="margin-top:10px;"><i class="fas fa-redo"></i> Jugar de Nuevo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>FisicaLab - Movimiento Circular Uniforme &nbsp;|&nbsp; Herramienta educativa interactiva</p>
+</footer>
+
+<script>
+// =============================================
+// SISTEMA DE TOASTS
+// =============================================
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
+    toast.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${message}`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'toastOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// =============================================
+// SCROLL REVEAL
+// =============================================
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// =============================================
+// CANVAS HERO - Orbitas de fondo
+// =============================================
+(function() {
+    const canvas = document.getElementById('heroCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+        w = canvas.width = canvas.offsetWidth;
+        h = canvas.height = canvas.offsetHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const particles = [];
+    for (let i = 0; i < 40; i++) {
+        particles.push({
+            cx: Math.random() * w,
+            cy: Math.random() * h,
+            r: 30 + Math.random() * 120,
+            angle: Math.random() * Math.PI * 2,
+            speed: (0.002 + Math.random() * 0.008) * (Math.random() < 0.5 ? 1 : -1),
+            size: 1 + Math.random() * 2,
+            alpha: 0.2 + Math.random() * 0.5
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+        particles.forEach(p => {
+            p.angle += p.speed;
+            const x = p.cx + Math.cos(p.angle) * p.r;
+            const y = p.cy + Math.sin(p.angle) * p.r;
+
+            // Orbita tenue
+            ctx.beginPath();
+            ctx.arc(p.cx, p.cy, p.r, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(240, 165, 0, ${p.alpha * 0.08})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+
+            // Particula
+            ctx.beginPath();
+            ctx.arc(x, y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(240, 165, 0, ${p.alpha})`;
+            ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+
+// =============================================
+// SIMULADOR INTERACTIVO
+// =============================================
+(function() {
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const radiusSlider = document.getElementById('radiusSlider');
+    const periodSlider = document.getElementById('periodSlider');
+    const massSlider = document.getElementById('massSlider');
+
+    let playing = true;
+    let angle = 0;
+    let trail = [];
+
+    // Escalar canvas para alta resolucion
+    function setupCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+    }
+    setupCanvas();
+    window.addEventListener('resize', setupCanvas);
+
+    function getParams() {
+        const r = parseInt(radiusSlider.value) / 100;        // 0.05 a 0.50 m
+        const T = parseInt(periodSlider.value) / 100;        // 0.20 a 3.00 s
+        const m = parseInt(massSlider.value) / 1000;         // 0.001 a 0.100 kg
+        const omega = (2 * Math.PI) / T;
+        const v = omega * r;
+        const an = omega * omega * r;
+        const fn = m * an;
+        return { r, T, m, omega, v, an, fn };
+    }
+
+    function updateLabels() {
+        const p = getParams();
+        document.getElementById('radiusVal').textContent = p.r.toFixed(2) + ' m';
+        document.getElementById('periodVal').textContent = p.T.toFixed(2) + ' s';
+        document.getElementById('massVal').textContent = p.m.toFixed(3) + ' kg';
+        document.getElementById('roOmega').textContent = p.omega.toFixed(2) + ' rad/s';
+        document.getElementById('roV').textContent = p.v.toFixed(3) + ' m/s';
+        document.getElementById('roAn').textContent = p.an.toFixed(2) + ' m/s²';
+        document.getElementById('roFn').textContent = p.fn.toFixed(4) + ' N';
+    }
+
+    radiusSlider.addEventListener('input', updateLabels);
+    periodSlider.addEventListener('input', updateLabels);
+    massSlider.addEventListener('input', updateLabels);
+    updateLabels();
+
+    document.getElementById('simPlayBtn').addEventListener('click', function() {
+        playing = !playing;
+        this.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+    });
+
+    document.getElementById('simResetBtn').addEventListener('click', function() {
+        angle = 0;
+        trail = [];
+    });
+
+    let lastTime = 0;
+    function animate(timestamp) {
+        const dt = lastTime ? (timestamp - lastTime) / 1000 : 0.016;
+        lastTime = timestamp;
+
+        const rect = canvas.getBoundingClientRect();
+        const W = rect.width;
+        const H = rect.height;
+
+        ctx.clearRect(0, 0, W, H);
+
+        const p = getParams();
+        const cx = W / 2;
+        const cy = H / 2;
+        const scale = Math.min(W, H) * 0.35;
+        const drawR = Math.max(20, p.r * scale * 2);
+
+        if (playing) {
+            angle += p.omega * dt;
+        }
+
+        const objX = cx + Math.cos(angle) * drawR;
+        const objY = cy + Math.sin(angle) * drawR;
+
+        // Trail
+        if (playing) {
+            trail.push({ x: objX, y: objY, age: 0 });
+            if (trail.length > 60) trail.shift();
+        }
+        trail.forEach((t, i) => {
+            t.age += dt;
+            const alpha = Math.max(0, 1 - t.age * 2) * 0.4;
+            ctx.beginPath();
+            ctx.arc(t.x, t.y, 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(240, 165, 0, ${alpha})`;
+            ctx.fill();
+        });
+
+        // Circunferencia orbita
+        ctx.beginPath();
+        ctx.arc(cx, cy, drawR, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(240, 165, 0, 0.15)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Radio
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(objX, objY);
+        ctx.strokeStyle = 'rgba(232, 236, 233, 0.25)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Etiqueta radio
+        const midX = (cx + objX) / 2;
+        const midY = (cy + objY) / 2;
+        ctx.font = '600 12px "JetBrains Mono", monospace';
+        ctx.fillStyle = 'rgba(232, 236, 233, 0.5)';
+        ctx.fillText('r = ' + p.r.toFixed(2) + ' m', midX + 8, midY - 8);
+
+        // Centro
+        ctx.beginPath();
+        ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(232, 236, 233, 0.3)';
+        ctx.fill();
+
+        // Vector velocidad tangencial
+        const tangentAngle = angle + Math.PI / 2;
+        const vLen = Math.min(60, p.v * 30);
+        const vx = objX + Math.cos(tangentAngle) * vLen;
+        const vy = objY + Math.sin(tangentAngle) * vLen;
+        ctx.beginPath();
+        ctx.moveTo(objX, objY);
+        ctx.lineTo(vx, vy);
+        ctx.strokeStyle = '#2ecc71';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        // Flecha
+        const arrowSize = 8;
+        const arrowAngle = Math.atan2(vy - objY, vx - objX);
+        ctx.beginPath();
+        ctx.moveTo(vx, vy);
+        ctx.lineTo(vx - arrowSize * Math.cos(arrowAngle - 0.4), vy - arrowSize * Math.sin(arrowAngle - 0.4));
+        ctx.lineTo(vx - arrowSize * Math.cos(arrowAngle + 0.4), vy - arrowSize * Math.sin(arrowAngle + 0.4));
+        ctx.closePath();
+        ctx.fillStyle = '#2ecc71';
+        ctx.fill();
+        ctx.font = '600 11px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#2ecc71';
+        ctx.fillText('v', vx + 6, vy - 4);
+
+        // Vector fuerza centrípeta
+        const fcLen = Math.min(50, p.fn * 150);
+        const fcx = objX + Math.cos(angle + Math.PI) * fcLen;
+        const fcy = objY + Math.sin(angle + Math.PI) * fcLen;
+        ctx.beginPath();
+        ctx.moveTo(objX, objY);
+        ctx.lineTo(fcx, fcy);
+        ctx.strokeStyle = '#e74c3c';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        const fcArrowAngle = Math.atan2(fcy - objY, fcx - objX);
+        ctx.beginPath();
+        ctx.moveTo(fcx, fcy);
+        ctx.lineTo(fcx - arrowSize * Math.cos(fcArrowAngle - 0.4), fcy - arrowSize * Math.sin(fcArrowAngle - 0.4));
+        ctx.lineTo(fcx - arrowSize * Math.cos(fcArrowAngle + 0.4), fcy - arrowSize * Math.sin(fcArrowAngle + 0.4));
+        ctx.closePath();
+        ctx.fillStyle = '#e74c3c';
+        ctx.fill();
+        ctx.fillStyle = '#e74c3c';
+        ctx.fillText('Fₙ', fcx - 18, fcy - 6);
+
+        // Objeto
+        const glow = ctx.createRadialGradient(objX, objY, 0, objX, objY, 16);
+        glow.addColorStop(0, 'rgba(240, 165, 0, 0.4)');
+        glow.addColorStop(1, 'rgba(240, 165, 0, 0)');
+        ctx.beginPath();
+        ctx.arc(objX, objY, 16, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(objX, objY, 7, 0, Math.PI * 2);
+        ctx.fillStyle = '#f0a500';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Leyenda
+        ctx.font = '600 11px "Outfit", sans-serif';
+        ctx.fillStyle = '#2ecc71';
+        ctx.fillRect(16, H - 50, 12, 3);
+        ctx.fillText('Velocidad (v)', 34, H - 45);
+        ctx.fillStyle = '#e74c3c';
+        ctx.fillRect(16, H - 32, 12, 3);
+        ctx.fillText('Fuerza centripeta (Fₙ)', 34, H - 27);
+
+        requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+})();
+
+// =============================================
+// EJERCICIOS DE TAREA
+// =============================================
+// Soluciones correctas (con tolerancia de +/-2%)
+const solutions = {
+    1: {
+        omega: 2 * Math.PI / 0.80,   // 7.854
+        v: (2 * Math.PI / 0.80) * 0.50,  // 3.927
+        an: Math.pow(2 * Math.PI / 0.80, 2) * 0.50,  // 30.843
+        fn: 0.05 * Math.pow(2 * Math.PI / 0.80, 2) * 0.50  // 1.542
+    },
+    2: {
+        omega: 2 * Math.PI / 1.50,   // 4.189
+        v: (2 * Math.PI / 1.50) * 0.15,  // 0.628
+        an: Math.pow(2 * Math.PI / 1.50, 2) * 0.15,  // 2.632
+        fn: 0.10 * Math.pow(2 * Math.PI / 1.50, 2) * 0.15  // 0.263
+    }
+};
+
+function checkExercise(num) {
+    const sol = solutions[num];
+    const fields = ['omega', 'v', 'an', 'fn'];
+    let allCorrect = true;
+    let answeredCount = 0;
+
+    fields.forEach(f => {
+        const input = document.getElementById(`ex${num}_${f}`);
+        const fb = document.getElementById(`fb_ex${num}_${f}`);
+        const val = parseFloat(input.value);
+
+        input.classList.remove('correct', 'incorrect');
+        fb.classList.remove('correct-fb', 'incorrect-fb');
+        fb.textContent = '';
+
+        if (isNaN(val)) {
+            allCorrect = false;
+            return;
+        }
+
+        answeredCount++;
+        const tolerance = sol[f] * 0.02; // 2% tolerancia
+        if (Math.abs(val - sol[f]) <= tolerance) {
+            input.classList.add('correct');
+            fb.classList.add('correct-fb');
+            fb.textContent = 'Correcto';
+        } else {
+            input.classList.add('incorrect');
+            fb.classList.add('incorrect-fb');
+            fb.textContent = `Intenta de nuevo (esperado: ${sol[f].toFixed(3)})`;
+            allCorrect = false;
+        }
+    });
+
+    if (answeredCount < 4) {
+        showToast('Completa todos los campos antes de verificar.', 'info');
+    } else if (allCorrect) {
+        showToast(`Ejercicio ${num}: Todos los resultados son correctos!`, 'success');
+    } else {
+        showToast(`Ejercicio ${num}: Hay errores. Revisa los campos marcados.`, 'error');
+    }
+}
+
+function toggleHint(num) {
+    const hint = document.getElementById(`hint${num}`);
+    hint.classList.toggle('show');
+}
+
+function showSolution(num) {
+    const sol = document.getElementById(`sol${num}`);
+    if (sol.style.display === 'none' || !sol.style.display) {
+        sol.style.display = 'block';
+        sol.classList.remove('show');
+        // Forzar display block en lugar de la clase
+    } else {
+        sol.style.display = 'none';
+    }
+}
+
+// =============================================
+// JUEGO INTERACTIVO
+// =============================================
+let gameState = {
+    score: 0,
+    lives: 3,
+    questionIndex: 0,
+    totalQuestions: 10,
+    questions: [],
+    timer: null,
+    timeLeft: 15,
+    answered: false
+};
+
+// Generador de preguntas
+function generateQuestions() {
+    const questions = [];
+    const types = ['omega', 'v', 'an', 'fn'];
+
+    for (let i = 0; i < 10; i++) {
+        const r = parseFloat((0.05 + Math.random() * 0.95).toFixed(2));
+        const T = parseFloat((0.3 + Math.random() * 2.7).toFixed(2));
+        const m = parseFloat((0.01 + Math.random() * 0.19).toFixed(3));
+        const omega = 2 * Math.PI / T;
+        const v = omega * r;
+        const an = omega * omega * r;
+        const fn = m * an;
+
+        // Elegir que magnitud preguntar
+        const askType = types[i % 4];
+        let correctAnswer, label;
+        switch (askType) {
+            case 'omega': correctAnswer = omega; label = 'ω (rad/s)'; break;
+            case 'v': correctAnswer = v; label = 'v (m/s)'; break;
+            case 'an': correctAnswer = an; label = 'aₙ (m/s²)'; break;
+            case 'fn': correctAnswer = fn; label = 'Fₙ (N)'; break;
+        }
+
+        // Generar opciones (1 correcta + 3 incorrectas)
+        const options = [correctAnswer];
+        while (options.length < 4) {
+            let wrong;
+            const factor = 0.5 + Math.random() * 2;
+            if (Math.random() < 0.5) {
+                wrong = correctAnswer * factor;
+            } else {
+                wrong = correctAnswer * (1 / factor);
+            }
+            // Asegurar que no sea demasiado cercana a la correcta
+            if (Math.abs(wrong - correctAnswer) / correctAnswer > 0.08 && !options.some(o => Math.abs(o - wrong) / wrong < 0.1)) {
+                options.push(wrong);
+            }
+        }
+
+        // Mezclar opciones
+        for (let j = options.length - 1; j > 0; j--) {
+            const k = Math.floor(Math.random() * (j + 1));
+            [options[j], options[k]] = [options[k], options[j]];
+        }
+
+        questions.push({
+            r, T, m, omega, v, an, fn,
+            askType, label, correctAnswer,
+            options,
+            correctIndex: options.indexOf(correctAnswer)
+        });
+    }
+    return questions;
+}
+
+function startGame() {
+    gameState = {
+        score: 0,
+        lives: 3,
+        questionIndex: 0,
+        totalQuestions: 10,
+        questions: generateQuestions(),
+        timer: null,
+        timeLeft: 15,
+        answered: false
+    };
+
+    document.getElementById('gameStartScreen').style.display = 'none';
+    document.getElementById('gameOverScreen').style.display = 'none';
+    document.getElementById('gameQuestionScreen').classList.add('active');
+    document.getElementById('gameScore').textContent = '0';
+    document.getElementById('gameLives').textContent = '3';
+    document.getElementById('gameLevel').textContent = '1/10';
+
+    showQuestion();
+}
+
+function showQuestion() {
+    const q = gameState.questions[gameState.questionIndex];
+    gameState.answered = false;
+
+    document.getElementById('gameLevel').textContent = `${gameState.questionIndex + 1}/${gameState.totalQuestions}`;
+    document.getElementById('gameProgressFill').style.width = `${(gameState.questionIndex / gameState.totalQuestions) * 100}%`;
+
+    // Problema
+    let problemHTML = `<p><strong>Datos:</strong></p>`;
+    problemHTML += `<p>r = ${q.r} m &nbsp;|&nbsp; m = ${q.m} kg &nbsp;|&nbsp; T = ${q.T} s</p>`;
+    problemHTML += `<p class="gq-ask">Calcula ${q.label}</p>`;
+    document.getElementById('gqProblem').innerHTML = problemHTML;
+
+    // Opciones
+    const optionsHTML = q.options.map((opt, i) => {
+        return `<div class="gq-option" onclick="selectOption(${i})" id="gqOpt${i}">${opt.toFixed(3)}</div>`;
+    }).join('');
+    document.getElementById('gqOptions').innerHTML = optionsHTML;
+
+    // Feedback oculto
+    const fb = document.getElementById('gqFeedback');
+    fb.classList.remove('show', 'correct-fb', 'wrong-fb');
+    document.getElementById('btnNextQ').classList.remove('show');
+
+    // Timer
+    startTimer();
+}
+
+function startTimer() {
+    clearInterval(gameState.timer);
+    gameState.timeLeft = 15;
+    const fill = document.getElementById('gameTimerFill');
+    fill.style.width = '100%';
+    fill.classList.remove('warning', 'danger');
+
+    gameState.timer = setInterval(() => {
+        gameState.timeLeft -= 0.1;
+        const pct = Math.max(0, (gameState.timeLeft / 15) * 100);
+        fill.style.width = pct + '%';
+
+        if (gameState.timeLeft <= 5) fill.classList.add('warning');
+        if (gameState.timeLeft <= 3) fill.classList.add('danger');
+
+        if (gameState.timeLeft <= 0) {
+            clearInterval(gameState.timer);
+            if (!gameState.answered) timeOut();
+        }
+    }, 100);
+}
+
+function selectOption(index) {
+    if (gameState.answered) return;
+    gameState.answered = true;
+    clearInterval(gameState.timer);
+
+    const q = gameState.questions[gameState.questionIndex];
+    const fb = document.getElementById('gqFeedback');
+
+    // Desactivar todas las opciones
+    for (let i = 0; i < 4; i++) {
+        document.getElementById(`gqOpt${i}`).classList.add('disabled');
+    }
+
+    if (index === q.correctIndex) {
+        // Correcta
+        document.getElementById(`gqOpt${index}`).classList.add('correct-answer');
+        const bonus = Math.ceil(gameState.timeLeft);
+        gameState.score += 100 + bonus;
+        document.getElementById('gameScore').textContent = gameState.score;
+        fb.textContent = `Correcto! +${100 + bonus} puntos (bonus por tiempo: +${bonus})`;
+        fb.className = 'gq-feedback show correct-fb';
+    } else {
+        // Incorrecta
+        document.getElementById(`gqOpt${index}`).classList.add('wrong-answer');
+        document.getElementById(`gqOpt${q.correctIndex}`).classList.add('correct-answer');
+        gameState.lives--;
+        document.getElementById('gameLives').textContent = gameState.lives;
+        fb.textContent = `Incorrecto. La respuesta era ${q.correctAnswer.toFixed(3)}.`;
+        fb.className = 'gq-feedback show wrong-fb';
+
+        if (gameState.lives <= 0) {
+            setTimeout(() => endGame(false), 1500);
+            return;
+        }
+    }
+
+    document.getElementById('btnNextQ').classList.add('show');
+}
+
+function timeOut() {
+    gameState.answered = true;
+    const q = gameState.questions[gameState.questionIndex];
+    const fb = document.getElementById('gqFeedback');
+
+    for (let i = 0; i < 4; i++) {
+        document.getElementById(`gqOpt${i}`).classList.add('disabled');
+    }
+    document.getElementById(`gqOpt${q.correctIndex}`).classList.add('correct-answer');
+
+    gameState.lives--;
+    document.getElementById('gameLives').textContent = gameState.lives;
+    fb.textContent = `Se acabo el tiempo! La respuesta era ${q.correctAnswer.toFixed(3)}.`;
+    fb.className = 'gq-feedback show wrong-fb';
+
+    if (gameState.lives <= 0) {
+        setTimeout(() => endGame(false), 1500);
+        return;
+    }
+
+    document.getElementById('btnNextQ').classList.add('show');
+}
+
+function nextQuestion() {
+    gameState.questionIndex++;
+    if (gameState.questionIndex >= gameState.totalQuestions) {
+        endGame(true);
+    } else {
+        showQuestion();
+    }
+}
+
+function endGame(completed) {
+    clearInterval(gameState.timer);
+    document.getElementById('gameQuestionScreen').classList.remove('active');
+    const overScreen = document.getElementById('gameOverScreen');
+    overScreen.style.display = 'block';
+
+    const title = document.getElementById('gameOverTitle');
+    const msg = document.getElementById('gameOverMsg');
+    document.getElementById('finalScore').textContent = gameState.score;
+
+    if (completed) {
+        title.textContent = 'Desafio Completado';
+        if (gameState.score >= 1200) {
+            msg.textContent = 'Excelente dominio del MCU! Eres un maestro de la fisica circular.';
+        } else if (gameState.score >= 800) {
+            msg.textContent = 'Buen trabajo! Tienes una solida comprension de los conceptos.';
+        } else {
+            msg.textContent = 'Sigue practicando. Revisa las formulas y vuelve a intentarlo.';
+        }
+    } else {
+        title.textContent = 'Se acabaron las vidas';
+        msg.textContent = `Llegaste a la pregunta ${gameState.questionIndex + 1} de ${gameState.totalQuestions}. No te rindas, intenta de nuevo!`;
+    }
+}
+</script>
+
+</body>
+</html>
