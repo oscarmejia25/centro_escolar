@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fusión y Ebullición del Agua - Física Interactiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #090e0c;
+            --bg2: #0f1512;
+            --card: #151c19;
+            --card-hover: #1c2522;
+            --border: #253029;
+            --fg: #e4ebe7;
+            --fg-muted: #7f9489;
+            --accent: #00d4aa;
+            --accent2: #ff6347;
+            --accent-glow: rgba(0, 212, 170, 0.12);
+            --warm: #ff8c42;
+            --hot: #ff4444;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --info: #5dade2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Fondo */
+        .bg-atmosphere {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .bg-atmosphere .orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(130px); opacity: 0.1;
+            animation: orbFloat 25s ease-in-out infinite alternate;
+        }
+        .bg-atmosphere .orb:nth-child(1) {
+            width: 500px; height: 500px;
+            background: var(--accent); top: -150px; left: -100px;
+        }
+        .bg-atmosphere .orb:nth-child(2) {
+            width: 400px; height: 400px;
+            background: var(--accent2); bottom: -100px; right: -80px;
+            animation-delay: -8s;
+        }
+        .bg-atmosphere .orb:nth-child(3) {
+            width: 350px; height: 350px;
+            background: var(--warm); top: 40%; left: 60%;
+            animation-delay: -15s; opacity: 0.06;
+        }
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, -40px) scale(1.15); }
+            100% { transform: translate(-30px, 25px) scale(0.9); }
+        }
+
+        .container {
+            max-width: 1100px; margin: 0 auto;
+            padding: 0 24px; position: relative; z-index: 1;
+        }
+
+        /* Nav */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(9, 14, 12, 0.88);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border); padding: 0 24px;
+        }
+        nav .nav-inner {
+            max-width: 1100px; margin: 0 auto;
+            display: flex; align-items: center;
+            justify-content: space-between; height: 60px;
+        }
+        nav .logo {
+            font-weight: 800; font-size: 1.1rem;
+            color: var(--accent);
+            display: flex; align-items: center; gap: 8px;
+        }
+        nav .logo i { font-size: 1.3rem; }
+        nav .nav-links { display: flex; gap: 4px; list-style: none; }
+        nav .nav-links a {
+            color: var(--fg-muted); text-decoration: none;
+            font-size: 0.82rem; font-weight: 400;
+            padding: 6px 12px; border-radius: 8px; transition: all 0.25s;
+        }
+        nav .nav-links a:hover { color: var(--fg); background: var(--card); }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh; display: flex;
+            align-items: center; justify-content: center;
+            text-align: center; padding: 100px 24px 60px;
+            position: relative;
+        }
+        .hero-content { max-width: 800px; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--accent-glow);
+            border: 1px solid rgba(0, 212, 170, 0.25);
+            color: var(--accent); font-size: 0.78rem; font-weight: 600;
+            padding: 6px 16px; border-radius: 100px; margin-bottom: 28px;
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        .hero h1 {
+            font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 900;
+            line-height: 1.08; margin-bottom: 20px; letter-spacing: -1px;
+        }
+        .hero h1 .hl1 {
+            background: linear-gradient(135deg, var(--accent), #00ffcc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero h1 .hl2 {
+            background: linear-gradient(135deg, var(--warm), var(--accent2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.1rem; color: var(--fg-muted);
+            max-width: 580px; margin: 0 auto 36px; font-weight: 200;
+        }
+        .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 12px;
+            font-family: 'Outfit', sans-serif; font-size: 0.95rem;
+            font-weight: 600; border: none; cursor: pointer;
+            transition: all 0.3s; text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #00ffcc);
+            color: #000; box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 212, 170, 0.4);
+        }
+        .btn-warm {
+            background: linear-gradient(135deg, var(--warm), var(--accent2));
+            color: #000; box-shadow: 0 4px 20px rgba(255, 99, 71, 0.25);
+        }
+        .btn-warm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 99, 71, 0.35);
+        }
+        .btn-secondary {
+            background: var(--card); color: var(--fg);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: var(--card-hover); border-color: var(--accent); }
+
+        #heroCanvas {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; opacity: 0.25;
+        }
+
+        /* Secciones */
+        section { padding: 100px 0; position: relative; }
+        .section-label {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--accent); font-size: 0.76rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 800; margin-bottom: 16px; letter-spacing: -0.5px;
+        }
+        .section-desc {
+            color: var(--fg-muted); font-size: 1.02rem;
+            max-width: 640px; margin-bottom: 50px; font-weight: 200;
+        }
+
+        /* Tarjetas */
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .concept-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 30px 26px;
+            transition: all 0.35s; position: relative; overflow: hidden;
+        }
+        .concept-card::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--warm));
+            opacity: 0; transition: opacity 0.35s;
+        }
+        .concept-card:hover {
+            border-color: rgba(0, 212, 170, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+        .concept-card:hover::before { opacity: 1; }
+        .concept-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: var(--accent-glow);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); font-size: 1.2rem; margin-bottom: 18px;
+        }
+        .concept-card.hot .concept-icon {
+            background: rgba(255, 99, 71, 0.12); color: var(--accent2);
+        }
+        .concept-card.warm .concept-icon {
+            background: rgba(255, 140, 66, 0.12); color: var(--warm);
+        }
+        .concept-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+        .concept-card p { color: var(--fg-muted); font-size: 0.88rem; font-weight: 200; margin-bottom: 16px; }
+        .formula-box {
+            background: rgba(0, 212, 170, 0.07);
+            border: 1px solid rgba(0, 212, 170, 0.15);
+            border-radius: 10px; padding: 14px 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem; color: var(--accent);
+            text-align: center; font-weight: 600;
+        }
+        .concept-card.hot .formula-box {
+            background: rgba(255, 99, 71, 0.07);
+            border-color: rgba(255, 99, 71, 0.15); color: var(--accent2);
+        }
+        .concept-card.warm .formula-box {
+            background: rgba(255, 140, 66, 0.07);
+            border-color: rgba(255, 140, 66, 0.15); color: var(--warm);
+        }
+        .formula-num {
+            font-size: 0.68rem; color: var(--fg-muted);
+            font-family: 'Outfit', sans-serif;
+            text-align: right; margin-top: 6px;
+        }
+
+        /* Simulador */
+        .sim-section {
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .sim-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px; gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 800px) {
+            .sim-layout { grid-template-columns: 1fr; }
+        }
+        .sim-canvas-wrap {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden; position: relative;
+        }
+        #simCanvas { display: block; width: 100%; height: auto; }
+        .sim-overlay {
+            position: absolute; bottom: 16px; left: 16px;
+            display: flex; gap: 8px;
+        }
+        .sim-overlay button {
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+            border: 1px solid var(--border); color: var(--fg);
+            width: 40px; height: 40px; border-radius: 10px;
+            cursor: pointer; display: flex; align-items: center;
+            justify-content: center; transition: all 0.2s; font-size: 0.9rem;
+        }
+        .sim-overlay button:hover {
+            background: rgba(0, 212, 170, 0.2);
+            border-color: var(--accent); color: var(--accent);
+        }
+        .sim-controls {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 26px;
+        }
+        .sim-controls h3 {
+            font-size: 0.95rem; font-weight: 700; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .sim-controls h3 i { color: var(--accent); }
+        .control-group { margin-bottom: 20px; }
+        .control-group label {
+            display: flex; justify-content: space-between;
+            align-items: center; font-size: 0.82rem;
+            color: var(--fg-muted); margin-bottom: 8px;
+        }
+        .control-group label span {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent); font-weight: 600;
+        }
+        input[type="range"] {
+            -webkit-appearance: none; width: 100%; height: 6px;
+            background: var(--border); border-radius: 3px; outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 20px; height: 20px;
+            border-radius: 50%; background: var(--accent); cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 212, 170, 0.4);
+        }
+        .sim-readout {
+            background: rgba(0, 212, 170, 0.05);
+            border: 1px solid rgba(0, 212, 170, 0.12);
+            border-radius: 12px; padding: 16px; margin-top: 18px;
+        }
+        .sim-readout h4 {
+            font-size: 0.72rem; color: var(--fg-muted);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+        }
+        .readout-row {
+            display: flex; justify-content: space-between;
+            padding: 5px 0; font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .readout-row:last-child { border-bottom: none; }
+        .readout-row .rlabel { color: var(--fg-muted); }
+        .readout-row .rvalue {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--fg); font-weight: 600;
+        }
+        .phase-indicator {
+            text-align: center; padding: 12px;
+            border-radius: 10px; margin-top: 14px;
+            font-weight: 700; font-size: 0.85rem;
+            transition: all 0.4s;
+        }
+        .phase-solid { background: rgba(93, 173, 226, 0.15); color: var(--info); border: 1px solid rgba(93,173,226,0.25); }
+        .phase-melting { background: rgba(0, 212, 170, 0.15); color: var(--accent); border: 1px solid rgba(0,212,170,0.25); }
+        .phase-liquid { background: rgba(255, 140, 66, 0.15); color: var(--warm); border: 1px solid rgba(255,140,66,0.25); }
+        .phase-boiling { background: rgba(255, 99, 71, 0.15); color: var(--accent2); border: 1px solid rgba(255,99,71,0.25); }
+        .phase-gas { background: rgba(255, 68, 68, 0.15); color: var(--hot); border: 1px solid rgba(255,68,68,0.25); }
+
+        /* Ejemplo resuelto */
+        .example-block {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 34px; margin-bottom: 30px;
+        }
+        .example-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+        }
+        .example-header .badge {
+            background: linear-gradient(135deg, var(--accent), #00ffcc);
+            color: #000; font-size: 0.72rem; font-weight: 700;
+            padding: 4px 12px; border-radius: 6px; text-transform: uppercase;
+        }
+        .example-header h3 { font-weight: 700; }
+        .example-data {
+            background: rgba(0, 212, 170, 0.05);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px; border-radius: 0 10px 10px 0;
+            margin-bottom: 24px;
+        }
+        .example-data p { font-size: 0.9rem; margin-bottom: 3px; }
+        .example-data strong { color: var(--accent); }
+        .step { display: flex; gap: 16px; margin-bottom: 18px; align-items: flex-start; }
+        .step-num {
+            flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+            background: var(--accent-glow);
+            border: 1px solid rgba(0, 212, 170, 0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; font-weight: 700; color: var(--accent);
+        }
+        .step-content { flex: 1; }
+        .step-content p { font-size: 0.9rem; color: var(--fg-muted); margin-bottom: 8px; }
+        .step-formula {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg); padding: 10px 16px; border-radius: 8px;
+            font-size: 0.86rem; color: var(--fg);
+            border: 1px solid var(--border);
+        }
+        .step-formula .result { color: var(--success); font-weight: 600; }
+        .conclusion-box {
+            background: rgba(46, 204, 113, 0.08);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            border-radius: 10px; padding: 16px 20px; margin-top: 24px;
+        }
+        .conclusion-box h4 {
+            color: var(--success); font-size: 0.83rem; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .conclusion-box ul { list-style: none; padding: 0; }
+        .conclusion-box li {
+            font-size: 0.86rem; color: var(--fg-muted);
+            padding: 3px 0; padding-left: 20px; position: relative;
+        }
+        .conclusion-box li::before {
+            content: '\f00c'; font-family: 'Font Awesome 6 Free';
+            font-weight: 900; position: absolute; left: 0;
+            color: var(--success); font-size: 0.7rem;
+        }
+
+        /* Ejercicios */
+        .exercise-block {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 34px; margin-bottom: 30px;
+            position: relative;
+        }
+        .exercise-block .ex-number {
+            position: absolute; top: -14px; left: 28px;
+            background: var(--accent); color: #000; font-weight: 800;
+            font-size: 0.78rem; padding: 4px 16px; border-radius: 8px;
+        }
+        .exercise-data {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 10px; padding: 16px 20px; margin-bottom: 24px;
+        }
+        .exercise-data p { font-size: 0.9rem; margin-bottom: 2px; }
+        .exercise-data strong { color: var(--accent); }
+        .exercise-tasks { list-style: none; padding: 0; margin-bottom: 24px; }
+        .exercise-tasks li {
+            font-size: 0.9rem; color: var(--fg-muted);
+            padding: 6px 0 6px 24px; position: relative;
+        }
+        .exercise-tasks li::before {
+            content: ''; position: absolute; left: 6px; top: 14px;
+            width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+        }
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px; margin-bottom: 20px;
+        }
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
+        .input-group label { font-size: 0.78rem; color: var(--fg-muted); font-weight: 600; }
+        .input-group input {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 10px; padding: 12px 14px; color: var(--fg);
+            font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+            outline: none; transition: border-color 0.25s;
+        }
+        .input-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+        .input-group input.correct { border-color: var(--success); box-shadow: 0 0 0 3px rgba(46,204,113,0.15); }
+        .input-group input.incorrect { border-color: var(--error); box-shadow: 0 0 0 3px rgba(231,76,60,0.15); }
+        .input-feedback { font-size: 0.73rem; min-height: 18px; font-weight: 600; }
+        .input-feedback.correct-fb { color: var(--success); }
+        .input-feedback.incorrect-fb { color: var(--error); }
+        .exercise-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-check { background: linear-gradient(135deg, var(--accent), #00ffcc); color: #000; }
+        .btn-check:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,212,170,0.3); }
+        .btn-hint { background: transparent; border: 1px solid var(--border); color: var(--fg-muted); }
+        .btn-hint:hover { border-color: var(--accent); color: var(--accent); }
+        .hint-text {
+            display: none; background: rgba(93, 173, 226, 0.08);
+            border: 1px solid rgba(93, 173, 226, 0.2);
+            border-radius: 10px; padding: 14px 18px; margin-top: 16px;
+            font-size: 0.86rem; color: var(--info);
+        }
+        .hint-text.show { display: block; }
+
+        /* Juego */
+        .game-section {
+            background: linear-gradient(180deg, var(--bg) 0%, #0c1210 50%, var(--bg) 100%);
+            border-top: 1px solid var(--border);
+        }
+        .game-container {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px; overflow: hidden;
+        }
+        .game-header {
+            background: linear-gradient(135deg, rgba(0,212,170,0.08), rgba(255,140,66,0.08));
+            border-bottom: 1px solid var(--border); padding: 22px 30px;
+            display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 16px;
+        }
+        .game-header h3 {
+            font-size: 1.15rem; font-weight: 800;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .game-header h3 i { color: var(--accent); }
+        .game-stats { display: flex; gap: 24px; }
+        .game-stat { text-align: center; }
+        .game-stat .stat-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem; font-weight: 700; color: var(--accent);
+        }
+        .game-stat .stat-label {
+            font-size: 0.68rem; color: var(--fg-muted);
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .game-body { padding: 34px 30px; }
+        .game-start-screen, .game-over-screen { text-align: center; padding: 40px 20px; }
+        .game-start-screen h4, .game-over-screen h4 {
+            font-size: 1.4rem; font-weight: 800; margin-bottom: 12px;
+        }
+        .game-start-screen p, .game-over-screen p {
+            color: var(--fg-muted); margin-bottom: 28px;
+            max-width: 500px; margin-left: auto; margin-right: auto;
+        }
+        .game-over-screen .final-score {
+            font-size: 3rem; font-weight: 900; color: var(--accent); margin: 16px 0;
+        }
+        .game-question { display: none; }
+        .game-question.active { display: block; }
+        .gq-problem {
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px 24px; margin-bottom: 24px;
+        }
+        .gq-problem p { font-size: 0.92rem; margin-bottom: 4px; }
+        .gq-problem .gq-ask { font-weight: 700; color: var(--accent); font-size: 1.02rem; margin-top: 10px; }
+        .gq-options {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
+        }
+        @media (max-width: 500px) { .gq-options { grid-template-columns: 1fr; } }
+        .gq-option {
+            background: var(--bg); border: 2px solid var(--border);
+            border-radius: 12px; padding: 16px 20px; cursor: pointer;
+            transition: all 0.25s; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.92rem; text-align: center;
+        }
+        .gq-option:hover { border-color: var(--accent); background: var(--accent-glow); }
+        .gq-option.correct-answer {
+            border-color: var(--success) !important;
+            background: rgba(46, 204, 113, 0.15) !important; color: var(--success);
+        }
+        .gq-option.wrong-answer {
+            border-color: var(--error) !important;
+            background: rgba(231, 76, 60, 0.15) !important; color: var(--error);
+        }
+        .gq-option.disabled { pointer-events: none; }
+        .gq-feedback {
+            display: none; padding: 14px 18px; border-radius: 10px;
+            font-size: 0.88rem; margin-bottom: 20px; font-weight: 600;
+        }
+        .gq-feedback.show { display: block; }
+        .gq-feedback.correct-fb {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.25); color: var(--success);
+        }
+        .gq-feedback.wrong-fb {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.25); color: var(--error);
+        }
+        .game-progress-bar {
+            height: 4px; background: var(--border);
+            border-radius: 2px; margin-bottom: 24px; overflow: hidden;
+        }
+        .game-progress-fill {
+            height: 100%; background: linear-gradient(90deg, var(--accent), var(--warm));
+            border-radius: 2px; transition: width 0.4s ease;
+        }
+        .btn-next-q { display: none; margin-left: auto; }
+        .btn-next-q.show { display: inline-flex; }
+
+        /* Toast */
+        .toast-container {
+            position: fixed; top: 80px; right: 24px; z-index: 200;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px 20px;
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.86rem; box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            animation: toastIn 0.3s ease; min-width: 260px;
+        }
+        .toast.success { border-color: rgba(46,204,113,0.3); }
+        .toast.success i { color: var(--success); }
+        .toast.error { border-color: rgba(231,76,60,0.3); }
+        .toast.error i { color: var(--error); }
+        .toast.info { border-color: rgba(93,173,226,0.3); }
+        .toast.info i { color: var(--info); }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(40px); } }
+
+        footer {
+            text-align: center; padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--fg-muted); font-size: 0.8rem;
+        }
+
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 640px) {
+            nav .nav-links { display: none; }
+            .hero h1 { font-size: 2rem; }
+            .example-block, .exercise-block { padding: 24px 16px; }
+            .game-body { padding: 24px 16px; }
+            .game-header { padding: 16px; }
+            .input-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-atmosphere">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<nav>
+    <div class="nav-inner">
+        <div class="logo"><i class="fas fa-temperature-high"></i> FisicaLab</div>
+        <ul class="nav-links">
+            <li><a href="#conceptos">Conceptos</a></li>
+            <li><a href="#simulador">Simulador</a></li>
+            <li><a href="#ejemplo">Ejemplo</a></li>
+            <li><a href="#tarea">Tarea</a></li>
+            <li><a href="#juego">Juego</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+    <canvas id="heroCanvas"></canvas>
+    <div class="hero-content">
+        <div class="hero-badge"><i class="fas fa-fire"></i> Creatividad - Termologia</div>
+        <h1><span class="hl1">Fusion</span> y <span class="hl2">Ebullicion</span><br>del Agua</h1>
+        <p>Explora como la temperatura cambia al calentar agua: calor especifico, calor latente de fusion y ebullicion, y la curva de calentamiento completa.</p>
+        <div class="hero-cta">
+            <a href="#conceptos" class="btn btn-primary"><i class="fas fa-play"></i> Comenzar</a>
+            <a href="#juego" class="btn btn-secondary"><i class="fas fa-gamepad"></i> Ir al Juego</a>
+        </div>
+    </div>
+</section>
+
+<!-- Conceptos -->
+<section id="conceptos">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-book-open"></i> Fundamentos</div>
+            <h2 class="section-title">Conceptos Clave de Calorimetria</h2>
+            <p class="section-desc">Cuando calentamos un solid hasta convertirlo en gas, la temperatura no sube siempre. Hay fases donde la energia se usa para cambiar de estado.</p>
+        </div>
+        <div class="concepts-grid">
+            <div class="concept-card reveal">
+                <div class="concept-icon"><i class="fas fa-thermometer-half"></i></div>
+                <h3>Calor Especifico (c)</h3>
+                <p>Cantidad de calor necesaria para elevar 1 grado la temperatura de 1 kg de una sustancia. Para el agua: c = 4186 J/(kg·°C).</p>
+                <div class="formula-box">Q = m · c · ΔT</div>
+                <div class="formula-num">Ecuacion 2.1</div>
+            </div>
+            <div class="concept-card warm reveal">
+                <div class="concept-icon"><i class="fas fa-snowflake"></i></div>
+                <h3>Calor Latente de Fusion (Lf)</h3>
+                <p>Energia necesaria para cambiar de solido a liquido sin cambiar la temperatura. Para el agua: Lf = 334 000 J/kg. Ocurre a 0°C.</p>
+                <div class="formula-box">Q = m · Lf</div>
+                <div class="formula-num">Ecuacion 2.2</div>
+            </div>
+            <div class="concept-card hot reveal">
+                <div class="concept-icon"><i class="fas fa-fire-alt"></i></div>
+                <h3>Calor Latente de Ebullicion (Lv)</h3>
+                <p>Energia necesaria para cambiar de liquido a gas sin cambiar la temperatura. Para el agua: Lv = 2 260 000 J/kg. Ocurre a 100°C.</p>
+                <div class="formula-box">Q = m · Lv</div>
+                <div class="formula-num">Ecuacion 2.3</div>
+            </div>
+            <div class="concept-card reveal">
+                <div class="concept-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Curva de Calentamiento</h3>
+                <p>Grafico temperatura vs tiempo que muestra 5 etapas: calentar solido, fusion (0°C), calentar liquido, ebullicion (100°C), calentar gas.</p>
+                <div class="formula-box">T = f(t) por etapas</div>
+                <div class="formula-num">Grafico 2.1</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Simulador -->
+<section id="simulador" class="sim-section">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-flask"></i> Laboratorio</div>
+            <h2 class="section-title">Curva de Calentamiento Interactiva</h2>
+            <p class="section-desc">Ajusta la masa y la potencia del calentador para ver como cambia la curva de calentamiento del agua en tiempo real.</p>
+        </div>
+        <div class="sim-layout reveal">
+            <div class="sim-canvas-wrap">
+                <canvas id="simCanvas" width="700" height="480"></canvas>
+                <div class="sim-overlay">
+                    <button id="simPlayBtn" title="Play/Pausa"><i class="fas fa-pause"></i></button>
+                    <button id="simResetBtn" title="Reiniciar"><i class="fas fa-undo"></i></button>
+                </div>
+            </div>
+            <div class="sim-controls">
+                <h3><i class="fas fa-sliders-h"></i> Parametros</h3>
+                <div class="control-group">
+                    <label>Masa (m) <span id="massVal">0.20 kg</span></label>
+                    <input type="range" id="massSlider" min="5" max="100" value="20" step="1">
+                </div>
+                <div class="control-group">
+                    <label>Potencia (P) <span id="powerVal">800 W</span></label>
+                    <input type="range" id="powerSlider" min="200" max="2000" value="800" step="50">
+                </div>
+                <div class="sim-readout">
+                    <h4>Magnitudes calculadas</h4>
+                    <div class="readout-row"><span class="rlabel">Temperatura</span><span class="rvalue" id="roTemp">-20.0 °C</span></div>
+                    <div class="readout-row"><span class="rlabel">Calor total</span><span class="rvalue" id="roHeat">0 J</span></div>
+                    <div class="readout-row"><span class="rlabel">Tiempo</span><span class="rvalue" id="roTime">0.0 s</span></div>
+                </div>
+                <div class="phase-indicator phase-solid" id="phaseIndicator">
+                    <i class="fas fa-cube"></i> Solido (hielo)
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ejemplo Resuelto -->
+<section id="ejemplo">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-pencil-alt"></i> Ejemplo Resuelto</div>
+            <h2 class="section-title">Ejemplo 1</h2>
+            <p class="section-desc">Se calientan 0.20 kg de hielo a -20°C hasta convertirlos en vapor a 120°C con una potencia de 800 W. Calcula el calor en cada etapa y el tiempo total.</p>
+        </div>
+        <div class="example-block reveal">
+            <div class="example-header">
+                <span class="badge">Ejemplo 1</span>
+                <h3>Calor total y tiempos de calentamiento</h3>
+            </div>
+            <div class="example-data">
+                <p><strong>Datos:</strong></p>
+                <p>m = 0.20 kg &nbsp;|&nbsp; T_inicial = -20°C &nbsp;|&nbsp; P = 800 W</p>
+                <p>c_hielo = 2090 J/(kg·°C) &nbsp;|&nbsp; c_agua = 4186 J/(kg·°C) &nbsp;|&nbsp; c_vapor = 2010 J/(kg·°C)</p>
+                <p>Lf = 334 000 J/kg &nbsp;|&nbsp; Lv = 2 260 000 J/kg</p>
+            </div>
+
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <p><strong>Etapa 1:</strong> Calentar el hielo de -20°C a 0°C (Q = m · c_hielo · ΔT):</p>
+                    <div class="step-formula">Q₁ = 0.20 × 2090 × 20 = <span class="result">8 360 J</span> &nbsp;→&nbsp; t₁ = 8360 / 800 = <span class="result">10.45 s</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <p><strong>Etapa 2:</strong> Fusion del hielo a 0°C (Q = m · Lf):</p>
+                    <div class="step-formula">Q₂ = 0.20 × 334 000 = <span class="result">66 800 J</span> &nbsp;→&nbsp; t₂ = 66800 / 800 = <span class="result">83.50 s</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <p><strong>Etapa 3:</strong> Calentar el agua de 0°C a 100°C (Q = m · c_agua · ΔT):</p>
+                    <div class="step-formula">Q₃ = 0.20 × 4186 × 100 = <span class="result">83 720 J</span> &nbsp;→&nbsp; t₃ = 83720 / 800 = <span class="result">104.65 s</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                    <p><strong>Etapa 4:</strong> Ebullicion del agua a 100°C (Q = m · Lv):</p>
+                    <div class="step-formula">Q₄ = 0.20 × 2 260 000 = <span class="result">452 000 J</span> &nbsp;→&nbsp; t₄ = 452000 / 800 = <span class="result">565.00 s</span></div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">5</div>
+                <div class="step-content">
+                    <p><strong>Etapa 5:</strong> Calentar el vapor de 100°C a 120°C (Q = m · c_vapor · ΔT):</p>
+                    <div class="step-formula">Q₅ = 0.20 × 2010 × 20 = <span class="result">8 040 J</span> &nbsp;→&nbsp; t₅ = 8040 / 800 = <span class="result">10.05 s</span></div>
+                </div>
+            </div>
+
+            <div class="conclusion-box">
+                <h4><i class="fas fa-check-circle"></i> Resultados finales</h4>
+                <ul>
+                    <li>Calor total: Q_total = 8360 + 66800 + 83720 + 452000 + 8040 = <strong>618 920 J</strong></li>
+                    <li>Tiempo total: t_total = 10.45 + 83.50 + 104.65 + 565.00 + 10.05 = <strong>773.65 s</strong></li>
+                    <li>La ebullicion es la etapa que mas calor y tiempo consume (73% del total)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ejercicios de Tarea -->
+<section id="tarea">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-clipboard-list"></i> Tarea</div>
+            <h2 class="section-title">Ejercicios Propuestos</h2>
+            <p class="section-desc">Resuelve los siguientes dos ejercicios siguiendo el mismo procedimiento del Ejemplo 1. Ingresa tus resultados y verifica.</p>
+        </div>
+
+        <!-- Ejercicio 1 -->
+        <div class="exercise-block reveal" id="ex1Block">
+            <div class="ex-number">Ejercicio 1</div>
+            <h3 style="margin-top:8px;margin-bottom:16px;font-weight:700;">Calentamiento de hielo (0.10 kg)</h3>
+            <div class="exercise-data">
+                <p><strong>Datos:</strong></p>
+                <p>m = 0.10 kg &nbsp;|&nbsp; T_inicial = -10°C &nbsp;|&nbsp; P = 500 W &nbsp;|&nbsp; T_final = 100°C (agua liquida)</p>
+                <p>c_hielo = 2090 J/(kg·°C) &nbsp;|&nbsp; c_agua = 4186 J/(kg·°C) &nbsp;|&nbsp; Lf = 334 000 J/kg</p>
+            </div>
+            <p style="font-size:0.9rem;color:var(--fg-muted);margin-bottom:14px;">Calcula el calor y el tiempo de cada etapa:</p>
+            <ul class="exercise-tasks">
+                <li>Q₁: Calentar hielo de -10°C a 0°C</li>
+                <li>Q₂: Fusion a 0°C</li>
+                <li>Q₃: Calentar agua de 0°C a 100°C</li>
+                <li>Q_total y t_total</li>
+            </ul>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>Q₁ (J)</label>
+                    <input type="number" step="any" id="ex1_q1" placeholder="Calor etapa 1">
+                    <div class="input-feedback" id="fb_ex1_q1"></div>
+                </div>
+                <div class="input-group">
+                    <label>Q₂ (J)</label>
+                    <input type="number" step="any" id="ex1_q2" placeholder="Calor etapa 2">
+                    <div class="input-feedback" id="fb_ex1_q2"></div>
+                </div>
+                <div class="input-group">
+                    <label>Q₃ (J)</label>
+                    <input type="number" step="any" id="ex1_q3" placeholder="Calor etapa 3">
+                    <div class="input-feedback" id="fb_ex1_q3"></div>
+                </div>
+                <div class="input-group">
+                    <label>Q_total (J)</label>
+                    <input type="number" step="any" id="ex1_qt" placeholder="Calor total">
+                    <div class="input-feedback" id="fb_ex1_qt"></div>
+                </div>
+                <div class="input-group">
+                    <label>t_total (s)</label>
+                    <input type="number" step="any" id="ex1_tt" placeholder="Tiempo total">
+                    <div class="input-feedback" id="fb_ex1_tt"></div>
+                </div>
+            </div>
+            <div class="exercise-actions">
+                <button class="btn btn-check" onclick="checkExercise(1)"><i class="fas fa-check"></i> Verificar</button>
+                <button class="btn btn-hint" onclick="toggleHint(1)"><i class="fas fa-lightbulb"></i> Pista</button>
+                <button class="btn btn-hint" onclick="showSolution(1)"><i class="fas fa-eye"></i> Solucion</button>
+            </div>
+            <div class="hint-text" id="hint1">Etapa 1: Q = m·c_hielo·ΔT donde ΔT = 0-(-10) = 10°C. Etapa 2: Q = m·Lf. Etapa 3: Q = m·c_agua·ΔT donde ΔT = 100°C. El tiempo total = Q_total / P.</div>
+            <div class="hint-text" id="sol1" style="display:none;background:rgba(0,212,170,0.08);border-color:rgba(0,212,170,0.2);color:var(--accent);">
+                <strong>Solucion:</strong> Q₁ = 2 090 J | Q₂ = 33 400 J | Q₃ = 41 860 J | Q_total = 77 350 J | t_total = 154.70 s
+            </div>
+        </div>
+
+        <!-- Ejercicio 2 -->
+        <div class="exercise-block reveal" id="ex2Block">
+            <div class="ex-number">Ejercicio 2</div>
+            <h3 style="margin-top:8px;margin-bottom:16px;font-weight:700;">Hielo a vapor (0.05 kg)</h3>
+            <div class="exercise-data">
+                <p><strong>Datos:</strong></p>
+                <p>m = 0.05 kg &nbsp;|&nbsp; T_inicial = 0°C (hielo) &nbsp;|&nbsp; P = 1000 W &nbsp;|&nbsp; T_final = 110°C (vapor)</p>
+                <p>c_agua = 4186 J/(kg·°C) &nbsp;|&nbsp; c_vapor = 2010 J/(kg·°C) &nbsp;|&nbsp; Lf = 334 000 J/kg &nbsp;|&nbsp; Lv = 2 260 000 J/kg</p>
+            </div>
+            <p style="font-size:0.9rem;color:var(--fg-muted);margin-bottom:14px;">Calcula el calor y el tiempo de cada etapa:</p>
+            <ul class="exercise-tasks">
+                <li>Q₁: Fusion a 0°C</li>
+                <li>Q₂: Calentar agua de 0°C a 100°C</li>
+                <li>Q₃: Ebullicion a 100°C</li>
+                <li>Q₄: Calentar vapor de 100°C a 110°C</li>
+                <li>Q_total y t_total</li>
+            </ul>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>Q₁ (J)</label>
+                    <input type="number" step="any" id="ex2_q1" placeholder="Calor etapa 1">
+                    <div class="input-feedback" id="fb_ex2_q1"></div>
+                </div>
+                <div class="input-group">
+                    <label>Q₂ (J)</label>
+                    <input type="number" step="any" id="ex2_q2" placeholder="Calor etapa 2">
+                    <div class="input-feedback" id="fb_ex2_q2"></div>
+                </div>
+                <div class="input-group">
+                    <label>Q₃ (J)</label>
+                    <input type="number" step="any" id="ex2_q3" placeholder="Calor etapa 3">
+                    <div class="input-feedback" id="fb_ex2_q3"></div>
+                </div>
+                <div class="input-group">
+                    <label>Q₄ (J)</label>
+                    <input type="number" step="any" id="ex2_q4" placeholder="Calor etapa 4">
+                    <div class="input-feedback" id="fb_ex2_q4"></div>
+                </div>
+                <div class="input-group">
+                    <label>Q_total (J)</label>
+                    <input type="number" step="any" id="ex2_qt" placeholder="Calor total">
+                    <div class="input-feedback" id="fb_ex2_qt"></div>
+                </div>
+                <div class="input-group">
+                    <label>t_total (s)</label>
+                    <input type="number" step="any" id="ex2_tt" placeholder="Tiempo total">
+                    <div class="input-feedback" id="fb_ex2_tt"></div>
+                </div>
+            </div>
+            <div class="exercise-actions">
+                <button class="btn btn-check" onclick="checkExercise(2)"><i class="fas fa-check"></i> Verificar</button>
+                <button class="btn btn-hint" onclick="toggleHint(2)"><i class="fas fa-lightbulb"></i> Pista</button>
+                <button class="btn btn-hint" onclick="showSolution(2)"><i class="fas fa-eye"></i> Solucion</button>
+            </div>
+            <div class="hint-text" id="hint2">Empieza con Q₁ = m·Lf (fusion). Luego Q₂ = m·c_agua·100. Q₃ = m·Lv (ebullicion). Q₄ = m·c_vapor·10. Suma todo y divide entre P para el tiempo.</div>
+            <div class="hint-text" id="sol2" style="display:none;background:rgba(0,212,170,0.08);border-color:rgba(0,212,170,0.2);color:var(--accent);">
+                <strong>Solucion:</strong> Q₁ = 16 700 J | Q₂ = 20 930 J | Q₃ = 113 000 J | Q₄ = 1 005 J | Q_total = 151 635 J | t_total = 151.64 s
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Juego Interactivo -->
+<section id="juego" class="game-section">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label"><i class="fas fa-gamepad"></i> Desafio Final</div>
+            <h2 class="section-title">Juego de Calorimetria</h2>
+            <p class="section-desc">Pon a prueba lo aprendido. Resuelve 10 problemas sobre calor especifico, calor latente y curvas de calentamiento. Sin presion de tiempo, piensa con calma.</p>
+        </div>
+        <div class="game-container reveal">
+            <div class="game-header">
+                <h3><i class="fas fa-trophy"></i> Desafio Termico</h3>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <div class="stat-val" id="gameScore">0</div>
+                        <div class="stat-label">Puntos</div>
+                    </div>
+                    <div class="game-stat">
+                        <div class="stat-val" id="gameLives">3</div>
+                        <div class="stat-label">Vidas</div>
+                    </div>
+                    <div class="game-stat">
+                        <div class="stat-val" id="gameLevel">-</div>
+                        <div class="stat-label">Pregunta</div>
+                    </div>
+                </div>
+            </div>
+            <div class="game-body">
+                <div class="game-start-screen" id="gameStartScreen">
+                    <h4>Listo para el desafio?</h4>
+                    <p>Se te presentaran 10 problemas de calorimetria. Elige la respuesta correcta entre 4 opciones. No hay temporizador, asi que toma tu tiempo para calcular bien. Tienes 3 vidas.</p>
+                    <button class="btn btn-primary" onclick="startGame()"><i class="fas fa-rocket"></i> Iniciar Juego</button>
+                </div>
+
+                <div class="game-question" id="gameQuestionScreen">
+                    <div class="game-progress-bar">
+                        <div class="game-progress-fill" id="gameProgressFill" style="width:0%"></div>
+                    </div>
+                    <div class="gq-problem" id="gqProblem"></div>
+                    <div class="gq-options" id="gqOptions"></div>
+                    <div class="gq-feedback" id="gqFeedback"></div>
+                    <button class="btn btn-primary btn-next-q" id="btnNextQ" onclick="nextQuestion()"><i class="fas fa-arrow-right"></i> Siguiente</button>
+                </div>
+
+                <div class="game-over-screen" id="gameOverScreen" style="display:none;">
+                    <h4 id="gameOverTitle">Desafio Completado</h4>
+                    <div class="final-score" id="finalScore">0</div>
+                    <p id="gameOverMsg">puntos obtenidos</p>
+                    <button class="btn btn-primary" onclick="startGame()" style="margin-top:10px;"><i class="fas fa-redo"></i> Jugar de Nuevo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>FisicaLab - Fusion y Ebullicion del Agua &nbsp;|&nbsp; Herramienta educativa interactiva</p>
+</footer>
+
+<script>
+// =============================================
+// TOASTS
+// =============================================
+function showToast(msg, type = 'info') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
+    t.innerHTML = `<i class="fas ${icons[type]||icons.info}"></i> ${msg}`;
+    c.appendChild(t);
+    setTimeout(() => { t.style.animation = 'toastOut 0.3s ease forwards'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+
+// =============================================
+// SCROLL REVEAL
+// =============================================
+const obs = new IntersectionObserver(e => e.forEach(en => { if (en.isIntersecting) en.target.classList.add('visible'); }), { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// =============================================
+// HERO CANVAS - Burbujas de calor
+// =============================================
+(function() {
+    const canvas = document.getElementById('heroCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; }
+    resize(); window.addEventListener('resize', resize);
+
+    const bubbles = [];
+    for (let i = 0; i < 50; i++) {
+        bubbles.push({
+            x: Math.random() * 2000, y: Math.random() * 1200,
+            r: 2 + Math.random() * 6,
+            speed: 0.3 + Math.random() * 1.2,
+            wobble: Math.random() * Math.PI * 2,
+            wobbleSpeed: 0.01 + Math.random() * 0.03,
+            alpha: 0.15 + Math.random() * 0.4
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+        bubbles.forEach(b => {
+            b.y -= b.speed;
+            b.wobble += b.wobbleSpeed;
+            b.x += Math.sin(b.wobble) * 0.5;
+            if (b.y < -20) { b.y = h + 20; b.x = Math.random() * w; }
+
+            const grad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+            grad.addColorStop(0, `rgba(0, 212, 170, ${b.alpha})`);
+            grad.addColorStop(1, `rgba(0, 212, 170, 0)`);
+            ctx.beginPath();
+            ctx.arc(b.x, b.y, b.r * 2, 0, Math.PI * 2);
+            ctx.fillStyle = grad;
+            ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+
+// =============================================
+// SIMULADOR DE CURVA DE CALENTAMIENTO
+// =============================================
+(function() {
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const massSlider = document.getElementById('massSlider');
+    const powerSlider = document.getElementById('powerSlider');
+
+    let playing = true;
+    let heatAccum = 0; // Calor acumulado en Joules
+
+    function setupCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+    }
+    setupCanvas();
+    window.addEventListener('resize', setupCanvas);
+
+    // Constantes del agua
+    const C_HIELO = 2090;
+    const C_AGUA = 4186;
+    const C_VAPOR = 2010;
+    const LF = 334000;
+    const LV = 2260000;
+    const T_START = -20;
+    const T_MELT = 0;
+    const T_BOIL = 100;
+    const T_END = 120;
+
+    function getParams() {
+        const m = parseInt(massSlider.value) / 100;
+        const P = parseInt(powerSlider.value);
+        return { m, P };
+    }
+
+    // Calor necesario para cada etapa con masa m
+    function stageHeats(m) {
+        const q1 = m * C_HIELO * (T_MELT - T_START);
+        const q2 = m * LF;
+        const q3 = m * C_AGUA * (T_BOIL - T_MELT);
+        const q4 = m * LV;
+        const q5 = m * C_VAPOR * (T_END - T_BOIL);
+        return [q1, q2, q3, q4, q5];
+    }
+
+    // Dado un calor acumulado, devolver temperatura y etapa
+    function heatToTemp(h, m) {
+        const [q1, q2, q3, q4, q5] = stageHeats(m);
+        const total = q1 + q2 + q3 + q4 + q5;
+
+        if (h <= 0) return { temp: T_START, stage: 0, progress: 0 };
+        if (h >= total) return { temp: T_END, stage: 5, progress: 1 };
+
+        let cumul = 0;
+        // Etapa 1: calentar hielo
+        cumul += q1;
+        if (h < cumul) {
+            const frac = h / q1;
+            return { temp: T_START + frac * (T_MELT - T_START), stage: 1, progress: frac };
+        }
+        // Etapa 2: fusion
+        cumul += q2;
+        if (h < cumul) {
+            return { temp: T_MELT, stage: 2, progress: (h - cumul + q2) / q2 };
+        }
+        // Etapa 3: calentar agua
+        cumul += q3;
+        if (h < cumul) {
+            const frac = (h - cumul + q3) / q3;
+            return { temp: T_MELT + frac * (T_BOIL - T_MELT), stage: 3, progress: frac };
+        }
+        // Etapa 4: ebullicion
+        cumul += q4;
+        if (h < cumul) {
+            return { temp: T_BOIL, stage: 4, progress: (h - cumul + q4) / q4 };
+        }
+        // Etapa 5: calentar vapor
+        const frac = (h - cumul + q5) / q5;
+        return { temp: T_BOIL + frac * (T_END - T_BOIL), stage: 5, progress: frac };
+    }
+
+    function updateLabels() {
+        const p = getParams();
+        document.getElementById('massVal').textContent = p.m.toFixed(2) + ' kg';
+        document.getElementById('powerVal').textContent = p.P + ' W';
+    }
+    massSlider.addEventListener('input', () => { updateLabels(); heatAccum = 0; });
+    powerSlider.addEventListener('input', () => { updateLabels(); heatAccum = 0; });
+    updateLabels();
+
+    document.getElementById('simPlayBtn').addEventListener('click', function() {
+        playing = !playing;
+        this.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+    });
+    document.getElementById('simResetBtn').addEventListener('click', () => { heatAccum = 0; });
+
+    // Datos para el grafico
+    let graphData = [];
+
+    let lastTime = 0;
+    function animate(timestamp) {
+        const dt = lastTime ? (timestamp - lastTime) / 1000 : 0.016;
+        lastTime = timestamp;
+
+        const rect = canvas.getBoundingClientRect();
+        const W = rect.width;
+        const H = rect.height;
+        const { m, P } = getParams();
+
+        if (playing) {
+            heatAccum += P * dt;
+        }
+
+        const state = heatToTemp(heatAccum, m);
+        const [q1, q2, q3, q4, q5] = stageHeats(m);
+        const totalHeat = q1 + q2 + q3 + q4 + q5;
+        const totalTime = totalHeat / P;
+
+        // Actualizar lecturas
+        document.getElementById('roTemp').textContent = state.temp.toFixed(1) + ' °C';
+        document.getElementById('roHeat').textContent = Math.round(heatAccum).toLocaleString() + ' J';
+        document.getElementById('roTime').textContent = (heatAccum / P).toFixed(1) + ' s';
+
+        // Actualizar indicador de fase
+        const pi = document.getElementById('phaseIndicator');
+        const phaseNames = [
+            { cls: 'phase-solid', icon: 'fa-cube', text: 'Solido (hielo)' },
+            { cls: 'phase-melting', icon: 'fa-snowflake', text: 'Fusion (0°C)' },
+            { cls: 'phase-liquid', icon: 'fa-tint', text: 'Liquido (agua)' },
+            { cls: 'phase-boiling', icon: 'fa-fire-alt', text: 'Ebullicion (100°C)' },
+            { cls: 'phase-gas', icon: 'fa-wind', text: 'Gas (vapor)' },
+            { cls: 'phase-gas', icon: 'fa-wind', text: 'Gas (vapor) - Completado' }
+        ];
+        const ph = phaseNames[Math.min(state.stage, 5)];
+        pi.className = 'phase-indicator ' + ph.cls;
+        pi.innerHTML = `<i class="fas ${ph.icon}"></i> ${ph.text}`;
+
+        // Dibujar grafico
+        ctx.clearRect(0, 0, W, H);
+
+        const pad = { top: 30, right: 30, bottom: 50, left: 65 };
+        const gW = W - pad.left - pad.right;
+        const gH = H - pad.top - pad.bottom;
+
+        // Fondo del area de grafico
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillRect(pad.left, pad.top, gW, gH);
+
+        // Lineas de referencia de temperatura
+        const tempRange = T_END - T_START;
+        const refTemps = [-20, 0, 20, 40, 60, 80, 100, 120];
+        ctx.font = '11px "JetBrains Mono", monospace';
+        ctx.textAlign = 'right';
+        refTemps.forEach(t => {
+            const y = pad.top + gH - ((t - T_START) / tempRange) * gH;
+            ctx.beginPath();
+            ctx.moveTo(pad.left, y);
+            ctx.lineTo(pad.left + gW, y);
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.fillStyle = 'rgba(255,255,255,0.35)';
+            ctx.fillText(t + '°', pad.left - 8, y + 4);
+        });
+
+        // Lineas de fase horizontales (0°C y 100°C) destacadas
+        [T_MELT, T_BOIL].forEach((t, idx) => {
+            const y = pad.top + gH - ((t - T_START) / tempRange) * gH;
+            ctx.beginPath();
+            ctx.setLineDash([6, 4]);
+            ctx.moveTo(pad.left, y);
+            ctx.lineTo(pad.left + gW, y);
+            ctx.strokeStyle = idx === 0 ? 'rgba(0, 212, 170, 0.4)' : 'rgba(255, 99, 71, 0.4)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.setLineDash([]);
+        });
+
+        // Etiquetas de fases
+        ctx.font = '600 11px "Outfit", sans-serif';
+        ctx.textAlign = 'center';
+        const stageTimes = [q1, q2, q3, q4, q5].map(q => q / P);
+        const cumTimes = []; let ct = 0;
+        stageTimes.forEach(t => { cumTimes.push(ct); ct += t; });
+        cumTimes.push(ct);
+
+        const phaseLabels = [
+            { text: 'SOLIDO', color: 'rgba(93,173,226,0.6)', idx: 0 },
+            { text: 'FUSION', color: 'rgba(0,212,170,0.6)', idx: 1 },
+            { text: 'LIQUIDO', color: 'rgba(255,140,66,0.6)', idx: 2 },
+            { text: 'EBULLICION', color: 'rgba(255,99,71,0.6)', idx: 3 },
+            { text: 'GAS', color: 'rgba(255,68,68,0.6)', idx: 4 }
+        ];
+        phaseLabels.forEach(pl => {
+            const x1 = pad.left + (cumTimes[pl.idx] / totalTime) * gW;
+            const x2 = pad.left + (cumTimes[pl.idx + 1] / totalTime) * gW;
+            const mx = (x1 + x2) / 2;
+            ctx.fillStyle = pl.color;
+            ctx.fillText(pl.text, mx, H - 14);
+        });
+
+        // Eje X label
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.font = '11px "Outfit", sans-serif';
+        ctx.fillText('Tiempo (s)', pad.left + gW / 2, H - 0);
+
+        // Dibujar curva teorica completa (tenue)
+        ctx.beginPath();
+        const steps = 200;
+        for (let i = 0; i <= steps; i++) {
+            const frac = i / steps;
+            const hAtStep = frac * totalHeat;
+            const st = heatToTemp(hAtStep, m);
+            const x = pad.left + frac * gW;
+            const y = pad.top + gH - ((st.temp - T_START) / tempRange) * gH;
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Curva recorrida (brillante, con gradiente por etapas)
+        if (heatAccum > 0) {
+            const actualSteps = 300;
+            const maxHeat = Math.min(heatAccum, totalHeat);
+            ctx.beginPath();
+            for (let i = 0; i <= actualSteps; i++) {
+                const frac = i / actualSteps;
+                const hAtStep = frac * maxHeat;
+                const st = heatToTemp(hAtStep, m);
+                const x = pad.left + (hAtStep / totalHeat) * gW;
+                const y = pad.top + gH - ((st.temp - T_START) / tempRange) * gH;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            // Gradiente de linea
+            const lineGrad = ctx.createLinearGradient(pad.left, 0, pad.left + (maxHeat / totalHeat) * gW, 0);
+            lineGrad.addColorStop(0, '#5dade2');
+            lineGrad.addColorStop(0.2, '#00d4aa');
+            lineGrad.addColorStop(0.5, '#ff8c42');
+            lineGrad.addColorStop(0.8, '#ff6347');
+            lineGrad.addColorStop(1, '#ff4444');
+            ctx.strokeStyle = lineGrad;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Punto actual
+            const finalSt = heatToTemp(maxHeat, m);
+            const px = pad.left + (maxHeat / totalHeat) * gW;
+            const py = pad.top + gH - ((finalSt.temp - T_START) / tempRange) * gH;
+
+            // Glow
+            const glow = ctx.createRadialGradient(px, py, 0, px, py, 18);
+            glow.addColorStop(0, 'rgba(0, 212, 170, 0.5)');
+            glow.addColorStop(1, 'rgba(0, 212, 170, 0)');
+            ctx.beginPath();
+            ctx.arc(px, py, 18, 0, Math.PI * 2);
+            ctx.fillStyle = glow;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(px, py, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#00d4aa';
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Temperatura actual al lado del punto
+            ctx.font = '600 12px "JetBrains Mono", monospace';
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#fff';
+            const labelX = px + 12;
+            const labelY = py - 8;
+            ctx.fillText(finalSt.temp.toFixed(1) + '°C', labelX, labelY);
+        }
+
+        // Si se completo, mostrar mensaje
+        if (heatAccum >= totalHeat && playing) {
+            ctx.font = '700 14px "Outfit", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = 'rgba(0, 212, 170, 0.8)';
+            ctx.fillText('Proceso completado', W / 2, pad.top + 20);
+        }
+
+        requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+})();
+
+// =============================================
+// EJERCICIOS DE TAREA
+// =============================================
+const solutions = {
+    1: {
+        q1: 0.10 * 2090 * 10,     // 2090
+        q2: 0.10 * 334000,         // 33400
+        q3: 0.10 * 4186 * 100,     // 41860
+        qt: 0.10 * 2090 * 10 + 0.10 * 334000 + 0.10 * 4186 * 100,  // 77350
+        tt: (0.10 * 2090 * 10 + 0.10 * 334000 + 0.10 * 4186 * 100) / 500  // 154.7
+    },
+    2: {
+        q1: 0.05 * 334000,         // 16700
+        q2: 0.05 * 4186 * 100,     // 20930
+        q3: 0.05 * 2260000,        // 113000
+        q4: 0.05 * 2010 * 10,      // 1005
+        qt: 0.05 * 334000 + 0.05 * 4186 * 100 + 0.05 * 2260000 + 0.05 * 2010 * 10,  // 151635
+        tt: (0.05 * 334000 + 0.05 * 4186 * 100 + 0.05 * 2260000 + 0.05 * 2010 * 10) / 1000  // 151.635
+    }
+};
+
+function checkExercise(num) {
+    const sol = solutions[num];
+    const fields = num === 1 ? ['q1','q2','q3','qt','tt'] : ['q1','q2','q3','q4','qt','tt'];
+    let allCorrect = true;
+    let answeredCount = 0;
+
+    fields.forEach(f => {
+        const input = document.getElementById(`ex${num}_${f}`);
+        const fb = document.getElementById(`fb_ex${num}_${f}`);
+        const val = parseFloat(input.value);
+        input.classList.remove('correct', 'incorrect');
+        fb.classList.remove('correct-fb', 'incorrect-fb');
+        fb.textContent = '';
+        if (isNaN(val)) { allCorrect = false; return; }
+        answeredCount++;
+        const tol = Math.max(sol[f] * 0.02, 1);
+        if (Math.abs(val - sol[f]) <= tol) {
+            input.classList.add('correct');
+            fb.classList.add('correct-fb');
+            fb.textContent = 'Correcto';
+        } else {
+            input.classList.add('incorrect');
+            fb.classList.add('incorrect-fb');
+            fb.textContent = `Esperado: ${sol[f].toFixed(1)}`;
+            allCorrect = false;
+        }
+    });
+
+    if (answeredCount < fields.length) {
+        showToast('Completa todos los campos antes de verificar.', 'info');
+    } else if (allCorrect) {
+        showToast(`Ejercicio ${num}: Todos correctos!`, 'success');
+    } else {
+        showToast(`Ejercicio ${num}: Hay errores. Revisa los campos marcados.`, 'error');
+    }
+}
+
+function toggleHint(num) {
+    document.getElementById(`hint${num}`).classList.toggle('show');
+}
+
+function showSolution(num) {
+    const sol = document.getElementById(`sol${num}`);
+    sol.style.display = sol.style.display === 'none' ? 'block' : 'none';
+}
+
+// =============================================
+// JUEGO DE CALORIMETRIA (SIN TEMPORIZADOR)
+// =============================================
+let gameState = {
+    score: 0, lives: 3, questionIndex: 0,
+    totalQuestions: 10, questions: [], answered: false
+};
+
+function generateQuestions() {
+    const questions = [];
+    const C_H = 2090, C_A = 4186, C_V = 2010, LF = 334000, LV = 2260000;
+
+    for (let i = 0; i < 10; i++) {
+        const type = i % 5; // 5 tipos diferentes
+        const m = parseFloat((0.05 + Math.random() * 0.45).toFixed(2));
+        let correctAnswer, label, problemText, dataText;
+
+        switch(type) {
+            case 0: { // Calor especifico - calentar liquido
+                const dt = Math.floor(10 + Math.random() * 90);
+                correctAnswer = m * C_A * dt;
+                dataText = `m = ${m} kg | c_agua = ${C_A} J/(kg·°C) | ΔT = ${dt}°C`;
+                problemText = 'Calor para calentar agua';
+                label = 'Q (J)';
+                break;
+            }
+            case 1: { // Calor latente de fusion
+                correctAnswer = m * LF;
+                dataText = `m = ${m} kg | Lf = ${LF} J/kg`;
+                problemText = 'Calor para fundir hielo a 0°C';
+                label = 'Q (J)';
+                break;
+            }
+            case 2: { // Calor latente de ebullicion
+                correctAnswer = m * LV;
+                dataText = `m = ${m} kg | Lv = ${LV} J/kg`;
+                problemText = 'Calor para vaporizar agua a 100°C';
+                label = 'Q (J)';
+                break;
+            }
+            case 3: { // Calentar hielo
+                const dt = Math.floor(5 + Math.random() * 25);
+                correctAnswer = m * C_H * dt;
+                dataText = `m = ${m} kg | c_hielo = ${C_H} J/(kg·°C) | ΔT = ${dt}°C`;
+                problemText = 'Calor para calentar hielo';
+                label = 'Q (J)';
+                break;
+            }
+            case 4: { // Calor total parcial (hielo a agua liquida)
+                const tInit = -Math.floor(5 + Math.random() * 20);
+                const tFinal = Math.floor(50 + Math.random() * 50);
+                const q1 = m * C_H * (0 - tInit);
+                const q2 = m * LF;
+                const q3 = m * C_A * tFinal;
+                correctAnswer = q1 + q2 + q3;
+                dataText = `m = ${m} kg | T_inicial = ${tInit}°C → T_final = ${tFinal}°C (agua liquida)`;
+                problemText = 'Calor total (hielo a agua liquida)';
+                label = 'Q_total (J)';
+                break;
+            }
+        }
+
+        // Generar opciones
+        const options = [correctAnswer];
+        let attempts = 0;
+        while (options.length < 4 && attempts < 100) {
+            attempts++;
+            let wrong;
+            const factor = 0.4 + Math.random() * 2.2;
+            wrong = correctAnswer * factor;
+            if (Math.abs(wrong - correctAnswer) / correctAnswer > 0.06 &&
+                !options.some(o => Math.abs(o - wrong) / Math.max(o, 1) < 0.08)) {
+                options.push(wrong);
+            }
+        }
+        // Si no se llenaron, agregar opciones simples
+        while (options.length < 4) {
+            options.push(correctAnswer * (1.5 + options.length * 0.5));
+        }
+
+        // Mezclar
+        for (let j = options.length - 1; j > 0; j--) {
+            const k = Math.floor(Math.random() * (j + 1));
+            [options[j], options[k]] = [options[k], options[j]];
+        }
+
+        questions.push({
+            dataText, problemText, label, correctAnswer, options,
+            correctIndex: options.indexOf(correctAnswer)
+        });
+    }
+    return questions;
+}
+
+function startGame() {
+    gameState = {
+        score: 0, lives: 3, questionIndex: 0,
+        totalQuestions: 10, questions: generateQuestions(), answered: false
+    };
+    document.getElementById('gameStartScreen').style.display = 'none';
+    document.getElementById('gameOverScreen').style.display = 'none';
+    document.getElementById('gameQuestionScreen').classList.add('active');
+    document.getElementById('gameScore').textContent = '0';
+    document.getElementById('gameLives').textContent = '3';
+    document.getElementById('gameLevel').textContent = '1/10';
+    showQuestion();
+}
+
+function showQuestion() {
+    const q = gameState.questions[gameState.questionIndex];
+    gameState.answered = false;
+
+    document.getElementById('gameLevel').textContent = `${gameState.questionIndex + 1}/${gameState.totalQuestions}`;
+    document.getElementById('gameProgressFill').style.width = `${(gameState.questionIndex / gameState.totalQuestions) * 100}%`;
+
+    document.getElementById('gqProblem').innerHTML =
+        `<p><strong>Datos:</strong> ${q.dataText}</p><p class="gq-ask">Calcula ${q.label}: ${q.problemText}</p>`;
+
+    document.getElementById('gqOptions').innerHTML = q.options.map((opt, i) =>
+        `<div class="gq-option" onclick="selectOption(${i})" id="gqOpt${i}">${Math.round(opt).toLocaleString()}</div>`
+    ).join('');
+
+    const fb = document.getElementById('gqFeedback');
+    fb.classList.remove('show', 'correct-fb', 'wrong-fb');
+    document.getElementById('btnNextQ').classList.remove('show');
+}
+
+function selectOption(index) {
+    if (gameState.answered) return;
+    gameState.answered = true;
+
+    const q = gameState.questions[gameState.questionIndex];
+    const fb = document.getElementById('gqFeedback');
+
+    for (let i = 0; i < 4; i++) {
+        document.getElementById(`gqOpt${i}`).classList.add('disabled');
+    }
+
+    if (index === q.correctIndex) {
+        document.getElementById(`gqOpt${index}`).classList.add('correct-answer');
+        gameState.score += 100;
+        document.getElementById('gameScore').textContent = gameState.score;
+        fb.textContent = `Correcto! +100 puntos`;
+        fb.className = 'gq-feedback show correct-fb';
+    } else {
+        document.getElementById(`gqOpt${index}`).classList.add('wrong-answer');
+        document.getElementById(`gqOpt${q.correctIndex}`).classList.add('correct-answer');
+        gameState.lives--;
+        document.getElementById('gameLives').textContent = gameState.lives;
+        fb.textContent = `Incorrecto. La respuesta era ${Math.round(q.correctAnswer).toLocaleString()} J`;
+        fb.className = 'gq-feedback show wrong-fb';
+        if (gameState.lives <= 0) {
+            setTimeout(() => endGame(false), 1500);
+            return;
+        }
+    }
+    document.getElementById('btnNextQ').classList.add('show');
+}
+
+function nextQuestion() {
+    gameState.questionIndex++;
+    if (gameState.questionIndex >= gameState.totalQuestions) {
+        endGame(true);
+    } else {
+        showQuestion();
+    }
+}
+
+function endGame(completed) {
+    document.getElementById('gameQuestionScreen').classList.remove('active');
+    const overScreen = document.getElementById('gameOverScreen');
+    overScreen.style.display = 'block';
+    document.getElementById('finalScore').textContent = gameState.score;
+
+    const title = document.getElementById('gameOverTitle');
+    const msg = document.getElementById('gameOverMsg');
+
+    if (completed) {
+        title.textContent = 'Desafio Completado';
+        if (gameState.score >= 900) {
+            msg.textContent = 'Excelente! Dominas por completo la calorimetria.';
+        } else if (gameState.score >= 600) {
+            msg.textContent = 'Buen trabajo! Tienes una solida base de calorimetria.';
+        } else {
+            msg.textContent = 'Sigue practicando. Repasa las formulas y vuelve a intentarlo.';
+        }
+    } else {
+        title.textContent = 'Se acabaron las vidas';
+        msg.textContent = `Llegaste a la pregunta ${gameState.questionIndex + 1} de ${gameState.totalQuestions}. Intentalo de nuevo!`;
+    }
+}
+</script>
+
+</body>
+</html>
