@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciencias - Polimorfismo y Alelos</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #e0f2fe;
+            --accent: #f59e0b;
+            --text-dark: #333;
+            --bg-light: #f9f9f9;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        h2 { color: var(--primary); border-bottom: 2px solid var(--secondary); padding-bottom: 5px; }
+        h3 { color: #0284c7; }
+        
+        .concept-box {
+            background-color: var(--secondary);
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .important {
+            font-weight: bold;
+            color: #b41712;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Grid for Teamwork Situations */
+        .situations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .situation-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            border-top: 5px solid;
+        }
+        .card-1 { border-color: #f59e0b; background-color: #fffbeb; }
+        .card-2 { border-color: #6d28d9; background-color: #f5f3ff; }
+        .card-3 { border-color: #eab308; background-color: #fefce8; }
+        .card-4 { border-color: #4f46e5; background-color: #eef2ff; }
+        
+        .team-work-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #10b981;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        /* Quiz Styles */
+        .quiz-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f0fdf4;
+            border: 2px dashed #22c55e;
+            border-radius: 8px;
+        }
+        .question { margin-bottom: 15px; }
+        button.submit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button.submit-btn:hover { background-color: #003d82; }
+        #quiz-result { margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Ciencias Naturales</h1>
+    <p>Tema: Polimorfismo y alelos</p>
+</header>
+
+<div class="container">
+    
+    <section id="indagacion">
+        <h2>🔍 Indagación</h2>
+        <p>Ahora que conocemos más sobre el material genético, sus funciones principales y cómo se replica, esta semana vamos a centrar nuestra atención en su variabilidad. Podemos encontrar distintos hechos cotidianos en El Salvador que evidencian la diversidad genética que existe en todos los seres vivos. Esta diversidad tiene origen natural y parte de ella puede apreciarse a simple vista.</p>
+    </section>
+
+    <section id="teoria">
+        <h2>A. Gen y alelo (Explicación Magistral)</h2>
+        <p>Probablemente recuerdes qué es un gen. Pero ¿sabías que estos pueden tener distintas versiones? Analicemos los siguientes conceptos clave:</p>
+        
+        <div class="concept-box">
+            <p>Ciertas partes del ADN tienen la información para producir proteínas y ARN necesarios para el funcionamiento de los seres vivos. <span class="important">✏️ Genes: Partes del ADN que controlan una característica.</span></p>
+            
+            <p>Los genes suelen venir en parejas dentro de cada organismo, pero los genes de una pareja no necesariamente son idénticos: pueden tener leves cambios o versiones. <span class="important">✏️ Alelos: Las distintas versiones o variantes de un mismo gen.</span></p>
+            
+            <p>Por ejemplo, para la tonalidad del pelaje de un animal de nuestras fincas, puede haber un gen encargado de controlarla, y tener un alelo que genera color rojo, y otro color amarillo. De una generación a otra, los hijos obtienen un único juego de alelos de cada progenitor.</p>
+            
+            <p>Además, cuando un organismo presenta dos alelos distintos, uno de ellos puede ser <span class="important">✏️ Dominante: El que se manifiesta y enmascara al otro.</span> sobre el otro, llamado <span class="important">✏️ Recesivo: El que queda oculto.</span>.</p>
+        </div>
+
+        <div class="concept-box">
+            <h3>En conclusión para anotar:</h3>
+            <ul>
+                <li><span class="important">📓 Homocigoto:</span> Organismo que tiene ambos alelos iguales para una característica.</li>
+                <li><span class="important">📓 Heterocigoto:</span> Organismo que tiene alelos distintos para una característica.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="practica-grupal">
+        <div class="team-work-header">
+            <h3>👥 Trabajo en Equipo (Equipos de 4 estudiantes)</h3>
+        </div>
+        <p><strong>Procedimiento:</strong> Con la información anterior explicada por el docente, analicen las siguientes situaciones. Respondan en su cuaderno y prepárense para explicar sus conclusiones a la clase.</p>
+
+        <div class="situations-grid">
+            <div class="situation-card card-1">
+                <p>"Tenía cuatro bolsas con frijoles que compramos en el mercado. Eran de seda (rojos), negros y blancos. Pensé que eran especies distintas, pero descubrí que todos pertenecían a la misma especie."</p>
+            </div>
+            
+            <div class="situation-card card-2">
+                <p>"Tenía diez pollitos de gallina india, pero ocho enfermaron y quedaron solo dos. Curiosamente, uno de los padres de esta generación fue sobreviviente de una enfermedad igual en el corral."</p>
+            </div>
+
+            <div class="situation-card card-3">
+                <p>"En el mercado central vendían elotes y mazorcas de colores. El vendedor me mencionó que estas mazorcas habían sido obtenidas a partir de siembras de progenitores con un solo color."</p>
+            </div>
+
+            <div class="situation-card card-4">
+                <p>"Viendo sus casos, me parece que las características del color y la resistencia a enfermedades son debidas a genes. ¿Acaso los genes variarán en una misma población de nuestro país?"</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="quiz-section">
+        <h2>🧠 Quizz Corto de Comprobación</h2>
+        <p>Resuelve el siguiente cuestionario para verificar lo aprendido hoy.</p>
+        
+        <form id="scienceQuiz">
+            <div class="question">
+                <label><strong>1. ¿Cómo se le llama a las versiones o variantes de un mismo gen?</strong></label><br>
+                <input type="radio" name="q1" value="a"> a) Cromosomas<br>
+                <input type="radio" name="q1" value="b"> b) Alelos<br>
+                <input type="radio" name="q1" value="c"> c) Proteínas<br>
+            </div>
+            
+            <div class="question">
+                <label><strong>2. Si un organismo hereda un alelo para cabello rizado y un alelo para cabello liso, se dice que es:</strong></label><br>
+                <input type="radio" name="q2" value="a"> a) Homocigoto<br>
+                <input type="radio" name="q2" value="b"> b) Dominante puro<br>
+                <input type="radio" name="q2" value="c"> c) Heterocigoto<br>
+            </div>
+
+            <div class="question">
+                <label><strong>3. El alelo que enmascara la presencia del otro en un organismo heterocigoto se llama:</strong></label><br>
+                <input type="radio" name="q3" value="a"> a) Recesivo<br>
+                <input type="radio" name="q3" value="b"> b) Dominante<br>
+                <input type="radio" name="q3" value="c"> c) Mutante<br>
+            </div>
+
+            <button type="button" class="submit-btn" onclick="checkQuiz()">Calificar Quizz</button>
+            <div id="quiz-result"></div>
+        </form>
+    </section>
+
+</div>
+
+<script>
+    function checkQuiz() {
+        let score = 0;
+        let form = document.getElementById('scienceQuiz');
+        let resultDiv = document.getElementById('quiz-result');
+        
+        // Respuestas correctas: 1-b, 2-c, 3-b
+        if(form.q1.value === 'b') score++;
+        if(form.q2.value === 'c') score++;
+        if(form.q3.value === 'b') score++;
+        
+        if (score === 3) {
+            resultDiv.style.color = 'green';
+            resultDiv.innerHTML = '¡Excelente! Has obtenido 3/3. Dominas los conceptos básicos de genética.';
+        } else if (score > 0) {
+            resultDiv.style.color = '#f59e0b';
+            resultDiv.innerHTML = `Obtuviste ${score}/3. Buen esfuerzo, pero repasa los conceptos marcados con el lapicito ✏️.`;
+        } else {
+            resultDiv.style.color = 'red';
+            resultDiv.innerHTML = 'Obtuviste 0/3. No te preocupes, consulta al docente para aclarar tus dudas y vuelve a intentarlo.';
+        }
+    }
+</script>
+
+</body>
+</html>
