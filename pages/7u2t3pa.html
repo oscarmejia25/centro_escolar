@@ -1,250 +1,1059 @@
 <!DOCTYPE html>
-<html lang="es-SV">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clase de Ciencias: Polimorfismo y Alelos</title>
+    <title>Polimorfismo y Alelos | Ciencias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                        oswald: ['Oswald', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: '#5423E7',
+                        accent: '#FF3366',
+                        dark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary-blue: #1e88e5;
-            --text-dark: #333333;
-            --bg-page: #f4f7f6;
-            --yellow-card: #fbc02d;
-            --purple-card: #673ab7;
-            --orange-card: #f57c00;
-            --dark-purple-card: #4527a0;
+        * { font-family: 'Inter', sans-serif; }
+        .font-oswald { font-family: 'Oswald', sans-serif; }
+
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes slideIn { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes blurIn { from{opacity:0;filter:blur(12px)} to{opacity:1;filter:blur(0)} }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+        @keyframes pulse-ring { 0%{transform:scale(0.8);opacity:0.5} 100%{transform:scale(1.4);opacity:0} }
+
+        .anim-fade { animation: fadeIn 0.8s ease-out both; }
+        .anim-slide { animation: slideIn 0.8s cubic-bezier(0.16,1,0.3,1) both; }
+        .anim-blur { animation: blurIn 1s ease-out both; }
+        .anim-float { animation: float 3s ease-in-out infinite; }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+        .delay-600 { animation-delay: 600ms; }
+        .delay-700 { animation-delay: 700ms; }
+
+        .card-explore {
+            transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+        .card-explore:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(84,35,231,0.25);
+        }
+        .card-explore:hover .card-img {
+            transform: scale(1.08);
+        }
+        .card-img {
+            transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
         }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--bg-page);
-            color: var(--text-dark);
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
+        .flip-card { perspective: 800px; cursor: pointer; }
+        .flip-inner {
+            transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+        .flip-front, .flip-back { backface-visibility: hidden; }
+        .flip-back { transform: rotateY(180deg); }
+
+        .gene-pair {
+            transition: all 0.4s ease;
+        }
+        .gene-pair:hover {
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 8px rgba(84,35,231,0.5));
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            color: var(--primary-blue);
-            text-align: center;
-            border-bottom: 3px solid var(--primary-blue);
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-
-        h2 {
-            color: var(--primary-blue);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h3 {
-            color: #333;
-        }
-
-        .important-concept {
-            background-color: #e3f2fd;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            color: #1565c0;
-        }
-
-        .procedure {
-            background-color: #fafafa;
-            border-left: 4px solid var(--primary-blue);
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        ol {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        /* Grid para las tarjetas de situaciones */
-        .situations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .card {
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            font-size: 0.95em;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: relative;
-        }
-
-        .card::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 20px;
-            border-width: 10px 10px 0;
-            border-style: solid;
-            display: block;
-            width: 0;
-        }
-
-        .card-1 { background-color: var(--yellow-card); color: #333; }
-        .card-1::after { border-color: var(--yellow-card) transparent transparent; }
-        
-        .card-2 { background-color: var(--purple-card); }
-        .card-2::after { border-color: var(--purple-card) transparent transparent; }
-        
-        .card-3 { background-color: var(--orange-card); }
-        .card-3::after { border-color: var(--orange-card) transparent transparent; }
-        
-        .card-4 { background-color: var(--dark-purple-card); }
-        .card-4::after { border-color: var(--dark-purple-card) transparent transparent; }
-
-        .conclusion-box {
-            background-color: #e8f5e9;
-            border: 2px solid #4caf50;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        /* Estilos del Quiz */
-        .quiz-container {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #fff3e0;
-            border-radius: 10px;
-            border: 2px dashed #ff9800;
-        }
-
-        .question { margin-bottom: 15px; }
-        
-        button {
-            background-color: #ff9800;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
+        .quiz-option {
+            transition: all 0.3s ease;
             cursor: pointer;
-            font-weight: bold;
+        }
+        .quiz-option:hover {
+            transform: translateX(6px);
+            border-color: #5423E7;
+            background: rgba(84,35,231,0.05);
+        }
+        .quiz-option.correct {
+            border-color: #22c55e !important;
+            background: rgba(34,197,94,0.1) !important;
+        }
+        .quiz-option.incorrect {
+            border-color: #ef4444 !important;
+            background: rgba(239,68,68,0.1) !important;
+        }
+        .quiz-option.disabled {
+            pointer-events: none;
+            opacity: 0.6;
         }
 
-        button:hover { background-color: #f57c00; }
-        #quiz-feedback { margin-top: 15px; font-weight: bold; font-size: 1.1em; }
+        .note-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s;
+            opacity: 0;
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .step-line {
+            background: linear-gradient(to bottom, #5423E7, rgba(84,35,231,0.1));
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 9999px;
+            filter: blur(64px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #5423E7; border-radius: 4px; }
     </style>
 </head>
-<body>
+<body class="bg-white text-dark">
 
-<div class="container">
-    <h1>Polimorfismo y alelos</h1>
+    <!-- TOAST -->
+    <div id="toast" class="toast bg-dark text-white px-6 py-3 rounded-2xl shadow-2xl font-medium text-sm flex items-center gap-3">
+        <iconify-icon id="toast-icon" icon="lucide:check-circle" width="20"></iconify-icon>
+        <span id="toast-msg"></span>
+    </div>
 
-    <section>
-        <h2>🔍 Indagación</h2>
-        <p>Ahora que conocemos más sobre el material genético, sus funciones principales y cómo se replica, esta semana vamos a centrar nuestra atención en su variabilidad. Podemos encontrar distintos hechos cotidianos que evidencian la diversidad genética que existe en todos los seres vivos. Esta diversidad tiene origen natural y parte de ella puede apreciarse a simple vista.</p>
-    </section>
+    <!-- HERO -->
+    <section class="relative min-h-[70vh] bg-gradient-to-br from-brand via-[#6333f0] to-[#3b1bb5] overflow-hidden flex items-center">
+        <div class="blob w-96 h-96 bg-accent top-[-100px] right-[-100px]"></div>
+        <div class="blob w-72 h-72 bg-blue-400 bottom-[-50px] left-[-50px]"></div>
 
-    <section>
-        <h2>A. Gen y alelo</h2>
-        <p>Probablemente recuerdes qué es un gen. Pero ¿sabías que estos pueden tener distintas versiones? Hagamos un pequeño ejercicio con el que descubriremos qué formas pueden tener los genes. Es recomendable que desarrolles esta actividad en <strong>equipos de hasta cuatro estudiantes</strong>.</p>
-        
-        <div class="procedure">
-            <h3>Procedimiento:</h3>
-            <ol>
-                <li>
-                    <strong>Lee el siguiente párrafo:</strong><br>
-                    «Ciertas partes del ADN tienen la información para producir proteínas y ARN necesarios para el funcionamiento de los seres vivos. Estas partes del ADN se denominan <span class="important-concept">✏️ genes</span>. Por tanto, cada gen suele controlar una característica. Los genes suelen venir en parejas dentro de cada organismo, pero los genes de una pareja no necesariamente son idénticos: pueden tener leves cambios o versiones a las que llamamos <span class="important-concept">✏️ alelos</span>. Los alelos producen variantes dentro de una misma característica controlada por el gen. Por ejemplo, para la tonalidad del pelaje en un animal puede haber un gen encargado de controlarla, y tener un alelo que genera color rojo, y otro color amarillo, pero ambos tienen la característica del pelo coloreado. De una generación a otra, los hijos obtienen un único juego de alelos de cada progenitor. Además, cuando un organismo presenta dos alelos distintos, uno de ellos puede ser <span class="important-concept">✏️ dominante</span> sobre el otro, llamado <span class="important-concept">✏️ recesivo</span>, y, por tanto, enmascarar su presencia».
-                </li>
-                <br>
-                <li>Con la información anterior, analiza las situaciones que mencionan a continuación nuestros amigos.</li>
-                <li>Responde en tu Cuaderno de Trabajo y luego explica las conclusiones de tu grupo a la clase.</li>
-            </ol>
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 py-16 grid lg:grid-cols-12 gap-8 items-center w-full">
+            <div class="lg:col-span-7 anim-slide">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
+                    <iconify-icon icon="lucide:dna" width="16" class="text-green-300"></iconify-icon>
+                    <span class="text-white/80 text-xs font-bold uppercase tracking-widest">Ciencias · Genética</span>
+                </div>
+                <h1 class="font-oswald text-5xl lg:text-7xl xl:text-8xl font-bold text-white uppercase tracking-tighter leading-[0.85]">
+                    Polimorfismo<br>
+                    <span class="text-green-300">&</span> Alelos
+                </h1>
+                <p class="text-white/60 text-lg mt-6 max-w-lg font-light leading-relaxed">
+                    ¿Por qué no todos somos iguales? Descubre cómo los alelos crean la diversidad que ves a tu alrededor en El Salvador.
+                </p>
+                <a href="#inicio" class="inline-flex items-center gap-2 bg-white text-brand font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded-full mt-8 hover:bg-green-300 hover:text-dark transition-all duration-300 group">
+                    Comenzar a explorar
+                    <iconify-icon icon="lucide:arrow-down" width="16" class="group-hover:translate-y-1 transition-transform"></iconify-icon>
+                </a>
+            </div>
+
+            <div class="lg:col-span-5 flex justify-center anim-blur delay-300">
+                <div class="relative">
+                    <!-- DNA ilustración con CSS -->
+                    <div class="w-64 h-72 relative anim-float">
+                        <svg viewBox="0 0 200 280" class="w-full h-full drop-shadow-2xl">
+                            <!-- Cadena izquierda -->
+                            <path d="M40,20 Q100,60 160,70 Q100,100 40,130 Q100,160 160,190 Q100,220 40,260" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                            <!-- Cadena derecha -->
+                            <path d="M160,20 Q100,60 40,70 Q100,100 160,130 Q100,160 40,190 Q100,220 160,260" fill="none" stroke="rgba(134,239,172,0.5)" stroke-width="3"/>
+                            <!-- Peldaños -->
+                            <line x1="58" y1="35" x2="142" y2="35" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                            <line x1="72" y1="65" x2="128" y2="75" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                            <line x1="58" y1="100" x2="142" y2="100" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                            <line x1="72" y1="130" x2="128" y2="130" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                            <line x1="58" y1="160" x2="142" y2="165" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                            <line x1="72" y1="195" x2="128" y2="190" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                            <line x1="58" y1="225" x2="142" y2="225" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+                            <!-- Nodos colores alelos -->
+                            <circle cx="58" cy="35" r="6" fill="#FF3366" opacity="0.9"/>
+                            <circle cx="142" cy="35" r="6" fill="#FF3366" opacity="0.9"/>
+                            <circle cx="72" cy="65" r="6" fill="#22c55e" opacity="0.9"/>
+                            <circle cx="128" cy="75" r="6" fill="#3b82f6" opacity="0.9"/>
+                            <circle cx="58" cy="100" r="6" fill="#f59e0b" opacity="0.9"/>
+                            <circle cx="142" cy="100" r="6" fill="#f59e0b" opacity="0.9"/>
+                            <circle cx="72" cy="130" r="6" fill="#22c55e" opacity="0.9"/>
+                            <circle cx="128" cy="130" r="6" fill="#FF3366" opacity="0.9"/>
+                            <circle cx="58" cy="160" r="6" fill="#3b82f6" opacity="0.9"/>
+                            <circle cx="142" cy="165" r="6" fill="#3b82f6" opacity="0.9"/>
+                            <circle cx="72" cy="195" r="6" fill="#f59e0b" opacity="0.9"/>
+                            <circle cx="128" cy="190" r="6" fill="#22c55e" opacity="0.9"/>
+                            <circle cx="58" cy="225" r="6" fill="#FF3366" opacity="0.9"/>
+                            <circle cx="142" cy="225" r="6" fill="#22c55e" opacity="0.9"/>
+                        </svg>
+                    </div>
+                    <!-- Etiqueta flotante -->
+                    <div class="absolute -left-8 top-16 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2 anim-float" style="animation-delay:0.5s">
+                        <span class="text-green-300 text-xs font-bold">Alelo A</span>
+                    </div>
+                    <div class="absolute -right-4 bottom-20 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-3 py-2 anim-float" style="animation-delay:1s">
+                        <span class="text-yellow-300 text-xs font-bold">Alelo a</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="situations-grid">
-            <div class="card card-1">
-                Tenía cuatro bolsas con frijoles de colores (seda, negros y blancos). Pensé que eran especies distintas, pero descubrí que todos pertenecían a la misma especie.
-            </div>
-            <div class="card card-2">
-                Tenía diez pollitos de gallina india, pero ocho enfermaron y quedaron solo dos. Curiosamente, uno de los padres de esta generación fue sobreviviente de una enfermedad igual.
-            </div>
-            <div class="card card-3">
-                En un mercado local vendían mazorcas multicolor. El vendedor mencionó que estas mazorcas habían sido obtenidas a partir de progenitores con un solo color.
-            </div>
-            <div class="card card-4">
-                Viendo sus casos, me parece que las características del color y la resistencia a enfermedades son debidas a genes. ¿Acaso los genes variarán en una misma población salvadoreña?
-            </div>
-        </div>
-
-        <div class="conclusion-box">
-            <p>En conclusión, los <span class="important-concept">📓 alelos</span> son las formas alternativas de un gen. Un gen es una secuencia de nucleótidos que codifica para la formación de proteínas o ARN, que permiten en conjunto las características de todos los seres vivos. Un organismo puede tener ambos alelos iguales, siendo <span class="important-concept">📓 homocigoto</span>, o bien, alelos distintos, denominándose <span class="important-concept">📓 heterocigoto</span>.</p>
+        <!-- Onda decorativa -->
+        <div class="absolute bottom-0 left-0 w-full">
+            <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" fill="white"/>
+            </svg>
         </div>
     </section>
 
-    <section class="quiz-container">
-        <h2>📝 Quizz Corto: Comprobación de Saberes</h2>
-        <p>Instrucciones: Selecciona la respuesta correcta basándote en lo que el docente acaba de explicar.</p>
-        
-        <form id="science-quiz">
-            <div class="question">
-                <label>1. ¿Cómo se le llama a las leves variaciones o versiones que puede tener un gen?</label><br>
-                <input type="radio" name="q1" value="a"> a) Proteínas<br>
-                <input type="radio" name="q1" value="b"> b) Alelos<br>
-                <input type="radio" name="q1" value="c"> c) Nucleótidos
-            </div>
-            
-            <div class="question">
-                <label>2. Si un organismo presenta dos alelos distintos (por ejemplo, para el color del maíz), se le denomina:</label><br>
-                <input type="radio" name="q2" value="a"> a) Heterocigoto<br>
-                <input type="radio" name="q2" value="b"> b) Homocigoto<br>
-                <input type="radio" name="q2" value="c"> c) Recesivo
-            </div>
+    <!-- SECCIÓN 1: ¿QUÉ ES UN GEN? -->
+    <section id="inicio" class="py-20 lg:py-28 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 items-start">
+                <div class="lg:col-span-5 anim-slide">
+                    <span class="text-brand text-xs font-bold uppercase tracking-widest">Paso 1</span>
+                    <h2 class="font-oswald text-4xl lg:text-5xl font-bold uppercase tracking-tight mt-3 leading-[0.95]">
+                        ¿Qué es<br>un gen?
+                    </h2>
+                </div>
+                <div class="lg:col-span-7 space-y-6 anim-slide delay-200">
+                    <p class="text-slate-600 text-lg leading-relaxed font-light">
+                        Imagina que tu cuerpo es un <strong class="text-dark font-semibold">manual de instrucciones</strong> gigante. Cada <strong class="text-dark font-semibold">gen</strong> es como un capítulo de ese manual que contiene la receta para una característica específica.
+                    </p>
 
-            <div class="question">
-                <label>3. En un par de alelos distintos, el que enmascara o cubre la presencia del otro se llama:</label><br>
-                <input type="radio" name="q3" value="a"> a) Recesivo<br>
-                <input type="radio" name="q3" value="b"> b) ARN<br>
-                <input type="radio" name="q3" value="c"> c) Dominante
-            </div>
+                    <!-- Nota importante -->
+                    <div class="flex items-start gap-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-2xl p-5">
+                        <div class="note-icon bg-amber-400 text-white mt-0.5">
+                            <iconify-icon icon="lucide:pencil" width="16"></iconify-icon>
+                        </div>
+                        <div>
+                            <p class="text-dark font-semibold text-sm">Anota esto</p>
+                            <p class="text-slate-600 text-sm mt-1">Un <strong>gen</strong> es un segmento de ADN que determina una característica hereditaria específica (color de ojos, tipo de sangre, etc.).</p>
+                        </div>
+                    </div>
 
-            <button type="button" onclick="evaluarQuiz()">Revisar Respuestas</button>
-            <div id="quiz-feedback"></div>
-        </form>
+                    <!-- Interactivo: haz clic en los genes -->
+                    <div class="bg-slate-50 rounded-3xl p-6 lg:p-8 mt-6">
+                        <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
+                            <iconify-icon icon="lucide:mouse-pointer-click" width="14" class="mr-1"></iconify-icon>
+                            Haz clic en cada gen para ver qué controla
+                        </p>
+                        <div class="flex flex-wrap gap-4 justify-center" id="gene-container">
+                            <div class="gene-pair flex flex-col items-center gap-2 cursor-pointer" onclick="showGene(this, 'Color de ojos', 'Este gen controla la producción de melanina en el iris. En El Salvador, predominan los ojos cafesones por el alelo dominante.', '#3b82f6')">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-2xl shadow-lg">👁️</div>
+                                <span class="text-xs font-bold text-slate-500">GEN A</span>
+                            </div>
+                            <div class="gene-pair flex flex-col items-center gap-2 cursor-pointer" onclick="showGene(this, 'Tipo de sangre', 'Este gen determina los antígenos en tus glóbulos rojos. El tipo O es el más común en población salvadoreña.', '#ef4444')">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white text-2xl shadow-lg">🩸</div>
+                                <span class="text-xs font-bold text-slate-500">GEN B</span>
+                            </div>
+                            <div class="gene-pair flex flex-col items-center gap-2 cursor-pointer" onclick="showGene(this, 'Color de piel', 'Controla la cantidad de melanina producida. Nuestro clima tropical favoreció esta adaptación a lo largo de generaciones.', '#f59e0b')">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white text-2xl shadow-lg">🤎</div>
+                                <span class="text-xs font-bold text-slate-500">GEN C</span>
+                            </div>
+                            <div class="gene-pair flex flex-col items-center gap-2 cursor-pointer" onclick="showGene(this, 'Capacidad de probar PTC', 'Algunas personas perciben un sabor amargo al probar feniltiocarbamida. ¡Es genético! Puedes probarlo en el laboratorio.', '#22c55e')">
+                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-2xl shadow-lg">👅</div>
+                                <span class="text-xs font-bold text-slate-500">GEN D</span>
+                            </div>
+                        </div>
+                        <div id="gene-info" class="mt-6 hidden">
+                            <div class="bg-white rounded-2xl p-5 shadow-lg border border-slate-100">
+                                <h4 id="gene-title" class="font-oswald text-xl font-bold uppercase tracking-tight"></h4>
+                                <p id="gene-desc" class="text-slate-600 text-sm mt-2 leading-relaxed"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-</div>
+    <!-- SECCIÓN 2: ¿QUÉ ES UN ALELO? -->
+    <section class="py-20 lg:py-28 bg-slate-50 relative overflow-hidden">
+        <div class="blob w-80 h-80 bg-brand top-0 right-0 opacity-10"></div>
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16 anim-slide">
+                <span class="text-brand text-xs font-bold uppercase tracking-widest">Paso 2</span>
+                <h2 class="font-oswald text-4xl lg:text-6xl font-bold uppercase tracking-tight mt-3 leading-[0.9]">
+                    ¿Qué es un <span class="text-brand">alelo</span>?
+                </h2>
+                <p class="text-slate-500 text-lg mt-6 font-light leading-relaxed">
+                    Cada gen puede tener diferentes <strong class="text-dark font-semibold">versiones</strong>. A esas versiones les llamamos <strong class="text-brand font-semibold">alelos</strong>.
+                </p>
+            </div>
 
-<script>
-    function evaluarQuiz() {
-        const form = document.getElementById('science-quiz');
-        const feedback = document.getElementById('quiz-feedback');
-        let puntaje = 0;
+            <!-- Analogía visual -->
+            <div class="max-w-2xl mx-auto anim-slide delay-200">
+                <div class="bg-white rounded-3xl p-8 lg:p-10 shadow-lg border border-slate-100">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center">
+                            <iconify-icon icon="lucide:lightbulb" width="20" class="text-brand"></iconify-icon>
+                        </div>
+                        <span class="font-oswald text-lg font-bold uppercase tracking-tight">Analogía fácil</span>
+                    </div>
 
-        if (form.q1.value === 'b') puntaje++;
-        if (form.q2.value === 'a') puntaje++;
-        if (form.q3.value === 'c') puntaje++;
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div class="text-center">
+                            <div class="text-5xl mb-3">👕</div>
+                            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">El GEN sería...</p>
+                            <p class="font-semibold text-dark">"Camiseta"</p>
+                            <p class="text-slate-500 text-sm mt-1">La categoría general</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="flex justify-center gap-2 text-4xl mb-3">
+                                <span>🔵</span><span>🟢</span><span>🔴</span>
+                            </div>
+                            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Los ALELOS serían...</p>
+                            <p class="font-semibold text-dark">"Azul", "Verde", "Roja"</p>
+                            <p class="text-slate-500 text-sm mt-1">Las versiones específicas</p>
+                        </div>
+                    </div>
+                </div>
 
-        if (puntaje === 3) {
-            feedback.style.color = '#2e7d32';
-            feedback.innerText = '¡Perfecto! (3/3) Tienes muy claros los conceptos vistos en clase.';
-        } else {
-            feedback.style.color = '#d32f2f';
-            feedback.innerText = `Obtuviste ${puntaje} de 3 correctas. Recuerda revisar tus apuntes con el ícono del lapicito ✏️ y el cuaderno 📓.`;
+                <!-- Nota cuaderno -->
+                <div class="flex items-start gap-4 bg-brand/5 border-l-4 border-brand rounded-r-2xl p-5 mt-6">
+                    <div class="note-icon bg-brand text-white mt-0.5">
+                        <iconify-icon icon="lucide:notebook-pen" width="16"></iconify-icon>
+                    </div>
+                    <div>
+                        <p class="text-dark font-semibold text-sm">En tu cuaderno</p>
+                        <p class="text-slate-600 text-sm mt-1">Los <strong>alelos</strong> son las diferentes formas que puede tomar un gen. Pueden ser <strong>iguales</strong> (homocigoto: AA o aa) o <strong>diferentes</strong> (heterocigoto: Aa).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualización interactiva: Par de alelos -->
+            <div class="max-w-3xl mx-auto mt-12 anim-slide delay-300">
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 text-center mb-6">
+                    <iconify-icon icon="lucide:mouse-pointer-click" width="14" class="mr-1"></iconify-icon>
+                    Selecciona la combinación de alelos para ver el resultado
+                </p>
+                <div class="grid sm:grid-cols-3 gap-4 mb-6">
+                    <button onclick="setAllele('A','A')" class="allele-btn px-5 py-4 rounded-2xl border-2 border-slate-200 bg-white font-bold text-lg hover:border-brand hover:bg-brand/5 transition-all" data-alleles="AA">AA</button>
+                    <button onclick="setAllele('A','a')" class="allele-btn px-5 py-4 rounded-2xl border-2 border-slate-200 bg-white font-bold text-lg hover:border-brand hover:bg-brand/5 transition-all" data-alleles="Aa">Aa</button>
+                    <button onclick="setAllele('a','a')" class="allele-btn px-5 py-4 rounded-2xl border-2 border-slate-200 bg-white font-bold text-lg hover:border-brand hover:bg-brand/5 transition-all" data-alleles="aa">aa</button>
+                </div>
+                <div id="allele-result" class="bg-white rounded-3xl p-8 shadow-lg border border-slate-100 text-center min-h-[140px] flex flex-col items-center justify-center">
+                    <p class="text-slate-400 text-sm">← Selecciona una combinación arriba</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 3: POLIMORFISMO - EXPLORA -->
+    <section class="py-20 lg:py-28 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 anim-slide">
+                <span class="text-brand text-xs font-bold uppercase tracking-widest">Paso 3</span>
+                <h2 class="font-oswald text-4xl lg:text-6xl font-bold uppercase tracking-tight mt-3 leading-[0.9]">
+                    Polimorfismo en<br><span class="text-brand">nuestro entorno</span>
+                </h2>
+                <p class="text-slate-500 text-lg mt-6 font-light leading-relaxed">
+                    El <strong class="text-dark font-semibold">polimorfismo</strong> es cuando en una población existen dos o más formas de un gen. Explora estos ejemplos que ves en El Salvador.
+                </p>
+            </div>
+
+            <!-- Nota lapicito -->
+            <div class="max-w-2xl mx-auto mb-12 anim-slide delay-100">
+                <div class="flex items-start gap-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-2xl p-5">
+                    <div class="note-icon bg-amber-400 text-white mt-0.5">
+                        <iconify-icon icon="lucide:pencil" width="16"></iconify-icon>
+                    </div>
+                    <div>
+                        <p class="text-dark font-semibold text-sm">Concepto clave</p>
+                        <p class="text-slate-600 text-sm mt-1"><strong>Polimorfismo</strong> = la presencia de dos o más alelos para un gen en una población. Es la base de la <strong>variabilidad genética</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Tarjetas exploratorias -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <!-- Maíz -->
+                <div class="card-explore bg-white rounded-3xl overflow-hidden shadow-md border border-slate-100 cursor-pointer group" onclick="openModal('maiz')">
+                    <div class="h-48 overflow-hidden bg-gradient-to-br from-yellow-100 to-amber-50 flex items-center justify-center relative">
+                        <div class="card-img text-8xl">🌽</div>
+                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-bold text-amber-600 uppercase tracking-wider">Ver más</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-oswald text-xl font-bold uppercase tracking-tight">Maíz</h3>
+                        <p class="text-slate-500 text-sm mt-2 leading-relaxed">Blanco, amarillo, negro... ¿Por qué el maíz salvadoreño tiene tantos colores?</p>
+                        <div class="flex gap-2 mt-4">
+                            <span class="w-6 h-6 rounded-full bg-yellow-300 border-2 border-yellow-400"></span>
+                            <span class="w-6 h-6 rounded-full bg-white border-2 border-slate-300"></span>
+                            <span class="w-6 h-6 rounded-full bg-purple-900 border-2 border-purple-800"></span>
+                            <span class="w-6 h-6 rounded-full bg-red-700 border-2 border-red-600"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallinas -->
+                <div class="card-explore bg-white rounded-3xl overflow-hidden shadow-md border border-slate-100 cursor-pointer group" onclick="openModal('gallinas')">
+                    <div class="h-48 overflow-hidden bg-gradient-to-br from-orange-100 to-red-50 flex items-center justify-center relative">
+                        <div class="card-img text-8xl">🐔</div>
+                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-bold text-orange-600 uppercase tracking-wider">Ver más</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-oswald text-xl font-bold uppercase tracking-tight">Gallinas</h3>
+                        <p class="text-slate-500 text-sm mt-2 leading-relaxed">En los patios salvadoreños hay gallinas de todos los colores y tipos de plumas.</p>
+                        <div class="flex gap-2 mt-4">
+                            <span class="w-6 h-6 rounded-full bg-amber-600 border-2 border-amber-500"></span>
+                            <span class="w-6 h-6 rounded-full bg-white border-2 border-slate-300"></span>
+                            <span class="w-6 h-6 rounded-full bg-slate-800 border-2 border-slate-700"></span>
+                            <span class="w-6 h-6 rounded-full bg-red-500 border-2 border-red-400"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flores de Jamaica -->
+                <div class="card-explore bg-white rounded-3xl overflow-hidden shadow-md border border-slate-100 cursor-pointer group" onclick="openModal('jamaica')">
+                    <div class="h-48 overflow-hidden bg-gradient-to-br from-red-100 to-pink-50 flex items-center justify-center relative">
+                        <div class="card-img text-8xl">🌺</div>
+                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-bold text-red-600 uppercase tracking-wider">Ver más</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-oswald text-xl font-bold uppercase tracking-tight">Flor de Jamaica</h3>
+                        <p class="text-slate-500 text-sm mt-2 leading-relaxed">La flor que usamos para la bebida puede ser roja intensa o más clara. ¡Es genético!</p>
+                        <div class="flex gap-2 mt-4">
+                            <span class="w-6 h-6 rounded-full bg-red-600 border-2 border-red-500"></span>
+                            <span class="w-6 h-6 rounded-full bg-pink-400 border-2 border-pink-300"></span>
+                            <span class="w-6 h-6 rounded-full bg-rose-300 border-2 border-rose-200"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chompipe -->
+                <div class="card-explore bg-white rounded-3xl overflow-hidden shadow-md border border-slate-100 cursor-pointer group" onclick="openModal('chompipe')">
+                    <div class="h-48 overflow-hidden bg-gradient-to-br from-teal-100 to-cyan-50 flex items-center justify-center relative">
+                        <div class="card-img text-8xl">🦃</div>
+                        <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-bold text-teal-600 uppercase tracking-wider">Ver más</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-oswald text-xl font-bold uppercase tracking-tight">Chompipe</h3>
+                        <p class="text-slate-500 text-sm mt-2 leading-relaxed">Nuestro chompipe típico muestra polimorfismo en el color de sus plumas.</p>
+                        <div class="flex gap-2 mt-4">
+                            <span class="w-6 h-6 rounded-full bg-teal-700 border-2 border-teal-600"></span>
+                            <span class="w-6 h-6 rounded-full bg-blue-800 border-2 border-blue-700"></span>
+                            <span class="w-6 h-6 rounded-full bg-gray-400 border-2 border-gray-300"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL EXPLORATORIO -->
+    <div id="modal-overlay" class="fixed inset-0 bg-dark/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4" onclick="closeModal(event)">
+        <div id="modal-content" class="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <div class="p-8 lg:p-10">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <span id="modal-tag" class="text-xs font-bold uppercase tracking-widest text-brand"></span>
+                        <h3 id="modal-title" class="font-oswald text-3xl font-bold uppercase tracking-tight mt-1"></h3>
+                    </div>
+                    <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
+                        <iconify-icon icon="lucide:x" width="20" class="text-slate-500"></iconify-icon>
+                    </button>
+                </div>
+                <div id="modal-body" class="space-y-6"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 4: ACTIVIDAD PRÁCTICA -->
+    <section class="py-20 lg:py-28 bg-dark text-white relative overflow-hidden">
+        <div class="blob w-96 h-96 bg-brand top-[-100px] left-[-100px] opacity-20"></div>
+        <div class="blob w-72 h-72 bg-accent bottom-[-50px] right-[-50px] opacity-10"></div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16 anim-slide">
+                <span class="text-green-300 text-xs font-bold uppercase tracking-widest">Paso 4 · Actividad</span>
+                <h2 class="font-oswald text-4xl lg:text-6xl font-bold uppercase tracking-tight mt-3 leading-[0.9]">
+                    Tu turno de<br><span class="text-green-300">analizar</span>
+                </h2>
+            </div>
+
+            <!-- Flip cards actividad -->
+            <div class="max-w-4xl mx-auto">
+                <p class="text-white/60 text-center mb-8">
+                    <iconify-icon icon="lucide:rotate-3d" width="16" class="mr-1"></iconify-icon>
+                    Haz clic en cada tarjeta para voltearla y descubrir el análisis
+                </p>
+
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <!-- Caso 1 -->
+                    <div class="flip-card h-64" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-inner relative w-full h-full">
+                            <div class="flip-front absolute inset-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 flex flex-col items-center justify-center text-center">
+                                <div class="text-5xl mb-4">👩‍🌾🌾</div>
+                                <h4 class="font-oswald text-lg font-bold uppercase">Caso 1</h4>
+                                <p class="text-white/60 text-sm mt-2">Doña María siembra maíz. De 100 plantas: 72 amarillas y 28 blancas.</p>
+                                <p class="text-green-300 text-xs font-bold mt-4 uppercase tracking-wider">Toca para analizar</p>
+                            </div>
+                            <div class="flip-back absolute inset-0 bg-brand border border-white/20 rounded-3xl p-6 flex flex-col justify-center">
+                                <h4 class="font-oswald text-lg font-bold uppercase mb-3">Análisis</h4>
+                                <p class="text-white/80 text-sm leading-relaxed">El color amarillo es <strong class="text-green-300">dominante (A)</strong> y el blanco <strong class="text-yellow-300">recesivo (a)</strong>.</p>
+                                <p class="text-white/80 text-sm leading-relaxed mt-2">Proporción ~3:1 → Los padres probablemente eran <strong class="text-white">Aa × Aa</strong> (heterocigotos).</p>
+                                <p class="text-white/50 text-xs mt-3">Las 28 blancas son <strong class="text-white">aa</strong> (homocigotas recesivas).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Caso 2 -->
+                    <div class="flip-card h-64" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-inner relative w-full h-full">
+                            <div class="flip-front absolute inset-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 flex flex-col items-center justify-center text-center">
+                                <div class="text-5xl mb-4">👨‍👩‍👧‍👦</div>
+                                <h4 class="font-oswald text-lg font-bold uppercase">Caso 2</h4>
+                                <p class="text-white/60 text-sm mt-2">Una familia salvadoreña: papá ojos cafesones, mamá ojos cafesones. Su hija tiene ojos verdes.</p>
+                                <p class="text-green-300 text-xs font-bold mt-4 uppercase tracking-wider">Toca para analizar</p>
+                            </div>
+                            <div class="flip-back absolute inset-0 bg-accent border border-white/20 rounded-3xl p-6 flex flex-col justify-center">
+                                <h4 class="font-oswald text-lg font-bold uppercase mb-3">Análisis</h4>
+                                <p class="text-white/80 text-sm leading-relaxed">Ambos padres son <strong class="text-green-300">heterocigotos (Aa)</strong>: tienen un alelo dominante (café) y uno recesivo (verde).</p>
+                                <p class="text-white/80 text-sm leading-relaxed mt-2">La hija recibió <strong class="text-white">aa</strong> (un alelo recesivo de cada padre). ¡Es posible!</p>
+                                <p class="text-white/50 text-xs mt-3">Probabilidad: 25% para cada hijo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Caso 3 -->
+                    <div class="flip-card h-64" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-inner relative w-full h-full">
+                            <div class="flip-front absolute inset-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 flex flex-col items-center justify-center text-center">
+                                <div class="text-5xl mb-4">🩸🩸</div>
+                                <h4 class="font-oswald text-lg font-bold uppercase">Caso 3</h4>
+                                <p class="text-white/60 text-sm mt-2">Papá tipo O, mamá tipo AB. ¿Qué tipos de sangre pueden tener sus hijos?</p>
+                                <p class="text-green-300 text-xs font-bold mt-4 uppercase tracking-wider">Toca para analizar</p>
+                            </div>
+                            <div class="flip-back absolute inset-0 bg-teal-600 border border-white/20 rounded-3xl p-6 flex flex-col justify-center">
+                                <h4 class="font-oswald text-lg font-bold uppercase mb-3">Análisis</h4>
+                                <p class="text-white/80 text-sm leading-relaxed">Papá: <strong class="text-green-300">ii</strong> (solo alelo i)</p>
+                                <p class="text-white/80 text-sm leading-relaxed mt-1">Mamá: <strong class="text-yellow-300">I<sup>A</sup>I<sup>B</sup></strong> (alelos A y B, codominancia)</p>
+                                <p class="text-white/80 text-sm leading-relaxed mt-2">Hijos posibles: <strong class="text-white">I<sup>A</sup>i</strong> (tipo A) o <strong class="text-white">I<sup>B</sup>i</strong> (tipo B). ¡Nunca AB ni O!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Caso 4 -->
+                    <div class="flip-card h-64" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-inner relative w-full h-full">
+                            <div class="flip-front absolute inset-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-3xl p-6 flex flex-col items-center justify-center text-center">
+                                <div class="text-5xl mb-4">🐔🐔</div>
+                                <h4 class="font-oswald text-lg font-bold uppercase">Caso 4</h4>
+                                <p class="text-white/60 text-sm mt-2">Cruzamos una gallina de plumas negras (NN) con una de plumas blancas (nn). ¿Qué pasa en F1 y F2?</p>
+                                <p class="text-green-300 text-xs font-bold mt-4 uppercase tracking-wider">Toca para analizar</p>
+                            </div>
+                            <div class="flip-back absolute inset-0 bg-amber-600 border border-white/20 rounded-3xl p-6 flex flex-col justify-center">
+                                <h4 class="font-oswald text-lg font-bold uppercase mb-3">Análisis</h4>
+                                <p class="text-white/80 text-sm leading-relaxed"><strong class="text-green-300">F1:</strong> Todos <strong class="text-white">Nn</strong> → plumas azules (dominancia incompleta).</p>
+                                <p class="text-white/80 text-sm leading-relaxed mt-2"><strong class="text-yellow-300">F2:</strong> Cruzando Nn × Nn → ¼ NN (negro), ½ Nn (azul), ¼ nn (blanco).</p>
+                                <p class="text-white/50 text-xs mt-3">¡Tres fenotipos a partir de dos alelos!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trabajo en grupo -->
+                <div class="mt-12 bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 text-center">
+                    <div class="inline-flex items-center gap-2 bg-green-500/20 text-green-300 rounded-full px-4 py-2 mb-4">
+                        <iconify-icon icon="lucide:users" width="16"></iconify-icon>
+                        <span class="text-xs font-bold uppercase tracking-wider">Trabajo en grupo</span>
+                    </div>
+                    <h3 class="font-oswald text-2xl font-bold uppercase tracking-tight">Mini-investigación</h3>
+                    <p class="text-white/60 text-sm mt-3 max-w-lg mx-auto leading-relaxed">
+                        En equipos de 3, elijan un organismo que encuentren en su comunidad (plantas del jardín, mascotas, insectos) e identifiquen al menos <strong class="text-white">2 características que muestren polimorfismo</strong>. Describan los posibles alelos involucrados.
+                    </p>
+                    <p class="text-white/40 text-xs mt-4">Tiempo: 15 minutos · Presentación: 2 minutos por equipo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 5: RESUMEN VISUAL -->
+    <section class="py-20 lg:py-28 bg-slate-50">
+        <div class="max-w-5xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-12 anim-slide">
+                <span class="text-brand text-xs font-bold uppercase tracking-widest">Resumen</span>
+                <h2 class="font-oswald text-3xl lg:text-5xl font-bold uppercase tracking-tight mt-3">Lo que debes recordar</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 anim-slide delay-200">
+                <div class="bg-white rounded-3xl p-8 shadow-md border border-slate-100 text-center relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-brand flex items-center justify-center text-white text-sm font-bold">1</div>
+                    <div class="text-4xl mb-4 mt-2">🧬</div>
+                    <h3 class="font-oswald text-lg font-bold uppercase tracking-tight">Gen</h3>
+                    <p class="text-slate-500 text-sm mt-2">Unidad de información que controla una característica hereditaria.</p>
+                </div>
+                <div class="bg-white rounded-3xl p-8 shadow-md border border-slate-100 text-center relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-sm font-bold">2</div>
+                    <div class="text-4xl mb-4 mt-2">🔀</div>
+                    <h3 class="font-oswald text-lg font-bold uppercase tracking-tight">Alelo</h3>
+                    <p class="text-slate-500 text-sm mt-2">Las diferentes formas que puede tener un gen. Pueden ser iguales o diferentes.</p>
+                </div>
+                <div class="bg-white rounded-3xl p-8 shadow-md border border-slate-100 text-center relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white text-sm font-bold">3</div>
+                    <div class="text-4xl mb-4 mt-2">🌈</div>
+                    <h3 class="font-oswald text-lg font-bold uppercase tracking-tight">Polimorfismo</h3>
+                    <p class="text-slate-500 text-sm mt-2">Cuando dos o más alelos de un gen coexisten en una población.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 6: QUIZ -->
+    <section class="py-20 lg:py-28 relative overflow-hidden">
+        <div class="blob w-80 h-80 bg-accent bottom-0 right-0 opacity-10"></div>
+        <div class="max-w-3xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12 anim-slide">
+                <span class="text-accent text-xs font-bold uppercase tracking-widest">Evalúa lo aprendido</span>
+                <h2 class="font-oswald text-4xl lg:text-5xl font-bold uppercase tracking-tight mt-3 leading-[0.9]">
+                    Quiz rápido
+                </h2>
+                <p class="text-slate-500 mt-4">5 preguntas para verificar tu comprensión</p>
+            </div>
+
+            <div id="quiz-container" class="space-y-8">
+                <!-- Las preguntas se generan por JS -->
+            </div>
+
+            <div id="quiz-result" class="hidden mt-10 text-center">
+                <div class="bg-gradient-to-br from-brand to-[#6333f0] rounded-3xl p-10 text-white">
+                    <div id="result-emoji" class="text-6xl mb-4"></div>
+                    <h3 id="result-title" class="font-oswald text-3xl font-bold uppercase tracking-tight"></h3>
+                    <p id="result-text" class="text-white/70 mt-3 text-lg"></p>
+                    <button onclick="resetQuiz()" class="mt-6 bg-white text-brand font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-full hover:bg-green-300 hover:text-dark transition-all">
+                        Intentar de nuevo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white py-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <p class="text-white/40 text-sm">Ciencias · Genética · El Salvador</p>
+            <p class="text-white/20 text-xs mt-2">Material educativo para uso en clase</p>
+        </div>
+    </footer>
+
+    <script>
+        // ==================== GEN INTERACTIVE ====================
+        function showGene(el, title, desc, color) {
+            const info = document.getElementById('gene-info');
+            const titleEl = document.getElementById('gene-title');
+            const descEl = document.getElementById('gene-desc');
+
+            // Reset all
+            document.querySelectorAll('.gene-pair').forEach(g => {
+                g.style.opacity = '0.5';
+                g.style.transform = 'scale(0.95)';
+            });
+            el.style.opacity = '1';
+            el.style.transform = 'scale(1.15)';
+
+            titleEl.textContent = title;
+            titleEl.style.color = color;
+            descEl.textContent = desc;
+            info.classList.remove('hidden');
+            info.style.animation = 'slideIn 0.4s ease-out';
         }
-    }
-</script>
 
+        // ==================== ALLELE COMBINATIONS ====================
+        function setAllele(a1, a2) {
+            document.querySelectorAll('.allele-btn').forEach(b => {
+                b.classList.remove('border-brand', 'bg-brand/5', 'text-brand');
+                b.classList.add('border-slate-200', 'bg-white');
+            });
+            const active = document.querySelector(`[data-alleles="${a1+a2}"]`);
+            active.classList.remove('border-slate-200', 'bg-white');
+            active.classList.add('border-brand', 'bg-brand/5', 'text-brand');
+
+            const result = document.getElementById('allele-result');
+            let html = '';
+
+            if (a1 === 'A' && a2 === 'A') {
+                html = `
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-4xl font-bold text-brand">A</span>
+                        <span class="text-2xl text-slate-300">+</span>
+                        <span class="text-4xl font-bold text-brand">A</span>
+                    </div>
+                    <span class="inline-block bg-brand/10 text-brand text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full mb-3">Homocigoto dominante</span>
+                    <p class="text-slate-600 text-sm">Ambos alelos son idénticos y dominantes. Siempre expresa la característica dominante. Ejemplo: ojos cafesones <strong>AA</strong>.</p>
+                    <div class="mt-4 flex justify-center gap-1">
+                        ${['👁️','👁️','👁️','👁️'].map(e => `<span class="text-2xl">${e}</span>`).join('')}
+                    </div>
+                    <p class="text-slate-400 text-xs mt-2">100% expresa el rasgo dominante</p>
+                `;
+            } else if (a1 === 'A' && a2 === 'a') {
+                html = `
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-4xl font-bold text-brand">A</span>
+                        <span class="text-2xl text-slate-300">+</span>
+                        <span class="text-4xl font-bold text-accent">a</span>
+                    </div>
+                    <span class="inline-block bg-accent/10 text-accent text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full mb-3">Heterocigoto</span>
+                    <p class="text-slate-600 text-sm">Los alelos son <strong>diferentes</strong>. El dominante (A) enmascara al recesivo (a). Ejemplo: portador de ojos verdes pero con ojos cafesones.</p>
+                    <div class="mt-4 flex justify-center gap-1">
+                        ${['👁️','👁️','👁️'].map(e => `<span class="text-2xl">${e}</span>`).join('')}
+                    </div>
+                    <p class="text-slate-400 text-xs mt-2">Expresa el rasgo dominante, pero porta el recesivo</p>
+                `;
+            } else {
+                html = `
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-4xl font-bold text-accent">a</span>
+                        <span class="text-2xl text-slate-300">+</span>
+                        <span class="text-4xl font-bold text-accent">a</span>
+                    </div>
+                    <span class="inline-block bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full mb-3">Homocigoto recesivo</span>
+                    <p class="text-slate-600 text-sm">Ambos alelos son idénticos y recesivos. Solo expresa el rasgo si NO hay alelo dominante presente. Ejemplo: ojos verdes <strong>aa</strong>.</p>
+                    <div class="mt-4 flex justify-center gap-1">
+                        ${['💚','💚','💚','💚'].map(e => `<span class="text-2xl">${e}</span>`).join('')}
+                    </div>
+                    <p class="text-slate-400 text-xs mt-2">Solo expresa el rasgo recesivo</p>
+                `;
+            }
+
+            result.innerHTML = html;
+            result.style.animation = 'slideIn 0.4s ease-out';
+        }
+
+        // ==================== MODAL ====================
+        const modalData = {
+            maiz: {
+                tag: 'Ejemplo salvadoreño',
+                title: 'Maíz: polimorfismo de color',
+                body: `
+                    <div class="bg-amber-50 rounded-2xl p-6">
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">En El Salvador, el maíz es parte fundamental de nuestra cultura. Si observas una milpa, notarás que no todas las mazorcas son iguales.</p>
+                        <div class="grid grid-cols-4 gap-3 mb-4">
+                            <div class="text-center"><div class="w-full aspect-square rounded-xl bg-yellow-300 mb-2 flex items-center justify-center text-2xl">🌽</div><span class="text-xs font-bold text-slate-500">Amarillo</span></div>
+                            <div class="text-center"><div class="w-full aspect-square rounded-xl bg-gray-100 border border-slate-200 mb-2 flex items-center justify-center text-2xl">🌽</div><span class="text-xs font-bold text-slate-500">Blanco</span></div>
+                            <div class="text-center"><div class="w-full aspect-square rounded-xl bg-purple-900 mb-2 flex items-center justify-center text-2xl">🌽</div><span class="text-xs font-bold text-slate-500">Negro</span></div>
+                            <div class="text-center"><div class="w-full aspect-square rounded-xl bg-red-700 mb-2 flex items-center justify-center text-2xl">🌽</div><span class="text-xs font-bold text-slate-500">Rojo</span></div>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed"><strong>¿Qué pasa aquí?</strong> El gen que controla el color del grano tiene <strong>múltiples alelos</strong> (polialélicos). Cada alelo produce un pigmento diferente en el pericarpio del grano.</p>
+                    </div>
+                    <div class="bg-brand/5 border-l-4 border-brand rounded-r-2xl p-5">
+                        <p class="text-dark font-semibold text-sm mb-1">Dato curioso</p>
+                        <p class="text-slate-600 text-sm">El maíz negro que se usa para atol de elote en algunas zonas de El Salvador debe su color a antocianinas, los mismos pigmentos que dan color a las moras.</p>
+                    </div>
+                `
+            },
+            gallinas: {
+                tag: 'Ejemplo salvadoreño',
+                title: 'Gallinas: polimorfismo de plumas',
+                body: `
+                    <div class="bg-orange-50 rounded-2xl p-6">
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">En los patios de las casas salvadoreñas es común ver gallinas criollas. Si las observas bien, notarás una enorme variedad en el color de sus plumas.</p>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="bg-white rounded-xl p-4 text-center">
+                                <div class="text-3xl mb-2">🐔</div>
+                                <p class="text-xs font-bold text-slate-600">Plumas cafés</p>
+                                <p class="text-xs text-slate-400 mt-1">Genotipo: probablemente heterocigoto</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center">
+                                <div class="text-3xl mb-2">🐓</div>
+                                <p class="text-xs font-bold text-slate-600">Plumas blancas</p>
+                                <p class="text-xs text-slate-400 mt-1">Genotipo: homocigoto recesivo (pp)</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center">
+                                <div class="text-3xl mb-2">🐦</div>
+                                <p class="text-xs font-bold text-slate-600">Plumas negras</p>
+                                <p class="text-xs text-slate-400 mt-1">Genotipo: homocigoto dominante (PP)</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center">
+                                <div class="text-3xl mb-2">🐔</div>
+                                <p class="text-xs font-bold text-slate-600">Plumas mixtas</p>
+                                <p class="text-xs text-slate-400 mt-1">Genotipo: múltiples genes interactuando</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed"><strong>¿Por qué tanta variedad?</strong> Las gallinas criollas no son de raza pura, así que tienen mucha mezcla genética. Esto produce mucho polimorfismo en la población.</p>
+                    </div>
+                `
+            },
+            jamaica: {
+                tag: 'Ejemplo salvadoreño',
+                title: 'Flor de Jamaica: color variable',
+                body: `
+                    <div class="bg-red-50 rounded-2xl p-6">
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">La flor de Jamaica que usamos para preparar la fresca refrescante muestra variación en la intensidad de su color rojo. Esto es polimorfismo en acción.</p>
+                        <div class="flex gap-4 justify-center mb-4">
+                            <div class="text-center">
+                                <div class="w-20 h-20 rounded-2xl bg-red-700 mx-auto mb-2"></div>
+                                <span class="text-xs font-bold text-slate-500">Rojo intenso</span>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-20 h-20 rounded-2xl bg-pink-400 mx-auto mb-2"></div>
+                                <span class="text-xs font-bold text-slate-500">Rosa claro</span>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-20 h-20 rounded-2xl bg-rose-300 mx-auto mb-2"></div>
+                                <span class="text-xs font-bold text-slate-500">Rosa pálido</span>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed"><strong>La genética del color:</strong> Los alelos que controlan la producción de antocianinas (pigmentos rojos) tienen diferentes niveles de expresión. Un alelo puede producir mucha antocianina (rojo intenso) y otro muy poca (rosa pálido).</p>
+                    </div>
+                    <div class="bg-brand/5 border-l-4 border-brand rounded-r-2xl p-5">
+                        <p class="text-dark font-semibold text-sm mb-1">Conexión con tu vida</p>
+                        <p class="text-slate-600 text-sm">¿Has notado que algunas jamaicas dan un color más oscuro que otras al hacer la bebida? ¡Eso es la expresión diferente de los alelos!</p>
+                    </div>
+                `
+            },
+            chompipe: {
+                tag: 'Ejemplo salvadoreño',
+                title: 'Chompipe: variedad genética',
+                body: `
+                    <div class="bg-teal-50 rounded-2xl p-6">
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">El chompipe o pavo es típico en las fiestas salvadoreñas, especialmente en diciembre. Los chompipes de patio muestran polimorfismo muy visible en sus plumas.</p>
+                        <div class="grid grid-cols-3 gap-3 mb-4">
+                            <div class="bg-white rounded-xl p-4 text-center">
+                                <div class="text-3xl mb-2">🦃</div>
+                                <p class="text-xs font-bold text-slate-600">Bronceado</p>
+                                <p class="text-xs text-slate-400 mt-1">Más común</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center">
+                                <div class="text-3xl mb-2">🦃</div>
+                                <p class="text-xs font-bold text-slate-600">Azululado</p>
+                                <p class="text-xs text-slate-400 mt-1">Menos común</p>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 text-center">
+                                <div class="text-3xl mb-2">🦃</div>
+                                <p class="text-xs font-bold text-slate-600">Blanco</p>
+                                <p class="text-xs text-slate-400 mt-1">Recesivo</p>
+                            </div>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed"><strong>El polimorfismo aquí</strong> involucra varios genes: uno para el patrón base, otro para la distribución de colores, y otro para la presencia/ausencia de pigmento. ¡Es polimorfismo <strong>multigénico</strong>!</p>
+                    </div>
+                    <div class="bg-brand/5 border-l-4 border-brand rounded-r-2xl p-5">
+                        <p class="text-dark font-semibold text-sm mb-1">Piensa</p>
+                        <p class="text-slate-600 text-sm">Los chompipes de granja (los que se venden en supermercados) son casi todos blancos. ¿Por qué crees que perdieron el polimorfismo? (Pista: selección artificial)</p>
+                    </div>
+                `
+            }
+        };
+
+        function openModal(key) {
+            const data = modalData[key];
+            document.getElementById('modal-tag').textContent = data.tag;
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-body').innerHTML = data.body;
+
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            overlay.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '1';
+                content.style.transform = 'scale(1)';
+            });
+        }
+
+        function closeModal(e) {
+            if (e && e.target !== e.currentTarget) return;
+            const overlay = document.getElementById('modal-overlay');
+            const content = document.getElementById('modal-content');
+            overlay.style.opacity = '0';
+            content.style.transform = 'scale(0.95)';
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+        }
+
+        // ==================== QUIZ ====================
+        const quizQuestions = [
+            {
+                q: '¿Qué es un alelo?',
+                options: [
+                    'Una parte del cromosoma que no tiene función',
+                    'Una de las diferentes formas que puede tener un gen',
+                    'Un tipo de célula reproductora',
+                    'Una proteína que controla el ADN'
+                ],
+                correct: 1
+            },
+            {
+                q: 'Si un organismo tiene genotipo Aa, se dice que es:',
+                options: [
+                    'Homocigoto dominante',
+                    'Homocigoto recesivo',
+                    'Heterocigoto',
+                    'Polimórfico'
+                ],
+                correct: 2
+            },
+            {
+                q: '¿Qué es el polimorfismo genético?',
+                options: [
+                    'Cuando un gen muta y causa enfermedad',
+                    'Cuando un organismo tiene más de dos ojos',
+                    'La presencia de dos o más alelos para un gen en una población',
+                    'Cuando los alelos son siempre iguales'
+                ],
+                correct: 2
+            },
+            {
+                q: 'En El Salvador, si cruzamos maíz amarillo (AA) con maíz blanco (aa), ¿cómo será la F1?',
+                options: [
+                    '50% amarillo, 50% blanco',
+                    '100% amarillo (Aa)',
+                    '100% blanco (aa)',
+                    '75% amarillo, 25% blanco'
+                ],
+                correct: 1
+            },
+            {
+                q: 'Doña Marta tiene ojos cafesones (Aa) y su esposo también (Aa). ¿Qué probabilidad hay de que su hijo tenga ojos verdes (aa)?',
+                options: [
+                    '0%',
+                    '25%',
+                    '50%',
+                    '75%'
+                ],
+                correct: 1
+            }
+        ];
+
+        let quizScore = 0;
+        let answeredQuestions = 0;
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = quizQuestions.map((q, i) => `
+                <div class="quiz-question anim-slide" style="animation-delay:${i*100}ms" data-index="${i}">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center flex-shrink-0">
+                            <span class="text-brand font-bold text-sm">${i+1}</span>
+                        </div>
+                        <h4 class="font-semibold text-dark pt-2">${q.q}</h4>
+                    </div>
+                    <div class="space-y-3 ml-14">
+                        ${q.options.map((opt, j) => `
+                            <div class="quiz-option flex items-center gap-3 p-4 rounded-2xl border-2 border-slate-100 bg-white" onclick="checkAnswer(${i}, ${j}, this)">
+                                <div class="w-8 h-8 rounded-full border-2 border-slate-200 flex items-center justify-center flex-shrink-0 text-xs font-bold text-slate-400 opt-letter">${String.fromCharCode(65+j)}</div>
+                                <span class="text-sm text-slate-600">${opt}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function checkAnswer(qIndex, optIndex, el) {
+            const question = document.querySelector(`[data-index="${qIndex}"]`);
+            const options = question.querySelectorAll('.quiz-option');
+            const correct = quizQuestions[qIndex].correct;
+
+            // Disable all
+            options.forEach(o => o.classList.add('disabled'));
+
+            if (optIndex === correct) {
+                el.classList.add('correct');
+                el.querySelector('.opt-letter').style.borderColor = '#22c55e';
+                el.querySelector('.opt-letter').style.color = '#22c55e';
+                el.querySelector('.opt-letter').style.background = 'rgba(34,197,94,0.1)';
+                quizScore++;
+                showToast('¡Correcto! 🎉', 'lucide:check-circle');
+            } else {
+                el.classList.add('incorrect');
+                el.querySelector('.opt-letter').style.borderColor = '#ef4444';
+                el.querySelector('.opt-letter').style.color = '#ef4444';
+                el.querySelector('.opt-letter').style.background = 'rgba(239,68,68,0.1)';
+                // Show correct
+                options[correct].classList.add('correct');
+                options[correct].querySelector('.opt-letter').style.borderColor = '#22c55e';
+                options[correct].querySelector('.opt-letter').style.color = '#22c55e';
+                options[correct].querySelector('.opt-letter').style.background = 'rgba(34,197,94,0.1)';
+                showToast('Incorrecto, revisa la respuesta correcta', 'lucide:x-circle');
+            }
+
+            answeredQuestions++;
+            if (answeredQuestions === quizQuestions.length) {
+                setTimeout(showResults, 800);
+            }
+        }
+
+        function showResults() {
+            const result = document.getElementById('quiz-result');
+            const pct = (quizScore / quizQuestions.length) * 100;
+
+            let emoji, title, text;
+            if (pct === 100) {
+                emoji = '🏆'; title = '¡Perfecto!'; text = `Obtuviste ${quizScore}/${quizQuestions.length}. ¡Dominas los alelos y el polimorfismo!`;
+            } else if (pct >= 60) {
+                emoji = '👍'; title = '¡Bien hecho!'; text = `Obtuviste ${quizScore}/${quizQuestions.length}. Vas por buen camino, repasa los conceptos que fallaste.`;
+            } else {
+                emoji = '📚'; title = 'Necesitas repasar'; text = `Obtuviste ${quizScore}/${quizQuestions.length}. Vuelve a leer la teoría y vuelve a intentarlo.`;
+            }
+
+            document.getElementById('result-emoji').textContent = emoji;
+            document.getElementById('result-title').textContent = title;
+            document.getElementById('result-text').textContent = text;
+            result.classList.remove('hidden');
+            result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            quizScore = 0;
+            answeredQuestions = 0;
+            document.getElementById('quiz-result').classList.add('hidden');
+            renderQuiz();
+            document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ==================== TOAST ====================
+        function showToast(msg, icon) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            document.getElementById('toast-icon').setAttribute('icon', icon);
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // ==================== SCROLL ANIMATIONS ====================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuiz();
+            document.querySelectorAll('.anim-slide, .anim-fade, .anim-blur').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+            // Allow hero animations
+            document.querySelectorAll('section:first-of-type .anim-slide, section:first-of-type .anim-blur').forEach(el => {
+                el.style.animationPlayState = 'running';
+            });
+        });
+
+        // Close modal with Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
 </body>
 </html>
