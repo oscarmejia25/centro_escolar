@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.1 Patrones Numéricos | Matemáticas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { inter: ['Inter','sans-serif'], oswald: ['Oswald','sans-serif'] },
+                    colors: { brand:'#5423E7', accent:'#FF3366', dark:'#0f172a' }
+                }
+            }
+        }
+    </script>
+    <style>
+        *{font-family:'Inter',sans-serif}
+        .font-oswald{font-family:'Oswald',sans-serif}
+        @keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .anim-slide{animation:slideIn .8s cubic-bezier(.16,1,.3,1) both}
+        .anim-float{animation:float 3s ease-in-out infinite}
+        .delay-100{animation-delay:100ms}.delay-200{animation-delay:200ms}.delay-300{animation-delay:300ms}.delay-400{animation-delay:400ms}.delay-500{animation-delay:500ms}.delay-600{animation-delay:600ms}
+        .note-icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;flex-shrink:0}
+        .blob{position:absolute;border-radius:9999px;filter:blur(64px);opacity:.15;pointer-events:none}
+        .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);transition:transform .4s cubic-bezier(.16,1,.3,1),opacity .4s;opacity:0;z-index:1000}
+        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+        .student-input{border:2px solid #e2e8f0;border-radius:12px;padding:10px 16px;font-size:1.1rem;font-weight:700;text-align:center;transition:all .3s ease;background:#fff;width:100%}
+        .student-input:focus{outline:none;border-color:#5423E7;box-shadow:0 0 0 4px rgba(84,35,231,.1)}
+        .student-input.correct{border-color:#22c55e;background:#f0fdf4;box-shadow:0 0 0 4px rgba(34,197,94,.1)}
+        .student-input.incorrect{border-color:#ef4444;background:#fef2f2;box-shadow:0 0 0 4px rgba(239,68,68,.1)}
+        .check-btn{transition:all .3s ease}
+        .check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(84,35,231,.3)}
+        .case-card{transition:all .4s cubic-bezier(.16,1,.3,1)}
+        .case-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,.08)}
+        .formula-highlight{background:linear-gradient(135deg,rgba(84,35,231,.06),rgba(99,51,240,.1));border:2px dashed rgba(84,35,231,.3)}
+        .theory-step{position:relative;padding-left:3rem}
+        .theory-step::before{content:attr(data-step);position:absolute;left:0;top:0;width:2.2rem;height:2.2rem;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:#fff;flex-shrink:0}
+        .calc-line{font-family:'Oswald',sans-serif;font-size:1.15rem;font-weight:600;letter-spacing:.02em}
+        .calc-line .op{color:#94a3b8;margin:0 .3rem}
+        .calc-line .result{color:#22c55e}
+        .feedback-icon{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+        ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#f1f5f9}::-webkit-scrollbar-thumb{background:#5423E7;border-radius:4px}
+    </style>
+</head>
+<body class="bg-white text-dark">
+
+<div id="toast" class="toast bg-dark text-white px-6 py-3 rounded-2xl shadow-2xl font-medium text-sm flex items-center gap-3">
+    <iconify-icon id="toast-icon" icon="lucide:check-circle" width="20"></iconify-icon>
+    <span id="toast-msg"></span>
+</div>
+
+<!-- HEADER -->
+<section class="relative py-14 lg:py-18 bg-gradient-to-br from-dark via-[#1a1f3a] to-dark overflow-hidden">
+    <div class="blob w-80 h-80 bg-brand top-[-60px] right-[-60px]"></div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <div class="flex items-center gap-4 anim-slide">
+            <div class="w-14 h-14 rounded-2xl bg-brand flex items-center justify-center text-white font-oswald text-xl font-bold flex-shrink-0">1.1</div>
+            <div>
+                <p class="text-white/40 text-xs font-bold uppercase tracking-widest">Matemáticas · Álgebra</p>
+                <h1 class="font-oswald text-3xl lg:text-5xl font-bold text-white uppercase tracking-tighter leading-[.9]">Patrones numéricos</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTENIDO -->
+<section class="py-14 lg:py-20">
+<div class="max-w-5xl mx-auto px-6 lg:px-8">
+
+    <!-- Intro observación -->
+    <p class="text-slate-600 leading-relaxed mb-10 anim-slide">
+        Un técnico fija láminas metálicas con pines. Observa cómo se agrupan los pines alrededor de cada lámina y descubre el patrón.
+    </p>
+
+    <!-- ========== 3 CASOS BASE (observar) ========== -->
+    <div class="grid md:grid-cols-3 gap-5 mb-12">
+        <div class="case-card bg-slate-50 rounded-3xl p-5 border border-slate-100 anim-slide delay-100">
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">1 lámina</p>
+            <div class="flex justify-center mb-3">
+                <svg width="140" height="70" viewBox="0 0 140 70">
+                    <circle cx="20" cy="16" r="7" fill="#5423E7"/><circle cx="20" cy="35" r="7" fill="#5423E7"/><circle cx="20" cy="54" r="7" fill="#5423E7"/>
+                    <rect x="44" y="12" width="52" height="46" rx="5" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="70" y="41" fill="#64748b" font-size="14" font-weight="bold" text-anchor="middle">1</text>
+                    <circle cx="120" cy="16" r="7" fill="#5423E7"/><circle cx="120" cy="35" r="7" fill="#5423E7"/><circle cx="120" cy="54" r="7" fill="#5423E7"/>
+                </svg>
+            </div>
+            <div class="bg-white rounded-2xl p-3 text-center">
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Total de pines</p>
+                <p class="text-3xl font-bold text-brand mt-0.5">6</p>
+            </div>
+        </div>
+        <div class="case-card bg-slate-50 rounded-3xl p-5 border border-slate-100 anim-slide delay-200">
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">2 láminas</p>
+            <div class="flex justify-center mb-3">
+                <svg width="220" height="70" viewBox="0 0 220 70">
+                    <circle cx="20" cy="16" r="7" fill="#5423E7"/><circle cx="20" cy="35" r="7" fill="#5423E7"/><circle cx="20" cy="54" r="7" fill="#5423E7"/>
+                    <rect x="44" y="12" width="44" height="46" rx="5" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="66" y="41" fill="#64748b" font-size="13" font-weight="bold" text-anchor="middle">1</text>
+                    <circle cx="100" cy="16" r="7" fill="#5423E7"/><circle cx="100" cy="35" r="7" fill="#5423E7"/><circle cx="100" cy="54" r="7" fill="#5423E7"/>
+                    <rect x="124" y="12" width="44" height="46" rx="5" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="146" y="41" fill="#64748b" font-size="13" font-weight="bold" text-anchor="middle">2</text>
+                    <circle cx="180" cy="16" r="7" fill="#5423E7"/><circle cx="180" cy="35" r="7" fill="#5423E7"/><circle cx="180" cy="54" r="7" fill="#5423E7"/>
+                </svg>
+            </div>
+            <div class="bg-white rounded-2xl p-3 text-center">
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Total de pines</p>
+                <p class="text-3xl font-bold text-brand mt-0.5">9</p>
+            </div>
+        </div>
+        <div class="case-card bg-slate-50 rounded-3xl p-5 border border-slate-100 anim-slide delay-300">
+            <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">3 láminas</p>
+            <div class="flex justify-center mb-3">
+                <svg width="300" height="70" viewBox="0 0 300 70">
+                    <circle cx="20" cy="16" r="7" fill="#5423E7"/><circle cx="20" cy="35" r="7" fill="#5423E7"/><circle cx="20" cy="54" r="7" fill="#5423E7"/>
+                    <rect x="40" y="12" width="38" height="46" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="59" y="41" fill="#64748b" font-size="12" font-weight="bold" text-anchor="middle">1</text>
+                    <circle cx="90" cy="16" r="7" fill="#5423E7"/><circle cx="90" cy="35" r="7" fill="#5423E7"/><circle cx="90" cy="54" r="7" fill="#5423E7"/>
+                    <rect x="110" y="12" width="38" height="46" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="129" y="41" fill="#64748b" font-size="12" font-weight="bold" text-anchor="middle">2</text>
+                    <circle cx="160" cy="16" r="7" fill="#5423E7"/><circle cx="160" cy="35" r="7" fill="#5423E7"/><circle cx="160" cy="54" r="7" fill="#5423E7"/>
+                    <rect x="180" y="12" width="38" height="46" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="199" y="41" fill="#64748b" font-size="12" font-weight="bold" text-anchor="middle">3</text>
+                    <circle cx="230" cy="16" r="7" fill="#5423E7"/><circle cx="230" cy="35" r="7" fill="#5423E7"/><circle cx="230" cy="54" r="7" fill="#5423E7"/>
+                </svg>
+            </div>
+            <div class="bg-white rounded-2xl p-3 text-center">
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Total de pines</p>
+                <p class="text-3xl font-bold text-brand mt-0.5">12</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== PREGUNTA (resolver) ========== -->
+    <div class="bg-white rounded-3xl p-6 lg:p-10 shadow-lg border-2 border-brand/20 mb-14 anim-slide delay-400">
+        <div class="flex items-start gap-4 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-brand/10 flex items-center justify-center flex-shrink-0">
+                <iconify-icon icon="lucide:help-circle" width="24" class="text-brand"></iconify-icon>
+            </div>
+            <div>
+                <h3 class="font-oswald text-xl lg:text-2xl font-bold uppercase tracking-tight">¿Cuántos pines se necesitan para fijar 4 láminas?</h3>
+                <p class="text-slate-500 text-sm mt-1">Observa el patrón de los casos anteriores y calcula.</p>
+            </div>
+        </div>
+        <div class="flex justify-center mb-8">
+            <svg width="380" height="70" viewBox="0 0 380 70">
+                <circle cx="20" cy="16" r="7" fill="#5423E7"/><circle cx="20" cy="35" r="7" fill="#5423E7"/><circle cx="20" cy="54" r="7" fill="#5423E7"/>
+                <rect x="40" y="12" width="38" height="46" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                <text x="59" y="41" fill="#64748b" font-size="12" font-weight="bold" text-anchor="middle">1</text>
+                <circle cx="90" cy="16" r="7" fill="#5423E7"/><circle cx="90" cy="35" r="7" fill="#5423E7"/><circle cx="90" cy="54" r="7" fill="#5423E7"/>
+                <rect x="110" y="12" width="38" height="46" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                <text x="129" y="41" fill="#64748b" font-size="12" font-weight="bold" text-anchor="middle">2</text>
+                <circle cx="160" cy="16" r="7" fill="#5423E7"/><circle cx="160" cy="35" r="7" fill="#5423E7"/><circle cx="160" cy="54" r="7" fill="#5423E7"/>
+                <rect x="180" y="12" width="38" height="46" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                <text x="199" y="41" fill="#64748b" font-size="12" font-weight="bold" text-anchor="middle">3</text>
+                <circle cx="230" cy="16" r="7" fill="#5423E7"/><circle cx="230" cy="35" r="7" fill="#5423E7"/><circle cx="230" cy="54" r="7" fill="#5423E7"/>
+                <rect x="250" y="12" width="38" height="46" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                <text x="269" y="41" fill="#64748b" font-size="12" font-weight="bold" text-anchor="middle">4</text>
+                <circle cx="300" cy="16" r="7" fill="#5423E7"/><circle cx="300" cy="35" r="7" fill="#5423E7"/><circle cx="300" cy="54" r="7" fill="#5423E7"/>
+            </svg>
+        </div>
+        <div class="max-w-xs mx-auto">
+            <label class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 block text-center">Tu respuesta</label>
+            <div class="flex items-center gap-3">
+                <input type="number" id="answer-4" class="student-input flex-1" placeholder="...">
+                <button onclick="checkAnswer('answer-4',15)" class="check-btn bg-brand hover:bg-brand/90 text-white font-bold text-sm px-5 py-3 rounded-xl flex items-center gap-2">
+                    <iconify-icon icon="lucide:check" width="16"></iconify-icon> Verificar
+                </button>
+            </div>
+            <div id="feedback-4" class="mt-3 text-sm text-center hidden"></div>
+        </div>
+    </div>
+
+    <!-- ========== DOS FORMAS DE CALCULAR (TEORÍA EXPLICADA) ========== -->
+    <div class="mb-14 anim-slide delay-500">
+        <div class="flex items-center gap-3 mb-6">
+            <iconify-icon icon="lucide:git-branch" width="22" class="text-brand"></iconify-icon>
+            <h2 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight">Dos formas de calcular</h2>
+        </div>
+        <p class="text-slate-500 mb-8 text-sm">Existen diferentes caminos para llegar al mismo resultado. Observa cómo se puede calcular el número de pines para 4 láminas de dos maneras distintas.</p>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Forma 1: EXPLICADA -->
+            <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+                <div class="flex items-center gap-2 mb-5">
+                    <div class="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white font-bold text-sm">1</div>
+                    <span class="font-semibold text-sm text-slate-700">Contando los grupos de pines</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-5">
+                    Si observas el dibujo de 4 láminas, hay un grupo de 3 pines a la izquierda, un grupo entre cada par de láminas, y un grupo a la derecha. Es decir, <strong>n + 1 grupos</strong>.
+                </p>
+                <div class="bg-white rounded-2xl p-5 space-y-3 border border-slate-100">
+                    <div class="calc-line">
+                        Grupos de pines <span class="op">=</span> 4 <span class="op">+</span> 1 <span class="op">=</span> <strong>5</strong>
+                    </div>
+                    <div class="calc-line">
+                        Pines por grupo <span class="op">=</span> <strong>3</strong>
+                    </div>
+                    <div class="border-t border-slate-200 pt-3 calc-line text-lg">
+                        Total <span class="op">=</span> 5 <span class="op">×</span> 3 <span class="op">=</span> <span class="result">15 pines</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forma 2: EXPLICADA -->
+            <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+                <div class="flex items-center gap-2 mb-5">
+                    <div class="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center text-white font-bold text-sm">2</div>
+                    <span class="font-semibold text-sm text-slate-700">Pines por lámina más un grupo extra</span>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-5">
+                    Cada lámina tiene 3 pines a su derecha, pero la primera lámina también necesita 3 pines a su izquierda. Entonces: 3 pines por cada lámina, más un grupo extra de 3.
+                </p>
+                <div class="bg-white rounded-2xl p-5 space-y-3 border border-slate-100">
+                    <div class="calc-line">
+                        3 pines <span class="op">×</span> 4 láminas <span class="op">=</span> <strong>12</strong>
+                    </div>
+                    <div class="calc-line">
+                        <span class="op">+</span> grupo extra <span class="op">=</span> <strong>3</strong>
+                    </div>
+                    <div class="border-t border-slate-200 pt-3 calc-line text-lg">
+                        Total <span class="op">=</span> 12 <span class="op">+</span> 3 <span class="op">=</span> <span class="result">15 pines</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== EXPRESIÓN GENERAL (TEORÍA EXPLICADA) ========== -->
+    <div class="mb-14 anim-slide delay-600">
+        <div class="flex items-center gap-3 mb-4">
+            <iconify-icon icon="lucide:variable" width="22" class="text-brand"></iconify-icon>
+            <h2 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight">Expresión general</h2>
+        </div>
+
+        <!-- Nota cuaderno -->
+        <div class="flex items-start gap-4 bg-brand/5 border-l-4 border-brand rounded-r-2xl p-5 mb-6">
+            <div class="note-icon bg-brand text-white mt-0.5">
+                <iconify-icon icon="lucide:notebook-pen" width="16"></iconify-icon>
+            </div>
+            <div>
+                <p class="text-dark font-semibold text-sm">En tu cuaderno</p>
+                <p class="text-slate-600 text-sm mt-1">Se puede obtener el número de pines con una expresión que use <strong>n</strong> (número de láminas).</p>
+            </div>
+        </div>
+
+        <div class="formula-highlight rounded-3xl p-8">
+            <p class="text-xs font-bold uppercase tracking-widest text-brand mb-6">Del primer método</p>
+
+            <div class="space-y-4 mb-8">
+                <div class="theory-step" data-step="1" style="--c:#5423E7">
+                    <div style="background:var(--c)" class="absolute left-0 top-0 w-[2.2rem] h-[2.2rem] rounded-xl flex items-center justify-center text-white font-bold text-sm">1</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Hay <strong>n + 1</strong> grupos de pines (uno a la izquierda de la primera lámina, uno entre cada par, y uno a la derecha de la última).</p>
+                </div>
+                <div class="theory-step" data-step="2" style="--c:#5423E7">
+                    <div style="background:var(--c)" class="absolute left-0 top-0 w-[2.2rem] h-[2.2rem] rounded-xl flex items-center justify-center text-white font-bold text-sm">2</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Cada grupo tiene <strong>3 pines</strong>.</p>
+                </div>
+                <div class="theory-step" data-step="3" style="--c:#22c55e">
+                    <div style="background:var(--c)" class="absolute left-0 top-0 w-[2.2rem] h-[2.2rem] rounded-xl flex items-center justify-center text-white font-bold text-sm">3</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Entonces el total de pines es:</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 text-center space-y-3 border border-slate-100">
+                <p class="calc-line text-lg">P <span class="op">=</span> 3 <span class="op">×</span> (n <span class="op">+</span> 1)</p>
+                <div class="border-t border-slate-200 pt-3">
+                    <p class="calc-line text-lg">P <span class="op">=</span> 3n <span class="op">+</span> 3</p>
+                </div>
+            </div>
+
+            <p class="text-xs font-bold uppercase tracking-widest text-brand mb-6 mt-8">Del segundo método</p>
+
+            <div class="space-y-4 mb-8">
+                <div class="theory-step" data-step="1" style="--c:#22c55e">
+                    <div style="background:var(--c)" class="absolute left-0 top-0 w-[2.2rem] h-[2.2rem] rounded-xl flex items-center justify-center text-white font-bold text-sm">1</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Cada lámina tiene <strong>3 pines</strong> a su derecha: son <strong>3n</strong> pines.</p>
+                </div>
+                <div class="theory-step" data-step="2" style="--c:#22c55e">
+                    <div style="background:var(--c)" class="absolute left-0 top-0 w-[2.2rem] h-[2.2rem] rounded-xl flex items-center justify-center text-white font-bold text-sm">2</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Se suma un grupo extra de <strong>3 pines</strong> a la izquierda de la primera lámina.</p>
+                </div>
+                <div class="theory-step" data-step="3" style="--c:#5423E7">
+                    <div style="background:var(--c)" class="absolute left-0 top-0 w-[2.2rem] h-[2.2rem] rounded-xl flex items-center justify-center text-white font-bold text-sm">3</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Se llega a la misma expresión:</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 text-center border border-slate-100">
+                <p class="calc-line text-lg">P <span class="op">=</span> 3n <span class="op">+</span> 3</p>
+            </div>
+
+            <!-- Nota lapicito -->
+            <div class="flex items-start gap-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-2xl p-5 mt-6">
+                <div class="note-icon bg-amber-400 text-white mt-0.5">
+                    <iconify-icon icon="lucide:pencil" width="16"></iconify-icon>
+                </div>
+                <div>
+                    <p class="text-dark font-semibold text-sm">Anota esto</p>
+                    <p class="text-slate-600 text-sm mt-1">Ambos métodos llegan a la misma expresión: <strong class="text-brand">P = 3n + 3</strong>, donde <strong>n</strong> es el número de láminas y <strong>P</strong> es el total de pines. La diferencia constante entre términos consecutivos es <strong>d = 3</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== APLICA LA EXPRESIÓN (RESOLVER) ========== -->
+    <div class="mb-20 anim-slide">
+        <div class="flex items-center gap-3 mb-6">
+            <iconify-icon icon="lucide:pencil-line" width="22" class="text-accent"></iconify-icon>
+            <h2 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight">Aplica la expresión</h2>
+        </div>
+        <p class="text-slate-600 mb-8 text-sm">Usa la expresión P = 3n + 3 para calcular los pines necesarios en cada caso.</p>
+
+        <div class="grid md:grid-cols-3 gap-5">
+            <div class="bg-white rounded-3xl p-5 shadow-md border border-slate-100">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center"><span class="font-bold text-brand text-sm">n = 5</span></div>
+                    <span class="font-semibold text-sm">5 láminas</span>
+                </div>
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-slate-500 text-sm">P =</span>
+                    <input type="number" id="ex-5" class="student-input text-sm !py-2 !px-3 flex-1" placeholder="?">
+                </div>
+                <button onclick="checkAnswer('ex-5',18)" class="check-btn w-full bg-brand/10 hover:bg-brand/20 text-brand font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl flex items-center justify-center gap-2">
+                    <iconify-icon icon="lucide:check" width="14"></iconify-icon> Verificar
+                </button>
+                <div id="feedback-ex-5" class="mt-3 text-sm text-center hidden"></div>
+            </div>
+            <div class="bg-white rounded-3xl p-5 shadow-md border border-slate-100">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center"><span class="font-bold text-brand text-sm">n = 6</span></div>
+                    <span class="font-semibold text-sm">6 láminas</span>
+                </div>
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-slate-500 text-sm">P =</span>
+                    <input type="number" id="ex-6" class="student-input text-sm !py-2 !px-3 flex-1" placeholder="?">
+                </div>
+                <button onclick="checkAnswer('ex-6',21)" class="check-btn w-full bg-brand/10 hover:bg-brand/20 text-brand font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl flex items-center justify-center gap-2">
+                    <iconify-icon icon="lucide:check" width="14"></iconify-icon> Verificar
+                </button>
+                <div id="feedback-ex-6" class="mt-3 text-sm text-center hidden"></div>
+            </div>
+            <div class="bg-white rounded-3xl p-5 shadow-md border border-slate-100">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center"><span class="font-bold text-brand text-sm">n = 7</span></div>
+                    <span class="font-semibold text-sm">7 láminas</span>
+                </div>
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-slate-500 text-sm">P =</span>
+                    <input type="number" id="ex-7" class="student-input text-sm !py-2 !px-3 flex-1" placeholder="?">
+                </div>
+                <button onclick="checkAnswer('ex-7',24)" class="check-btn w-full bg-brand/10 hover:bg-brand/20 text-brand font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl flex items-center justify-center gap-2">
+                    <iconify-icon icon="lucide:check" width="14"></iconify-icon> Verificar
+                </button>
+                <div id="feedback-ex-7" class="mt-3 text-sm text-center hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEPARADOR -->
+    <div class="border-t-2 border-slate-100 mb-20"></div>
+
+    <!-- ========== SEGUNDO PROBLEMA: PARAGUAS ========== -->
+    <div class="anim-slide">
+        <div class="flex items-center gap-3 mb-4">
+            <iconify-icon icon="lucide:umbrella" width="22" class="text-accent"></iconify-icon>
+            <h2 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight">Otro patrón</h2>
+        </div>
+        <p class="text-slate-600 mb-8 text-sm leading-relaxed">
+            En un local de San Salvador, los paraguas se cuelgan en una percha formando rombos. Observa la relación entre el número de rombos y el número de paraguas.
+        </p>
+
+        <!-- 3 casos (observar) -->
+        <div class="grid md:grid-cols-3 gap-5 mb-8">
+            <div class="case-card bg-slate-50 rounded-3xl p-5 border border-slate-100">
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">1 rombo</p>
+                <div class="flex justify-center mb-3">
+                    <svg width="90" height="80" viewBox="0 0 90 80">
+                        <line x1="5" y1="12" x2="85" y2="12" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M20,12 L20,24" stroke="#cbd5e1" stroke-width="2"/>
+                        <path d="M20,24 L12,44 L20,64 L28,44 Z" fill="rgba(84,35,231,.5)" stroke="#5423E7" stroke-width="1.5"/>
+                        <path d="M38,24 L30,44 L38,64 L46,44 Z" fill="rgba(255,51,102,.4)" stroke="#FF3366" stroke-width="1.5"/>
+                        <text x="20" y="49" fill="white" font-size="10" font-weight="bold" text-anchor="middle">1</text>
+                        <text x="38" y="49" fill="white" font-size="10" font-weight="bold" text-anchor="middle">2</text>
+                    </svg>
+                </div>
+                <div class="bg-white rounded-2xl p-3 text-center">
+                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Paraguas</p>
+                    <p class="text-3xl font-bold text-brand mt-0.5">2</p>
+                </div>
+            </div>
+            <div class="case-card bg-slate-50 rounded-3xl p-5 border border-slate-100">
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">2 rombos</p>
+                <div class="flex justify-center mb-3">
+                    <svg width="150" height="80" viewBox="0 0 150 80">
+                        <line x1="5" y1="12" x2="145" y2="12" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M18,12 L18,24" stroke="#cbd5e1" stroke-width="2"/>
+                        <path d="M18,24 L10,44 L18,64 L26,44 Z" fill="rgba(84,35,231,.5)" stroke="#5423E7" stroke-width="1.5"/>
+                        <path d="M34,24 L26,44 L34,64 L42,44 Z" fill="rgba(255,51,102,.4)" stroke="#FF3366" stroke-width="1.5"/>
+                        <path d="M78,12 L78,24" stroke="#cbd5e1" stroke-width="2"/>
+                        <path d="M78,24 L70,44 L78,64 L86,44 Z" fill="rgba(84,35,231,.5)" stroke="#5423E7" stroke-width="1.5"/>
+                        <path d="M94,24 L86,44 L94,64 L102,44 Z" fill="rgba(255,51,102,.4)" stroke="#FF3366" stroke-width="1.5"/>
+                        <text x="18" y="49" fill="white" font-size="9" font-weight="bold" text-anchor="middle">1</text>
+                        <text x="34" y="49" fill="white" font-size="9" font-weight="bold" text-anchor="middle">2</text>
+                        <text x="78" y="49" fill="white" font-size="9" font-weight="bold" text-anchor="middle">3</text>
+                        <text x="94" y="49" fill="white" font-size="9" font-weight="bold" text-anchor="middle">4</text>
+                    </svg>
+                </div>
+                <div class="bg-white rounded-2xl p-3 text-center">
+                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Paraguas</p>
+                    <p class="text-3xl font-bold text-brand mt-0.5">4</p>
+                </div>
+            </div>
+            <div class="case-card bg-slate-50 rounded-3xl p-5 border border-slate-100">
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">3 rombos</p>
+                <div class="flex justify-center mb-3">
+                    <svg width="210" height="80" viewBox="0 0 210 80">
+                        <line x1="5" y1="12" x2="205" y2="12" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M16,12 L16,24" stroke="#cbd5e1" stroke-width="2"/>
+                        <path d="M16,24 L8,44 L16,64 L24,44 Z" fill="rgba(84,35,231,.5)" stroke="#5423E7" stroke-width="1.5"/>
+                        <path d="M32,24 L24,44 L32,64 L40,44 Z" fill="rgba(255,51,102,.4)" stroke="#FF3366" stroke-width="1.5"/>
+                        <path d="M76,12 L76,24" stroke="#cbd5e1" stroke-width="2"/>
+                        <path d="M76,24 L68,44 L76,64 L84,44 Z" fill="rgba(84,35,231,.5)" stroke="#5423E7" stroke-width="1.5"/>
+                        <path d="M92,24 L84,44 L92,64 L100,44 Z" fill="rgba(255,51,102,.4)" stroke="#FF3366" stroke-width="1.5"/>
+                        <path d="M136,12 L136,24" stroke="#cbd5e1" stroke-width="2"/>
+                        <path d="M136,24 L128,44 L136,64 L144,44 Z" fill="rgba(84,35,231,.5)" stroke="#5423E7" stroke-width="1.5"/>
+                        <path d="M152,24 L144,44 L152,64 L160,44 Z" fill="rgba(255,51,102,.4)" stroke="#FF3366" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="bg-white rounded-2xl p-3 text-center">
+                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Paraguas</p>
+                    <p class="text-3xl font-bold text-brand mt-0.5">6</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla: observar + resolver lo faltante -->
+        <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-lg border border-slate-100 mb-8">
+            <h3 class="font-semibold text-sm mb-5 flex items-center gap-2">
+                <iconify-icon icon="lucide:table" width="18" class="text-brand"></iconify-icon>
+                Completa la tabla
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-center">
+                    <thead>
+                        <tr class="border-b-2 border-slate-200">
+                            <th class="py-3 px-2 text-xs font-bold uppercase tracking-widest text-slate-400">Rombos (r)</th>
+                            <th class="py-3 px-2 text-xs font-bold text-slate-600">1</th>
+                            <th class="py-3 px-2 text-xs font-bold text-slate-600">2</th>
+                            <th class="py-3 px-2 text-xs font-bold text-slate-600">3</th>
+                            <th class="py-3 px-2 text-xs font-bold text-slate-600">4</th>
+                            <th class="py-3 px-2 text-xs font-bold text-slate-600">5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="py-4 px-2 text-sm font-semibold text-slate-500">Paraguas (P)</td>
+                            <td class="py-4 px-2 text-lg font-bold text-brand">2</td>
+                            <td class="py-4 px-2 text-lg font-bold text-brand">4</td>
+                            <td class="py-4 px-2 text-lg font-bold text-brand">6</td>
+                            <td class="py-4 px-2"><input type="number" id="tabla-4" class="student-input text-sm !py-2 !px-2 w-20 mx-auto" placeholder="?"></td>
+                            <td class="py-4 px-2"><input type="number" id="tabla-5" class="student-input text-sm !py-2 !px-2 w-20 mx-auto" placeholder="?"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex justify-center mt-5">
+                <button onclick="checkTabla()" class="check-btn bg-brand hover:bg-brand/90 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl flex items-center gap-2">
+                    <iconify-icon icon="lucide:check" width="14"></iconify-icon> Verificar tabla
+                </button>
+            </div>
+            <div id="feedback-tabla" class="mt-4 text-sm text-center hidden"></div>
+        </div>
+
+        <!-- Expresión paraguas: TEORÍA EXPLICADA -->
+        <div class="bg-slate-50 rounded-3xl p-6 lg:p-8 border border-slate-100 mb-8">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+                    <iconify-icon icon="lucide:lightbulb" width="20" class="text-accent"></iconify-icon>
+                </div>
+                <h3 class="font-oswald text-xl font-bold uppercase tracking-tight">Análisis del patrón</h3>
+            </div>
+            <div class="space-y-3 mb-6">
+                <div class="flex items-start gap-3">
+                    <span class="text-brand font-bold text-sm mt-0.5">•</span>
+                    <p class="text-slate-600 text-sm leading-relaxed">La sucesión de paraguas es: <strong>2, 4, 6, 8, 10, …</strong></p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-brand font-bold text-sm mt-0.5">•</span>
+                    <p class="text-slate-600 text-sm leading-relaxed">La diferencia constante entre términos consecutivos es <strong>d = 2</strong> (cada rombo nuevo agrega 2 paraguas).</p>
+                </div>
+                <div class="flex items-start gap-3">
+                    <span class="text-brand font-bold text-sm mt-0.5">•</span>
+                    <p class="text-slate-600 text-sm leading-relaxed">Cada rombo está formado por <strong>2 paraguas</strong>, entonces la expresión es:</p>
+                </div>
+            </div>
+            <div class="formula-highlight rounded-2xl p-5 text-center">
+                <p class="font-oswald text-2xl font-bold text-dark tracking-tight">P = 2r</p>
+                <p class="text-slate-500 text-sm mt-2">donde <strong>r</strong> = número de rombos y <strong>P</strong> = número de paraguas</p>
+            </div>
+            <!-- Nota lapicito -->
+            <div class="flex items-start gap-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-2xl p-5 mt-6">
+                <div class="note-icon bg-amber-400 text-white mt-0.5">
+                    <iconify-icon icon="lucide:pencil" width="16"></iconify-icon>
+                </div>
+                <div>
+                    <p class="text-dark font-semibold text-sm">Anota esto</p>
+                    <p class="text-slate-600 text-sm mt-1">Aquí el primer término es <strong>a₁ = 2</strong> y la razón es <strong>d = 2</strong>. Como a₁ = d, la expresión se simplifica a <strong>P = 2r</strong>. No todos los patrones tienen un término independiente como en el caso de las láminas.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aplicar paraguas: RESOLVER -->
+        <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-lg border-2 border-accent/20">
+            <h3 class="font-oswald text-xl font-bold uppercase tracking-tight mb-2">Aplica la expresión P = 2r</h3>
+            <p class="text-slate-500 text-sm mb-6">Calcula cuántos paraguas hay para cada cantidad de rombos.</p>
+            <div class="grid sm:grid-cols-3 gap-5">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">r = 8</p>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-slate-500 text-sm">P =</span>
+                        <input type="number" id="para-8" class="student-input text-sm !py-2 !px-3 flex-1" placeholder="?">
+                    </div>
+                    <button onclick="checkAnswer('para-8',16)" class="check-btn w-full bg-accent/10 hover:bg-accent/20 text-accent font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl flex items-center justify-center gap-2">
+                        <iconify-icon icon="lucide:check" width="14"></iconify-icon> Verificar
+                    </button>
+                    <div id="feedback-para-8" class="mt-3 text-sm text-center hidden"></div>
+                </div>
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">r = 12</p>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-slate-500 text-sm">P =</span>
+                        <input type="number" id="para-12" class="student-input text-sm !py-2 !px-3 flex-1" placeholder="?">
+                    </div>
+                    <button onclick="checkAnswer('para-12',24)" class="check-btn w-full bg-accent/10 hover:bg-accent/20 text-accent font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl flex items-center justify-center gap-2">
+                        <iconify-icon icon="lucide:check" width="14"></iconify-icon> Verificar
+                    </button>
+                    <div id="feedback-para-12" class="mt-3 text-sm text-center hidden"></div>
+                </div>
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">r = 20</p>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-slate-500 text-sm">P =</span>
+                        <input type="number" id="para-20" class="student-input text-sm !py-2 !px-3 flex-1" placeholder="?">
+                    </div>
+                    <button onclick="checkAnswer('para-20',40)" class="check-btn w-full bg-accent/10 hover:bg-accent/20 text-accent font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl flex items-center justify-center gap-2">
+                        <iconify-icon icon="lucide:check" width="14"></iconify-icon> Verificar
+                    </button>
+                    <div id="feedback-para-20" class="mt-3 text-sm text-center hidden"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- TRABAJO EN GRUPO -->
+<section class="py-14 lg:py-18 bg-dark text-white">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+        <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 lg:p-10 text-center">
+            <div class="inline-flex items-center gap-2 bg-green-500/20 text-green-300 rounded-full px-4 py-2 mb-5">
+                <iconify-icon icon="lucide:users" width="16"></iconify-icon>
+                <span class="text-xs font-bold uppercase tracking-wider">Trabajo en grupo</span>
+            </div>
+            <h3 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight mb-3">Encuentra otro patrón</h3>
+            <p class="text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-6">
+                En equipos de 3, busquen un patrón numérico en su entorno (escalones del aula, baldosas del patio, sillas apiladas). Dibujen los primeros 3 casos, escriban la expresión general y verifíquenla.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 text-sm text-white/40">
+                <span class="flex items-center gap-1"><iconify-icon icon="lucide:clock" width="14"></iconify-icon> 12 minutos</span>
+                <span class="flex items-center gap-1"><iconify-icon icon="lucide:presentation" width="14"></iconify-icon> 2 min por equipo</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CALCULADORA -->
+<section class="py-14 lg:py-20">
+    <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-10 anim-slide">
+            <span class="text-brand text-xs font-bold uppercase tracking-widest">Herramienta</span>
+            <h2 class="font-oswald text-3xl lg:text-4xl font-bold uppercase tracking-tight mt-3">Calculadora de patrones</h2>
+            <p class="text-slate-500 mt-3 text-sm">Verifica cualquier término de una sucesión aritmética</p>
+        </div>
+        <div class="bg-white rounded-3xl p-6 lg:p-10 shadow-xl border border-slate-100 anim-slide delay-200">
+            <div class="grid sm:grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 block">Primer término (a₁)</label>
+                    <input type="number" id="calc-a1" value="6" class="student-input" oninput="calcPattern()">
+                </div>
+                <div>
+                    <label class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 block">Diferencia (d)</label>
+                    <input type="number" id="calc-d" value="3" class="student-input" oninput="calcPattern()">
+                </div>
+                <div>
+                    <label class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2 block">Posición (n)</label>
+                    <input type="number" id="calc-n" value="10" min="1" class="student-input" oninput="calcPattern()">
+                </div>
+            </div>
+            <div id="calc-output" class="bg-slate-50 rounded-2xl p-6"></div>
+            <div class="mt-6"><canvas id="chartCanvas" width="800" height="250" class="w-full rounded-xl"></canvas></div>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-dark text-white py-8">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+        <p class="text-white/40 text-sm">Matemáticas · 1.1 Patrones Numéricos · El Salvador</p>
+    </div>
+</footer>
+
+<script>
+function showFeedback(id,ok,hint){
+    const el=document.getElementById(id);el.classList.remove('hidden');
+    el.innerHTML=ok?'<span class="inline-flex items-center gap-2 text-green-600"><span class="feedback-icon bg-green-100 text-green-600">✓</span> ¡Correcto!</span>':'<span class="inline-flex items-center gap-2 text-red-500"><span class="feedback-icon bg-red-100 text-red-500">✗</span> '+(hint||'Intenta de nuevo')+'</span>';
+}
+function setBorder(id,ok){
+    const inp=document.getElementById(id);inp.classList.remove('correct','incorrect');inp.classList.add(ok?'correct':'incorrect');
+    if(!ok)setTimeout(()=>{inp.classList.remove('incorrect');inp.value='';inp.focus()},1500);
+}
+function checkAnswer(id,val){
+    const v=parseInt(document.getElementById(id).value);const ok=v===val;setBorder(id,ok);
+    showFeedback('feedback-'+id,ok,'Revisa tu cálculo');
+    showToast(ok?'¡Correcto!':'Incorrecto, intenta de nuevo',ok?'lucide:check-circle':'lucide:x-circle');
+}
+function checkTabla(){
+    const v4=parseInt(document.getElementById('tabla-4').value),v5=parseInt(document.getElementById('tabla-5').value);
+    setBorder('tabla-4',v4===8);setBorder('tabla-5',v5===10);
+    const fb=document.getElementById('feedback-tabla');fb.classList.remove('hidden');
+    if(v4===8&&v5===10){fb.innerHTML='<span class="inline-flex items-center gap-2 text-green-600"><span class="feedback-icon bg-green-100 text-green-600">✓</span> ¡Tabla correcta!</span>';showToast('¡Correcto!','lucide:check-circle')}
+    else{fb.innerHTML='<span class="inline-flex items-center gap-2 text-red-500"><span class="feedback-icon bg-red-100 text-red-500">✗</span> Revisa la diferencia constante</span>';showToast('Hay errores','lucide:x-circle')}
+}
+function calcPattern(){
+    const a1=parseFloat(document.getElementById('calc-a1').value),d=parseFloat(document.getElementById('calc-d').value),n=parseInt(document.getElementById('calc-n').value),out=document.getElementById('calc-output');
+    if(isNaN(a1)||isNaN(d)||isNaN(n)||n<1){out.innerHTML='<p class="text-slate-400 text-sm text-center">Ingresa valores válidos</p>';return}
+    const an=a1+(n-1)*d;let th='';const show=Math.min(n,12);
+    for(let i=1;i<=show;i++){const v=a1+(i-1)*d;th+='<span class="inline-flex items-center justify-center min-w-[40px] h-10 rounded-lg text-sm font-bold '+(i===n?'bg-brand text-white':'bg-white text-slate-600 border border-slate-200')+'">'+v+'</span>'}
+    if(n>12)th+='<span class="text-slate-400 text-sm ml-1">…</span>';
+    out.innerHTML='<div class="grid sm:grid-cols-2 gap-4 mb-4"><div class="bg-white rounded-xl p-4 border border-slate-100"><p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Fórmula</p><p class="text-sm text-slate-600">a<sub>n</sub> = a<sub>1</sub> + (n − 1) × d</p><p class="text-sm text-slate-600 mt-1">a<sub>'+n+'</sub> = '+a1+' + ('+n+'−1) × '+d+' = '+a1+' + '+((n-1)*d)+'</p></div><div class="bg-brand/5 rounded-xl p-4 border border-brand/10 text-center"><p class="text-xs font-bold uppercase tracking-widest text-brand mb-1">Resultado</p><p class="text-3xl font-bold text-brand">a<sub>'+n+'</sub> = '+an+'</p></div></div><p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Sucesión</p><div class="flex flex-wrap gap-2">'+th+'</div>';
+    drawChart(a1,d,n);
+}
+function drawChart(a1,d,n){
+    const c=document.getElementById('chartCanvas'),ctx=c.getContext('2d'),dp=window.devicePixelRatio||1,r=c.getBoundingClientRect();
+    c.width=r.width*dp;c.height=250*dp;ctx.scale(dp,dp);const W=r.width,H=250;ctx.clearRect(0,0,W,H);
+    const mN=Math.max(n,5),vs=[];for(let i=1;i<=mN;i++)vs.push(a1+(i-1)*d);
+    const mn=Math.min(...vs),mx=Math.max(...vs),rng=mx-mn||1,p={t:25,r:25,b:40,l:50},cW=W-p.l-p.r,cH=H-p.t-p.b;
+    ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=1;for(let i=0;i<=4;i++){const y=p.t+(cH/4)*i;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(W-p.r,y);ctx.stroke()}
+    ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(p.l,p.t);ctx.lineTo(p.l,H-p.b);ctx.lineTo(W-p.r,H-p.b);ctx.stroke();
+    ctx.fillStyle='#94a3b8';ctx.font='10px Inter';ctx.textAlign='right';for(let i=0;i<=4;i++)ctx.fillText(Math.round(mx-(rng/4)*i),p.l-8,p.t+(cH/4)*i+4);
+    const pts=vs.map((v,i)=>({x:p.l+(i/(mN-1||1))*cW,y:p.t+cH-((v-mn)/rng)*cH,v,n:i+1}));
+    ctx.beginPath();ctx.moveTo(pts[0].x,H-p.b);pts.forEach(pp=>ctx.lineTo(pp.x,pp.y));ctx.lineTo(pts[pts.length-1].x,H-p.b);ctx.closePath();
+    const ag=ctx.createLinearGradient(0,p.t,0,H-p.b);ag.addColorStop(0,'rgba(84,35,231,0.12)');ag.addColorStop(1,'rgba(84,35,231,0.01)');ctx.fillStyle=ag;ctx.fill();
+    const lg=ctx.createLinearGradient(p.l,0,W-p.r,0);lg.addColorStop(0,'#5423E7');lg.addColorStop(1,'#FF3366');
+    ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.strokeStyle=lg;ctx.lineWidth=2.5;ctx.stroke();
+    pts.forEach(pp=>{ctx.beginPath();ctx.arc(pp.x,pp.y,pp.n===n?7:4,0,Math.PI*2);ctx.fillStyle=pp.n===n?'#FF3366':'#5423E7';ctx.fill();if(pp.n===n){ctx.beginPath();ctx.arc(pp.x,pp.y,3,0,Math.PI*2);ctx.fillStyle='white';ctx.fill()}});
+    ctx.fillStyle='#94a3b8';ctx.font='10px Inter';ctx.textAlign='center';pts.forEach((pp,i)=>{if(i%Math.ceil(mN/8)===0||pp.n===n)ctx.fillText(pp.n,pp.x,H-p.b+16)});
+    const tg=pts.find(pp=>pp.n===n);if(tg){ctx.fillStyle='#FF3366';ctx.font='bold 12px Inter';ctx.textAlign='center';ctx.fillText('('+tg.n+', '+tg.v+')',tg.x,tg.y-12)}
+    ctx.fillStyle='#64748b';ctx.font='bold 11px Inter';ctx.textAlign='center';ctx.fillText('n',W/2,H-4);ctx.save();ctx.translate(12,H/2);ctx.rotate(-Math.PI/2);ctx.fillText('aₙ',0,0);ctx.restore();
+}
+function showToast(msg,icon){const t=document.getElementById('toast');document.getElementById('toast-msg').textContent=msg;document.getElementById('toast-icon').setAttribute('icon',icon);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.style.animationPlayState='running'})},{threshold:.1});
+document.addEventListener('DOMContentLoaded',()=>{calcPattern();document.querySelectorAll('.anim-slide').forEach(el=>{el.style.animationPlayState='paused';obs.observe(el)});document.querySelectorAll('section:first-of-type .anim-slide').forEach(el=>el.style.animationPlayState='running');window.addEventListener('resize',calcPattern)});
+</script>
+</body>
+</html>
