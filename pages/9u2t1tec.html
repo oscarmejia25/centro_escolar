@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabajo y Energía Cinética | Ciencias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config={theme:{extend:{fontFamily:{inter:['Inter','sans-serif'],oswald:['Oswald','sans-serif']},colors:{brand:'#5423E7',accent:'#FF3366',dark:'#0f172a'}}}}
+    </script>
+    <style>
+        *{font-family:'Inter',sans-serif}.font-oswald{font-family:'Oswald',sans-serif}
+        @keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .anim-slide{animation:slideIn .8s cubic-bezier(.16,1,.3,1) both}
+        .delay-100{animation-delay:100ms}.delay-200{animation-delay:200ms}.delay-300{animation-delay:300ms}.delay-400{animation-delay:400ms}.delay-500{animation-delay:500ms}
+        .note-icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;flex-shrink:0}
+        .blob{position:absolute;border-radius:9999px;filter:blur(64px);opacity:.15;pointer-events:none}
+        .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);transition:transform .4s cubic-bezier(.16,1,.3,1),opacity .4s;opacity:0;z-index:1000}
+        .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+        .student-input{border:2px solid #e2e8f0;border-radius:10px;padding:8px 12px;font-size:.95rem;font-weight:600;text-align:center;transition:all .3s;background:#fff;width:100%}
+        .student-input:focus{outline:none;border-color:#5423E7;box-shadow:0 0 0 3px rgba(84,35,231,.1)}
+        .student-input.correct{border-color:#22c55e;background:#f0fdf4}
+        .student-input.incorrect{border-color:#ef4444;background:#fef2f2}
+        .check-btn{transition:all .3s}.check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(84,35,231,.3)}
+        .feedback-icon{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+        .theory-step{position:relative;padding-left:3rem}
+        .theory-step .step-num{position:absolute;left:0;top:0;width:2.2rem;height:2.2rem;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;color:#fff}
+        .force-card{transition:all .3s;cursor:pointer}
+        .force-card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.08)}
+        .force-card.selected{border-color:#5423E7!important;background:rgba(84,35,231,.05)!important}
+        .force-card.correct-pick{border-color:#22c55e!important;background:rgba(34,197,94,.05)!important}
+        .force-card.wrong-pick{border-color:#ef4444!important;background:rgba(239,68,68,.05)!important}
+        .quiz-opt{transition:all .3s;cursor:pointer}
+        .quiz-opt:hover{transform:translateX(4px);border-color:#5423E7}
+        .quiz-opt.picked-correct{border-color:#22c55e!important;background:rgba(34,197,94,.08)!important}
+        .quiz-opt.picked-wrong{border-color:#ef4444!important;background:rgba(239,68,68,.08)!important}
+        ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#f1f5f9}::-webkit-scrollbar-thumb{background:#5423E7;border-radius:4px}
+    </style>
+</head>
+<body class="bg-white text-dark">
+
+<div id="toast" class="toast bg-dark text-white px-6 py-3 rounded-2xl shadow-2xl font-medium text-sm flex items-center gap-3">
+    <iconify-icon id="toast-icon" icon="lucide:check-circle" width="20"></iconify-icon>
+    <span id="toast-msg"></span>
+</div>
+
+<!-- HERO -->
+<section class="relative py-14 lg:py-18 bg-gradient-to-br from-dark via-[#1a1f3a] to-dark overflow-hidden">
+    <div class="blob w-80 h-80 bg-brand top-[-60px] right-[-60px]"></div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <div class="flex items-center gap-4 anim-slide">
+            <div class="w-14 h-14 rounded-2xl bg-brand flex items-center justify-center text-white text-2xl flex-shrink-0">⚡</div>
+            <div>
+                <p class="text-white/40 text-xs font-bold uppercase tracking-widest">Ciencias · Física</p>
+                <h1 class="font-oswald text-3xl lg:text-5xl font-bold text-white uppercase tracking-tighter leading-[.9]">Trabajo y energía<br>cinética en rampas</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTENIDO -->
+<section class="py-14 lg:py-20">
+<div class="max-w-5xl mx-auto px-6 lg:px-8">
+
+    <!-- ========== TEORÍA: ¿Qué es el trabajo? ========== -->
+    <div class="mb-14 anim-slide">
+        <div class="flex items-center gap-3 mb-6">
+            <iconify-icon icon="lucide:book-open" width="22" class="text-brand"></iconify-icon>
+            <h2 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight">Conceptos clave</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center text-xl">🔧</div>
+                    <h3 class="font-oswald text-lg font-bold uppercase tracking-tight">Trabajo (W)</h3>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">El <strong>trabajo</strong> que realiza una fuerza sobre un objeto es igual al producto de la fuerza por la distancia que se desplaza en la dirección de la fuerza.</p>
+                <div class="bg-white rounded-xl p-4 text-center border border-slate-100">
+                    <p class="font-oswald text-2xl font-bold text-brand">W = F × d</p>
+                    <p class="text-slate-400 text-xs mt-1">F = fuerza (N) · d = desplazamiento (m)</p>
+                </div>
+            </div>
+            <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-xl">🏃</div>
+                    <h3 class="font-oswald text-lg font-bold uppercase tracking-tight">Energía cinética (Ec)</h3>
+                </div>
+                <p class="text-slate-600 text-sm leading-relaxed mb-3">La <strong>energía cinética</strong> es la energía que tiene un objeto debido a su movimiento. Depende de su masa y su velocidad.</p>
+                <div class="bg-white rounded-xl p-4 text-center border border-slate-100">
+                    <p class="font-oswald text-2xl font-bold text-accent">Ec = ½mv²</p>
+                    <p class="text-slate-400 text-xs mt-1">m = masa (kg) · v = velocidad (m/s)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nota cuaderno -->
+        <div class="flex items-start gap-4 bg-brand/5 border-l-4 border-brand rounded-r-2xl p-5">
+            <div class="note-icon bg-brand text-white mt-0.5">
+                <iconify-icon icon="lucide:notebook-pen" width="16"></iconify-icon>
+            </div>
+            <div>
+                <p class="text-dark font-semibold text-sm">En tu cuaderno</p>
+                <p class="text-slate-600 text-sm mt-1">El <strong>Teorema del trabajo y la energía cinética</strong> dice que el trabajo neto sobre un objeto es igual al cambio en su energía cinética: <strong>W = ΔEc = Ec final − Ec inicial</strong>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CONTEXTO: Rampa en El Salvador ========== -->
+    <div class="mb-14 anim-slide delay-100">
+        <div class="flex items-center gap-3 mb-6">
+            <iconify-icon icon="lucide:map-pin" width="22" class="text-brand"></iconify-icon>
+            <h2 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight">La situación</h2>
+        </div>
+        <p class="text-slate-600 mb-8 text-sm leading-relaxed">En una bodega de distribución de El Salvador, los trabajadores usan una rampa para subir cajas de productos desde el nivel del suelo hasta la plataforma de carga. Observa el diagrama.</p>
+
+        <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-lg border border-slate-100">
+            <!-- Diagrama de rampa SVG -->
+            <div class="flex justify-center mb-6">
+                <svg viewBox="0 0 500 280" class="w-full max-w-lg" style="filter:drop-shadow(0 4px 12px rgba(0,0,0,.08))">
+                    <!-- Suelo -->
+                    <rect x="0" y="240" width="500" height="40" fill="#e2e8f0" rx="4"/>
+                    <line x1="0" y1="240" x2="500" y2="240" stroke="#94a3b8" stroke-width="2"/>
+                    <!-- Plataforma -->
+                    <rect x="340" y="190" width="160" height="50" fill="#cbd5e1" rx="4" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="420" y="220" fill="#64748b" font-size="11" font-weight="bold" text-anchor="middle">Plataforma</text>
+                    <!-- Rampa (triángulo) -->
+                    <polygon points="80,240 340,190 80,190" fill="#f1f5f9" stroke="#5423E7" stroke-width="2"/>
+                    <!-- Caja en la rampa -->
+                    <rect x="170" y="196" width="50" height="40" rx="4" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+                    <text x="195" y="221" fill="#92400e" font-size="11" font-weight="bold" text-anchor="middle">Caja</text>
+                    <!-- Flecha de subida -->
+                    <line x1="140" y1="230" x2="200" y2="200" stroke="#22c55e" stroke-width="2.5" marker-end="url(#arrowG)"/>
+                    <text x="145" y="225" fill="#22c55e" font-size="10" font-weight="bold">F</text>
+                    <!-- Medidas -->
+                    <!-- Altura -->
+                    <line x1="70" y1="190" x2="70" y2="240" stroke="#FF3366" stroke-width="2" stroke-dasharray="4"/>
+                    <text x="55" y="220" fill="#FF3366" font-size="12" font-weight="bold" text-anchor="end">1.50 m</text>
+                    <!-- Base -->
+                    <line x1="80" y1="255" x2="340" y2="255" stroke="#5423E7" stroke-width="2" stroke-dasharray="4"/>
+                    <text x="210" y="272" fill="#5423E7" font-size="12" font-weight="bold" text-anchor="middle">2.00 m</text>
+                    <!-- Ángulo -->
+                    <path d="M110,240 A30,30 0 0,1 100,218" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+                    <text x="118" y="232" fill="#f59e0b" font-size="11" font-weight="bold">θ</text>
+                    <!-- Peso -->
+                    <line x1="195" y1="236" x2="195" y2="260" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowR)"/>
+                    <text x="210" y="258" fill="#ef4444" font-size="10" font-weight="bold">P</text>
+                    <!-- Normal -->
+                    <line x1="195" y1="216" x2="170" y2="195" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowB)"/>
+                    <text x="158" y="200" fill="#3b82f6" font-size="10" font-weight="bold">N</text>
+                    <!-- Defs -->
+                    <defs>
+                        <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#22c55e"/></marker>
+                        <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#ef4444"/></marker>
+                        <marker id="arrowB" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0,0 8,3 0,6" fill="#3b82f6"/></marker>
+                    </defs>
+                </svg>
+            </div>
+            <div class="grid sm:grid-cols-3 gap-4 text-center">
+                <div class="bg-slate-50 rounded-xl p-3">
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Altura</p>
+                    <p class="text-xl font-bold text-accent">h = 1.50 m</p>
+                </div>
+                <div class="bg-slate-50 rounded-xl p-3">
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Base</p>
+                    <p class="text-xl font-bold text-brand">d = 2.00 m</p>
+                </div>
+                <div class="bg-slate-50 rounded-xl p-3">
+                    <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Masa de la caja</p>
+                    <p class="text-xl font-bold text-dark">m = 20 kg</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TEORÍA: Diagrama de cuerpo libre ========== -->
+    <div class="mb-14 anim-slide delay-200">
+        <div class="flex items-center gap-3 mb-6">
+            <iconify-icon icon="lucide:lightbulb" width="22" class="text-green-500"></iconify-icon>
+            <h2 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight">Diagrama de cuerpo libre</h2>
+        </div>
+
+        <div class="bg-slate-50 rounded-3xl p-6 lg:p-8 border border-slate-100 mb-6">
+            <div class="space-y-4">
+                <div class="theory-step">
+                    <div class="step-num bg-brand">1</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Se dibuja el objeto <strong>aislado</strong> (solo la caja, sin la rampa ni el suelo).</p>
+                </div>
+                <div class="theory-step">
+                    <div class="step-num bg-brand">2</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Se representan <strong>todas las fuerzas</strong> que actúan sobre él como flechas (vectores) que salen del centro del objeto.</p>
+                </div>
+                <div class="theory-step">
+                    <div class="step-num bg-green-500">3</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">En una rampa, sobre la caja actúan: el <strong class="text-red-500">peso (P)</strong> hacia abajo, la <strong class="text-blue-500">normal (N)</strong> perpendicular a la rampa, y la <strong class="text-green-500">fuerza aplicada (F)</strong> paralela a la rampa hacia arriba. También puede haber <strong class="text-orange-500">fricción (f)</strong> opuesta al movimiento.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nota lapicito -->
+        <div class="flex items-start gap-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-2xl p-5">
+            <div class="note-icon bg-amber-400 text-white mt-0.5">
+                <iconify-icon icon="lucide:pencil" width="16"></iconify-icon>
+            </div>
+            <div>
+                <p class="text-dark font-semibold text-sm">Anota esto</p>
+                <p class="text-slate-600 text-sm mt-1">El <strong>peso P = mg</strong> siempre apunta hacia abajo. La <strong>normal N</strong> es perpendicular a la superficie de contacto. La <strong>fricción f</strong> se opone al movimiento. La <strong>fuerza F</strong> es la que aplica el trabajador.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== RESOLVER: Seleccionar fuerzas del DCL ========== -->
+    <div class="bg-white rounded-3xl p-6 lg:p-10 shadow-lg border-2 border-brand/20 mb-14 anim-slide delay-300">
+        <div class="flex items-start gap-4 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-brand/10 flex items-center justify-center flex-shrink-0">
+                <iconify-icon icon="lucide:pen-tool" width="22" class="text-brand"></iconify-icon>
+            </div>
+            <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-brand mb-1">Ejercicio</p>
+                <h3 class="font-oswald text-lg lg:text-xl font-bold uppercase tracking-tight">Selecciona las fuerzas que actúan sobre la caja en la rampa</h3>
+                <p class="text-slate-500 text-sm mt-1">Haz clic en todas las fuerzas que deben aparecer en el diagrama de cuerpo libre.</p>
+            </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="force-card bg-white border-2 border-slate-100 rounded-2xl p-4 text-center" id="f-peso" onclick="toggleForce('peso')">
+                <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center mx-auto mb-2">
+                    <svg width="28" height="28"><line x1="14" y1="4" x2="14" y2="24" stroke="#ef4444" stroke-width="3"/><polygon points="8,20 14,28 20,20" fill="#ef4444"/></svg>
+                </div>
+                <p class="font-semibold text-sm">Peso (P)</p>
+                <p class="text-slate-400 text-xs">Hacia abajo</p>
+            </div>
+            <div class="force-card bg-white border-2 border-slate-100 rounded-2xl p-4 text-center" id="f-normal" onclick="toggleForce('normal')">
+                <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mx-auto mb-2">
+                    <svg width="28" height="28"><line x1="20" y1="22" x2="8" y2="6" stroke="#3b82f6" stroke-width="3"/><polygon points="4,10 8,2 12,10" fill="#3b82f6" transform="rotate(-50,8,6)"/></svg>
+                </div>
+                <p class="font-semibold text-sm">Normal (N)</p>
+                <p class="text-slate-400 text-xs">Perpendicular a rampa</p>
+            </div>
+            <div class="force-card bg-white border-2 border-slate-100 rounded-2xl p-4 text-center" id="f-fuerza" onclick="toggleForce('fuerza')">
+                <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center mx-auto mb-2">
+                    <svg width="28" height="28"><line x1="6" y1="22" x2="22" y2="6" stroke="#22c55e" stroke-width="3"/><polygon points="18,2 24,8 16,10" fill="#22c55e"/></svg>
+                </div>
+                <p class="font-semibold text-sm">Fuerza (F)</p>
+                <p class="text-slate-400 text-xs">Hacia arriba por rampa</p>
+            </div>
+            <div class="force-card bg-white border-2 border-slate-100 rounded-2xl p-4 text-center" id="f-friccion" onclick="toggleForce('friccion')">
+                <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mx-auto mb-2">
+                    <svg width="28" height="28"><line x1="22" y1="6" x2="6" y2="22" stroke="#f59e0b" stroke-width="3"/><polygon points="2,18 8,24 10,16" fill="#f59e0b"/></svg>
+                </div>
+                <p class="font-semibold text-sm">Fricción (f)</p>
+                <p class="text-slate-400 text-xs">Hacia abajo por rampa</p>
+            </div>
+        </div>
+        <div class="flex justify-center gap-3">
+            <button onclick="checkForces()" class="check-btn bg-brand hover:bg-brand/90 text-white font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl flex items-center gap-2">
+                <iconify-icon icon="lucide:check" width="14"></iconify-icon> Verificar
+            </button>
+            <button onclick="resetForces()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl transition-all">Limpiar</button>
+        </div>
+        <div id="feedback-forces" class="mt-4 text-sm text-center hidden"></div>
+    </div>
+
+    <!-- ========== TEORÍA: Condiciones de equilibrio y cálculo ========== -->
+    <div class="mb-14 anim-slide delay-400">
+        <div class="flex items-center gap-3 mb-6">
+            <iconify-icon icon="lucide:calculator" width="22" class="text-brand"></iconify-icon>
+            <h2 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight">Condiciones de equilibrio</h2>
+        </div>
+
+        <div class="bg-slate-50 rounded-3xl p-6 lg:p-8 border border-slate-100 mb-6">
+            <p class="text-slate-600 text-sm leading-relaxed mb-5">Para que la caja permanezca en <strong>equilibrio</strong> sobre la rampa (sin moverse), la suma de todas las fuerzas en cada dirección debe ser igual a cero.</p>
+
+            <div class="space-y-4">
+                <div class="theory-step">
+                    <div class="step-num bg-brand">1</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Primero calculamos el <strong>ángulo θ</strong> de la rampa usando trigonometría:</p>
+                    <div class="bg-white rounded-xl p-4 mt-2 border border-slate-100 text-center">
+                        <p class="text-sm text-slate-500">tan θ = altura / base = 1.50 / 2.00 = 0.75</p>
+                        <p class="font-oswald text-xl font-bold text-brand mt-1">θ = 36.87°</p>
+                    </div>
+                </div>
+                <div class="theory-step">
+                    <div class="step-num bg-brand">2</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">El peso de la caja es:</p>
+                    <div class="bg-white rounded-xl p-4 mt-2 border border-slate-100 text-center">
+                        <p class="text-sm text-slate-500">P = m × g = 20 kg × 9.8 m/s²</p>
+                        <p class="font-oswald text-xl font-bold text-accent mt-1">P = 196 N</p>
+                    </div>
+                </div>
+                <div class="theory-step">
+                    <div class="step-num bg-green-500">3</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">La componente del peso <strong>paralela a la rampa</strong> (la que la hace resbalar) es:</p>
+                    <div class="bg-white rounded-xl p-4 mt-2 border border-slate-100 text-center">
+                        <p class="text-sm text-slate-500">P<sub>paralela</sub> = P × sen θ = 196 × sen(36.87°)</p>
+                        <p class="font-oswald text-xl font-bold text-green-500 mt-1">P<sub>paralela</sub> = 117.6 N</p>
+                    </div>
+                </div>
+                <div class="theory-step">
+                    <div class="step-num bg-accent">4</div>
+                    <p class="text-slate-600 text-sm leading-relaxed">Para mantener el <strong>equilibrio</strong>, la fuerza aplicada debe ser igual a la componente paralela del peso (si despreciamos fricción):</p>
+                    <div class="bg-white rounded-xl p-4 mt-2 border border-slate-100 text-center">
+                        <p class="font-oswald text-xl font-bold text-dark">F = P<sub>paralela</sub> = 117.6 N</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nota cuaderno -->
+        <div class="flex items-start gap-4 bg-brand/5 border-l-4 border-brand rounded-r-2xl p-5">
+            <div class="note-icon bg-brand text-white mt-0.5">
+                <iconify-icon icon="lucide:notebook-pen" width="16"></iconify-icon>
+            </div>
+            <div>
+                <p class="text-dark font-semibold text-sm">En tu cuaderno</p>
+                <p class="text-slate-600 text-sm mt-1">La componente del peso paralela a la rampa es <strong>P × sen θ</strong>. Para subir la caja con velocidad constante, necesitas una fuerza <strong>mayor</strong> que esta componente para vencerla. El <strong>trabajo</strong> realizado es W = F × d (distancia por la rampa).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== RESOLVER: Calcular valores ========== -->
+    <div class="bg-white rounded-3xl p-6 lg:p-10 shadow-lg border-2 border-accent/20 mb-14 anim-slide delay-500">
+        <div class="flex items-start gap-4 mb-6">
+            <div class="w-12 h-12 rounded-2xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+                <iconify-icon icon="lucide:pen-tool" width="22" class="text-accent"></iconify-icon>
+            </div>
+            <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-accent mb-1">Calcula</p>
+                <h3 class="font-oswald text-lg lg:text-xl font-bold uppercase tracking-tight">Aplica lo aprendido</h3>
+                <p class="text-slate-500 text-sm mt-1">Usa los datos de la rampa (h=1.50m, d=2.00m, m=20kg, g=9.8 m/s²). Redondea a un decimal.</p>
+            </div>
+        </div>
+
+        <div class="space-y-5">
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <span class="text-sm text-slate-600 font-semibold w-56 flex-shrink-0">Longitud de la rampa (L):</span>
+                <input type="number" step="0.1" id="calc-L" class="student-input !w-32" placeholder="?">
+                <span class="text-slate-400 text-sm">m</span>
+                <button onclick="checkCalc('calc-L',2.5,'Usa Pitágoras: L = √(1.50² + 2.00²)')" class="check-btn bg-accent/10 hover:bg-accent/20 text-accent font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1">
+                    <iconify-icon icon="lucide:check" width="14"></iconify-icon>
+                </button>
+                <div id="feedback-calc-L" class="text-sm hidden"></div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <span class="text-sm text-slate-600 font-semibold w-56 flex-shrink-0">Peso de la caja (P):</span>
+                <input type="number" step="0.1" id="calc-P" class="student-input !w-32" placeholder="?">
+                <span class="text-slate-400 text-sm">N</span>
+                <button onclick="checkCalc('calc-P',196,'P = m × g = 20 × 9.8')" class="check-btn bg-accent/10 hover:bg-accent/20 text-accent font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1">
+                    <iconify-icon icon="lucide:check" width="14"></iconify-icon>
+                </button>
+                <div id="feedback-calc-P" class="text-sm hidden"></div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <span class="text-sm text-slate-600 font-semibold w-56 flex-shrink-0">Componente paralela (P×sen θ):</span>
+                <input type="number" step="0.1" id="calc-Pp" class="student-input !w-32" placeholder="?">
+                <span class="text-slate-400 text-sm">N</span>
+                <button onclick="checkCalc('calc-Pp',117.6,'P × sen(36.87°) = 196 × 0.6')" class="check-btn bg-accent/10 hover:bg-accent/20 text-accent font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1">
+                    <iconify-icon icon="lucide:check" width="14"></iconify-icon>
+                </button>
+                <div id="feedback-calc-Pp" class="text-sm hidden"></div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center gap-3">
+                <span class="text-sm text-slate-600 font-semibold w-56 flex-shrink-0">Trabajo para subir (W = F × L):</span>
+                <input type="number" step="0.1" id="calc-W" class="student-input !w-32" placeholder="?">
+                <span class="text-slate-400 text-sm">J</span>
+                <button onclick="checkCalc('calc-W',294,'W = 117.6 × 2.5')" class="check-btn bg-accent/10 hover:bg-accent/20 text-accent font-bold text-xs px-4 py-2.5 rounded-xl flex items-center gap-1">
+                    <iconify-icon icon="lucide:check" width="14"></iconify-icon>
+                </button>
+                <div id="feedback-calc-W" class="text-sm hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEPARADOR -->
+    <div class="border-t-2 border-slate-100 mb-14"></div>
+
+    <!-- ========== QUIZ ========== -->
+    <div class="mb-14 anim-slide">
+        <div class="text-center mb-10">
+            <span class="text-accent text-xs font-bold uppercase tracking-widest">Evalúa lo aprendido</span>
+            <h2 class="font-oswald text-3xl lg:text-4xl font-bold uppercase tracking-tight mt-3">Quiz rápido</h2>
+        </div>
+
+        <div class="space-y-6" id="quiz-container"></div>
+
+        <div id="quiz-result" class="hidden mt-10 text-center">
+            <div class="bg-gradient-to-br from-brand to-[#6333f0] rounded-3xl p-10 text-white">
+                <div id="result-emoji" class="text-6xl mb-4"></div>
+                <h3 id="result-title" class="font-oswald text-3xl font-bold uppercase tracking-tight"></h3>
+                <p id="result-text" class="text-white/70 mt-3 text-lg"></p>
+                <button onclick="resetQuiz()" class="mt-6 bg-white text-brand font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-full hover:bg-green-300 hover:text-dark transition-all">Intentar de nuevo</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+</section>
+
+<!-- TRABAJO EN GRUPO -->
+<section class="py-14 lg:py-18 bg-dark text-white">
+    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+        <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 lg:p-10 text-center">
+            <div class="inline-flex items-center gap-2 bg-green-500/20 text-green-300 rounded-full px-4 py-2 mb-5">
+                <iconify-icon icon="lucide:users" width="16"></iconify-icon>
+                <span class="text-xs font-bold uppercase tracking-wider">Trabajo en grupo</span>
+            </div>
+            <h3 class="font-oswald text-2xl lg:text-3xl font-bold uppercase tracking-tight mb-3">¿Por qué usar rampas?</h3>
+            <p class="text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-4">
+                En el mercado de San Salvador, los vendedores suben sacos de café de 50 kg a camionetas usando rampas de madera. En equipos de 3, respondan:
+            </p>
+            <div class="text-left max-w-lg mx-auto space-y-2 mb-6">
+                <p class="text-white/80 text-sm">1. ¿Qué ventaja tiene usar una rampa en lugar de levantar directamente?</p>
+                <p class="text-white/80 text-sm">2. Si la rampa es más larga, ¿la fuerza necesaria es mayor o menor? ¿Por qué?</p>
+                <p class="text-white/80 text-sm">3. ¿Qué sucede con el trabajo total? ¿Aumenta, disminuye o es el mismo?</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-4 text-sm text-white/40">
+                <span class="flex items-center gap-1"><iconify-icon icon="lucide:clock" width="14"></iconify-icon> 10 minutos</span>
+                <span class="flex items-center gap-1"><iconify-icon icon="lucide:presentation" width="14"></iconify-icon> 2 min por equipo</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-dark text-white py-8">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+        <p class="text-white/40 text-sm">Ciencias · Trabajo y Energía Cinética · El Salvador</p>
+    </div>
+</footer>
+
+<script>
+// Utilidades
+function showFeedback(id, ok, hint) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('hidden');
+    if (ok) {
+        el.innerHTML = '<span class="inline-flex items-center gap-2 text-green-600"><span class="feedback-icon bg-green-100 text-green-600">&#10003;</span> Correcto</span>';
+    } else {
+        el.innerHTML = '<span class="inline-flex items-center gap-2 text-red-500"><span class="feedback-icon bg-red-100 text-red-500">&#10007;</span> ' + (hint || 'Intenta de nuevo') + '</span>';
+    }
+}
+function setBorder(id, ok) {
+    var inp = document.getElementById(id);
+    if (!inp) return;
+    inp.classList.remove('correct', 'incorrect');
+    inp.classList.add(ok ? 'correct' : 'incorrect');
+    if (!ok) {
+        setTimeout(function() { inp.classList.remove('incorrect'); inp.value = ''; inp.focus(); }, 1500);
+    }
+}
+function showToast(msg, icon) {
+    var t = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    document.getElementById('toast-icon').setAttribute('icon', icon);
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+// Selección de fuerzas
+var selectedForces = {};
+function toggleForce(name) {
+    var el = document.getElementById('f-' + name);
+    if (selectedForces[name]) {
+        delete selectedForces[name];
+        el.classList.remove('selected');
+    } else {
+        selectedForces[name] = true;
+        el.classList.add('selected');
+    }
+}
+function resetForces() {
+    selectedForces = {};
+    ['peso', 'normal', 'fuerza', 'friccion'].forEach(function(f) {
+        var el = document.getElementById('f-' + f);
+        el.classList.remove('selected', 'correct-pick', 'wrong-pick');
+    });
+    document.getElementById('feedback-forces').classList.add('hidden');
+}
+function checkForces() {
+    var correct = ['peso', 'normal', 'fuerza', 'friccion'];
+    var allOk = true;
+    var anySelected = false;
+    correct.forEach(function(f) {
+        var el = document.getElementById('f-' + f);
+        el.classList.remove('selected');
+        if (selectedForces[f]) {
+            el.classList.add('correct-pick');
+            anySelected = true;
+        } else {
+            el.classList.add('wrong-pick');
+            allOk = false;
+        }
+    });
+    if (!anySelected) { showToast('Selecciona al menos una fuerza', 'lucide:alert-circle'); return; }
+    showFeedback('feedback-forces', allOk, 'Faltan fuerzas. Recuerda: peso, normal, fuerza aplicada y fricción');
+    showToast(allOk ? 'Correcto' : 'Incorrecto', 'lucide:' + (allOk ? 'check-circle' : 'x-circle'));
+    if (allOk) {
+        ['peso', 'normal', 'fuerza', 'friccion'].forEach(function(f) {
+            document.getElementById('f-' + f).style.pointerEvents = 'none';
+        });
+    }
+}
+
+// Cálculos
+function checkCalc(id, correct, hint) {
+    var inp = document.getElementById(id);
+    var val = parseFloat(inp.value);
+    var ok = Math.abs(val - correct) < 0.5;
+    setBorder(id, ok);
+    showFeedback('feedback-' + id, ok, hint);
+    showToast(ok ? 'Correcto' : 'Incorrecto', 'lucide:' + (ok ? 'check-circle' : 'x-circle'));
+}
+
+// Quiz
+var quizData = [
+    { q: 'El trabajo se mide en:', opts: ['Watts (W)', 'Joules (J)', 'Newtons (N)', 'Pascals (Pa)'], correct: 1 },
+    { q: 'Si la rampa es más larga, la fuerza necesaria para subir la caja es:', opts: ['Mayor', 'Menor', 'La misma', 'No se puede determinar'], correct: 1 },
+    { q: 'La energía cinética de un objeto depende de:', opts: ['Su masa y altura', 'Su masa y velocidad', 'Su fuerza y desplazamiento', 'Su peso y velocidad'], correct: 1 },
+    { q: 'El teorema del trabajo y la energía cinética establece que:', opts: ['W = F × d', 'W = m × g × h', 'W = Ec final − Ec inicial', 'Ec = ½mv²'], correct: 2 },
+    { q: 'Si despreciamos la fricción, ¿qué sucede con el trabajo total al usar una rampa más larga?', opts: ['Aumenta', 'Disminuye', 'Es el mismo', 'Se hace cero'], correct: 2 }
+];
+var quizScore = 0;
+var quizAnswered = 0;
+
+function renderQuiz() {
+    var container = document.getElementById('quiz-container');
+    var html = '';
+    for (var i = 0; i < quizData.length; i++) {
+        var q = quizData[i];
+        html += '<div class="bg-white rounded-2xl p-6 shadow-md border border-slate-100 anim-slide" style="animation-delay:' + (i * 100) + 'ms" data-q="' + i + '">';
+        html += '<div class="flex items-start gap-3 mb-4"><div class="w-8 h-8 rounded-lg bg-brand/10 flex items-center justify-center flex-shrink-0"><span class="text-brand font-bold text-sm">' + (i + 1) + '</span></div>';
+        html += '<p class="font-semibold text-sm pt-1">' + q.q + '</p></div>';
+        html += '<div class="space-y-2 ml-11">';
+        for (var j = 0; j < q.opts.length; j++) {
+            html += '<div class="quiz-opt flex items-center gap-3 p-3 rounded-xl border-2 border-slate-100 bg-white" onclick="pickQuiz(' + i + ',' + j + ',this)">';
+            html += '<span class="w-7 h-7 rounded-full border-2 border-slate-200 flex items-center justify-center text-xs font-bold text-slate-400 flex-shrink-0">' + String.fromCharCode(65 + j) + '</span>';
+            html += '<span class="text-sm text-slate-600">' + q.opts[j] + '</span></div>';
+        }
+        html += '</div></div>';
+    }
+    container.innerHTML = html;
+}
+
+function pickQuiz(qi, oi, el) {
+    var qDiv = document.querySelector('[data-q="' + qi + '"]');
+    var opts = qDiv.querySelectorAll('.quiz-opt');
+    for (var k = 0; k < opts.length; k++) {
+        opts[k].style.pointerEvents = 'none';
+    }
+    var correct = quizData[qi].correct;
+    if (oi === correct) {
+        el.classList.add('picked-correct');
+        quizScore++;
+        showToast('Correcto', 'lucide:check-circle');
+    } else {
+        el.classList.add('picked-wrong');
+        opts[correct].classList.add('picked-correct');
+        showToast('Incorrecto', 'lucide:x-circle');
+    }
+    quizAnswered++;
+    if (quizAnswered === quizData.length) {
+        setTimeout(showQuizResult, 800);
+    }
+}
+
+function showQuizResult() {
+    var result = document.getElementById('quiz-result');
+    var pct = (quizScore / quizData.length) * 100;
+    var emoji, title, text;
+    if (pct === 100) { emoji = '🏆'; title = 'Perfecto'; text = quizScore + '/' + quizData.length + ' respuestas correctas'; }
+    else if (pct >= 60) { emoji = '👍'; title = 'Bien'; text = quizScore + '/' + quizData.length + '. Repasa lo que fallaste.'; }
+    else { emoji = '📚'; title = 'Repasa'; text = quizScore + '/' + quizData.length + '. Vuelve a leer la teoría.'; }
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-text').textContent = text;
+    result.classList.remove('hidden');
+    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function resetQuiz() {
+    quizScore = 0;
+    quizAnswered = 0;
+    document.getElementById('quiz-result').classList.add('hidden');
+    renderQuiz();
+    document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Scroll animations
+var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) { if (e.isIntersecting) e.target.style.animationPlayState = 'running'; });
+}, { threshold: 0.1 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderQuiz();
+    document.querySelectorAll('.anim-slide').forEach(function(el) {
+        el.style.animationPlayState = 'paused';
+        obs.observe(el);
+    });
+    document.querySelectorAll('section:first-of-type .anim-slide').forEach(function(el) {
+        el.style.animationPlayState = 'running';
+    });
+});
+</script>
+</body>
+</html>
