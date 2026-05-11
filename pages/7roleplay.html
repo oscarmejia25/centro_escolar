@@ -212,29 +212,65 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        .quiz-option {
-            background: white;
+        .quiz-input {
+            width: 100%;
+            padding: 0.8rem;
             border: 2px solid #D4B8E0;
-            padding: 1rem;
-            margin: 0.5rem 0;
             border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
+            font-size: 1rem;
+            margin: 0.5rem 0;
         }
 
-        .quiz-option:hover {
-            background: #F8F0FA;
+        .quiz-input:focus {
+            outline: none;
             border-color: #6B2D8E;
+            box-shadow: 0 0 0 3px rgba(107, 45, 142, 0.1);
         }
 
-        .quiz-option.correct {
-            background: #CDE9D6;
+        .quiz-input.correct {
             border-color: #2E7D32;
+            background: #CDE9D6;
         }
 
-        .quiz-option.incorrect {
-            background: #F8D3CF;
+        .quiz-input.incorrect {
             border-color: #C62828;
+            background: #F8D3CF;
+        }
+
+        .feedback {
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #CDE9D6;
+            color: #2E7D32;
+        }
+
+        .feedback.incorrect {
+            background: #F8D3CF;
+            color: #C62828;
+        }
+
+        .object-display {
+            background: white;
+            border: 3px solid #6B2D8E;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .object-emoji {
+            font-size: 5rem;
+            margin: 1rem 0;
         }
 
         .highlight {
@@ -250,6 +286,26 @@
             padding: 1rem;
             margin: 1rem 0;
             border-radius: 6px;
+        }
+
+        .results-summary {
+            background: linear-gradient(135deg, #CDE9D6, #D2E4FD);
+            border: 3px solid #6B2D8E;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .results-summary.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 768px) {
@@ -300,74 +356,27 @@
                 </div>
 
                 <div class="activity-box">
-                    <h3 style="color: #6B2D8E; margin-bottom: 1rem;">🎨 Mini Board Virtual: Colores y Objetos</h3>
+                    <h3 style="color: #6B2D8E; margin-bottom: 1rem;">🎨 ¿De qué color es el objeto?</h3>
                     <p style="margin-bottom: 1rem;">
-                        <strong>Instrucciones:</strong> En lugar de mini pizarras físicas, usarás tu cuaderno o una hoja de papel. Cuando veas un objeto del salón, escribe su color en inglés.
+                        <strong>Instrucciones:</strong> Observa el objeto que aparece en pantalla y escribe su color en inglés en el cuadro de texto.
                     </p>
 
-                    <h4 style="color: #04071B; margin: 1rem 0 0.5rem 0;">Vocabulario de Colores:</h4>
-                    <div class="vocabulary-grid">
-                        <div class="vocab-card">
-                            <div class="vocab-icon">⚫</div>
-                            <div class="vocab-word">Black</div>
-                            <div class="vocab-pronunciation">/blak/ (blac)</div>
-                        </div>
-                        <div class="vocab-card">
-                            <div class="vocab-icon">🔴</div>
-                            <div class="vocab-word">Red</div>
-                            <div class="vocab-pronunciation">/red/ (red)</div>
-                        </div>
-                        <div class="vocab-card">
-                            <div class="vocab-icon">💗</div>
-                            <div class="vocab-word">Pink</div>
-                            <div class="vocab-pronunciation">/pɪŋk/ (pink)</div>
-                        </div>
-                        <div class="vocab-card">
-                            <div class="vocab-icon">🟢</div>
-                            <div class="vocab-word">Green</div>
-                            <div class="vocab-pronunciation">/grin/ (grin)</div>
-                        </div>
-                        <div class="vocab-card">
-                            <div class="vocab-icon">🔵</div>
-                            <div class="vocab-word">Blue</div>
-                            <div class="vocab-pronunciation">/blu/ (blu)</div>
-                        </div>
-                        <div class="vocab-card">
-                            <div class="vocab-icon">🟡</div>
-                            <div class="vocab-word">Yellow</div>
-                            <div class="vocab-pronunciation">/ˈjeloʊ/ (yelou)</div>
-                        </div>
-                    </div>
-
-                    <h4 style="color: #04071B; margin: 1rem 0 0.5rem 0;">Objetos del Salón:</h4>
-                    <div class="vocabulary-grid">
-                        <div class="vocab-card">
-                            <div class="vocab-icon">✏️</div>
-                            <div class="vocab-word">Pencil</div>
-                            <div class="vocab-pronunciation">/ˈpensl/ (pensol)</div>
-                        </div>
-                        <div class="vocab-card">
-                            <div class="vocab-icon">📝</div>
-                            <div class="vocab-word">Eraser</div>
-                            <div class="vocab-pronunciation">/ɪˈreɪsər/ (ireiser)</div>
-                        </div>
-                        <div class="vocab-card">
-                            <div class="vocab-icon">🖊️</div>
-                            <div class="vocab-word">Marker</div>
-                            <div class="vocab-pronunciation">/ˈmɑrkər/ (marker)</div>
-                        </div>
-                        <div class="vocab-card">
-                            <div class="vocab-icon">📚</div>
-                            <div class="vocab-word">Book</div>
-                            <div class="vocab-pronunciation">/bʊk/ (buk)</div>
-                        </div>
+                    <div class="object-display" id="objectDisplay">
+                        <h4 style="color: #6B2D8E; margin-bottom: 1rem;">Objeto #<span id="objectNumber">1</span></h4>
+                        <div class="object-emoji" id="objectEmoji">🍎</div>
+                        <p style="font-size: 1.2rem; margin: 1rem 0;">
+                            <strong id="objectName">Apple</strong> (Manzana)
+                        </p>
+                        <input type="text" class="quiz-input" id="colorInput" placeholder="Escribe el color en inglés..." autocomplete="off">
+                        <div class="feedback" id="colorFeedback"></div>
+                        <button class="interactive-btn" onclick="checkColor()" style="margin-top: 1rem;">Verificar</button>
+                        <button class="interactive-btn" onclick="nextObject()" style="margin-top: 1rem; background: #2E7D32;">Siguiente Objeto</button>
                     </div>
 
                     <div style="margin-top: 1.5rem; text-align: center;">
-                        <button class="interactive-btn" onclick="startBrainstorming()">🎲 Practicar Colores</button>
+                        <p style="color: #666; margin-bottom: 1rem;">Progreso: <span id="progressCount">0</span> de 5 objetos</p>
+                        <button class="interactive-btn" onclick="showFinalResults()" id="finishBtn" style="display: none; background: #1976D2;">Finalizar Actividad</button>
                     </div>
-
-                    <div id="brainstormingResult" style="margin-top: 1rem; display: none;"></div>
                 </div>
             </div>
         </div>
@@ -485,7 +494,7 @@
                     </div>
 
                     <div style="text-align: center; margin-top: 1.5rem;">
-                        <button class="interactive-btn" onclick="practiceConversation()">🎤 Practicar Pronunciación</button>
+                        <button class="interactive-btn" onclick="practiceConversation()">🎤 Consejos de Pronunciación</button>
                     </div>
                 </div>
             </div>
@@ -507,18 +516,21 @@
 
                     <h4 style="color: #04071B; margin: 1.5rem 0 1rem 0;">Ejercicio 1: Completa la conversación</h4>
                     <div id="exercise1">
-                        <p style="margin-bottom: 1rem;">Arrastra o selecciona la palabra correcta:</p>
-                        <div class="quiz-option" onclick="checkAnswer1(this, false)">
-                            A: Good morning! I need your <input type="text" placeholder="???">
-                            <br><small>Respuesta: help (ayuda)</small>
+                        <p style="margin-bottom: 1rem;">Escribe la palabra que falta en cada espacio:</p>
+                        
+                        <div style="background: white; padding: 1rem; margin: 1rem 0; border-radius: 6px; border: 2px solid #D4B8E0;">
+                            <p><strong>A:</strong> Good morning! I need your <input type="text" class="quiz-input" id="ex1a" placeholder="???"></p>
+                            <div class="feedback" id="feedback1a"></div>
                         </div>
-                        <div class="quiz-option" onclick="checkAnswer1(this, false)">
-                            B: What color <input type="text" placeholder="???"> it?
-                            <br><small>Respuesta: is (es)</small>
+
+                        <div style="background: white; padding: 1rem; margin: 1rem 0; border-radius: 6px; border: 2px solid #D4B8E0;">
+                            <p><strong>B:</strong> What color <input type="text" class="quiz-input" id="ex1b" placeholder="???"> it?</p>
+                            <div class="feedback" id="feedback1b"></div>
                         </div>
-                        <div class="quiz-option" onclick="checkAnswer1(this, true)">
-                            B: They <input type="text" placeholder="???"> markers.
-                            <br><small>Respuesta: are (son)</small>
+
+                        <div style="background: white; padding: 1rem; margin: 1rem 0; border-radius: 6px; border: 2px solid #D4B8E0;">
+                            <p><strong>B:</strong> They <input type="text" class="quiz-input" id="ex1c" placeholder="???"> markers.</p>
+                            <div class="feedback" id="feedback1c"></div>
                         </div>
                     </div>
 
@@ -529,20 +541,20 @@
                             <div class="vocab-card">
                                 <div class="vocab-icon">🍎</div>
                                 <div style="font-weight: 600; margin-bottom: 0.5rem;">Apple (Manzana)</div>
-                                <input type="text" placeholder="Color en inglés" style="width: 100%; padding: 0.5rem; border: 2px solid #D4B8E0; border-radius: 4px;">
-                                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">Respuesta: Red</div>
+                                <input type="text" class="quiz-input" id="ex2a" placeholder="Color en inglés">
+                                <div class="feedback" id="feedback2a"></div>
                             </div>
                             <div class="vocab-card">
                                 <div class="vocab-icon">🌿</div>
                                 <div style="font-weight: 600; margin-bottom: 0.5rem;">Leaf (Hoja)</div>
-                                <input type="text" placeholder="Color en inglés" style="width: 100%; padding: 0.5rem; border: 2px solid #D4B8E0; border-radius: 4px;">
-                                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">Respuesta: Green</div>
+                                <input type="text" class="quiz-input" id="ex2b" placeholder="Color en inglés">
+                                <div class="feedback" id="feedback2b"></div>
                             </div>
                             <div class="vocab-card">
                                 <div class="vocab-icon">☁️</div>
                                 <div style="font-weight: 600; margin-bottom: 0.5rem;">Cloud (Nube)</div>
-                                <input type="text" placeholder="Color en inglés" style="width: 100%; padding: 0.5rem; border: 2px solid #D4B8E0; border-radius: 4px;">
-                                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">Respuesta: White</div>
+                                <input type="text" class="quiz-input" id="ex2c" placeholder="Color en inglés">
+                                <div class="feedback" id="feedback2c"></div>
                             </div>
                         </div>
                     </div>
@@ -551,7 +563,7 @@
                     <div class="tip-box">
                         <strong>📝 Tu tarea:</strong> Escribe una conversación similar cambiando los objetos y colores. Usa al menos 3 objetos diferentes del salón de clases.
                     </div>
-                    <textarea style="width: 100%; min-height: 200px; padding: 1rem; border: 2px solid #D4B8E0; border-radius: 8px; font-family: inherit; font-size: 1rem; margin-top: 1rem;" placeholder="Escribe tu conversación aquí...
+                    <textarea class="quiz-input" style="width: 100%; min-height: 200px; padding: 1rem; border: 2px solid #D4B8E0; border-radius: 8px; font-family: inherit; font-size: 1rem; margin-top: 1rem;" id="exercise3" placeholder="Escribe tu conversación aquí...
 
 Ejemplo:
 A: Good afternoon! I need your help.
@@ -563,7 +575,13 @@ B: It's blue and yellow.
 ..."></textarea>
 
                     <div style="text-align: center; margin-top: 1.5rem;">
-                        <button class="interactive-btn" onclick="showAnswers()">✅ Ver Respuestas Correctas</button>
+                        <button class="interactive-btn" onclick="checkAllAnswers()">✅ Verificar Todas las Respuestas</button>
+                    </div>
+
+                    <div class="results-summary" id="resultsSummary">
+                        <h3 style="color: #6B2D8E; margin-bottom: 1rem;">📊 Resumen de Resultados</h3>
+                        <div id="resultsContent"></div>
+                        <button class="interactive-btn" onclick="showCorrectAnswers()" style="margin-top: 1rem;">Mostrar Respuestas Correctas</button>
                     </div>
                 </div>
             </div>
@@ -579,63 +597,162 @@ B: It's blue and yellow.
     </div>
 
     <script>
-        function startBrainstorming() {
-            const colors = ['Red', 'Blue', 'Green', 'Yellow', 'Pink', 'Black', 'White', 'Orange'];
-            const objects = ['pencil', 'eraser', 'marker', 'book', 'notebook', 'ruler'];
-            
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            const randomObject = objects[Math.floor(Math.random() * objects.length)];
-            
-            const resultDiv = document.getElementById('brainstormingResult');
-            resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `
-                <div style="background: #FFF1CB; padding: 1.5rem; border-radius: 8px; text-align: center;">
-                    <h4 style="color: #6B2D8E; margin-bottom: 1rem;">🎨 ¿De qué color es?</h4>
-                    <div style="font-size: 3rem; margin: 1rem 0;">📝</div>
-                    <p style="font-size: 1.2rem; margin-bottom: 1rem;">
-                        <strong>${randomObject}</strong> (objeto)
-                    </p>
-                    <p style="color: #666; margin-bottom: 1rem;">Escribe el color en tu cuaderno:</p>
-                    <button class="interactive-btn" onclick="this.parentElement.innerHTML += '<div style=\'margin-top: 1rem; font-size: 1.2rem; color: #6B2D8E; font-weight: bold;\'><br>Respuesta: <span style=\'color: #2E7D32;\'>${randomColor}</span></div>'">
-                        Mostrar Respuesta
-                    </button>
-                </div>
-            `;
-        }
+        // Actividad 1 - Objetos y Colores
+        const objects = [
+            { emoji: '🍎', name: 'Apple', color: 'red' },
+            { emoji: '🌿', name: 'Leaf', color: 'green' },
+            { emoji: '☁️', name: 'Cloud', color: 'white' },
+            { emoji: '🍌', name: 'Banana', color: 'yellow' },
+            { emoji: '🍇', name: 'Grapes', color: 'purple' }
+        ];
 
-        function practiceConversation() {
-            alert('💡 Consejo de pronunciación:\n\n1. Lee la conversación en voz alta 3 veces\n2. Grábate y compara con la pronunciación escrita\n3. Presta atención especial a:\n   - "TH" en "Thank" (suena como "z" suave)\n   - "R" en inglés es más suave que en español\n   - Las vocales son más cortas en inglés\n\n¡Practica frente a un espejo!');
-        }
+        let currentObject = 0;
+        let answeredObjects = 0;
+        let correctObjects = 0;
 
-        function checkAnswer1(element, isCorrect) {
-            element.classList.remove('correct', 'incorrect');
-            if (isCorrect) {
-                element.classList.add('correct');
+        function checkColor() {
+            const input = document.getElementById('colorInput');
+            const feedback = document.getElementById('colorFeedback');
+            const userAnswer = input.value.toLowerCase().trim();
+            const correctAnswer = objects[currentObject].color;
+
+            if (!userAnswer) {
+                feedback.textContent = '⚠️ Por favor escribe una respuesta';
+                feedback.className = 'feedback show incorrect';
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                feedback.textContent = '✅ ¡Correcto!';
+                feedback.className = 'feedback show correct';
+                input.classList.add('correct');
+                correctObjects++;
             } else {
-                element.classList.add('incorrect');
+                feedback.textContent = `❌ Incorrecto. La respuesta correcta es: ${correctAnswer}`;
+                feedback.className = 'feedback show incorrect';
+                input.classList.add('incorrect');
+            }
+
+            answeredObjects++;
+            document.getElementById('progressCount').textContent = answeredObjects;
+            input.disabled = true;
+        }
+
+        function nextObject() {
+            currentObject++;
+            if (currentObject >= objects.length) {
+                currentObject = 0;
+            }
+            
+            document.getElementById('objectNumber').textContent = currentObject + 1;
+            document.getElementById('objectEmoji').textContent = objects[currentObject].emoji;
+            document.getElementById('objectName').textContent = objects[currentObject].name;
+            
+            const input = document.getElementById('colorInput');
+            const feedback = document.getElementById('colorFeedback');
+            input.value = '';
+            input.disabled = false;
+            input.classList.remove('correct', 'incorrect');
+            feedback.className = 'feedback';
+            feedback.textContent = '';
+
+            if (answeredObjects >= 5) {
+                document.getElementById('finishBtn').style.display = 'inline-block';
             }
         }
 
-        function showAnswers() {
-            alert('✅ Respuestas del Ejercicio 1:\n\n1. A: Good morning! I need your HELP\n2. B: What color IS it?\n3. B: They ARE markers\n\nEjercicio 2:\n🍎 Apple = RED (rojo)\n🌿 Leaf = GREEN (verde)\n☁️ Cloud = WHITE (blanco)\n\n¡Recuerda practicar la pronunciación!');
+        function showFinalResults() {
+            const percentage = Math.round((correctObjects / 5) * 100);
+            alert(`📊 Actividad Completada!\n\nObjetos respondidos: ${answeredObjects}/5\nCorrectas: ${correctObjects}/5\nPorcentaje: ${percentage}%\n\n¡Buen trabajo!`);
         }
 
-        // Agregar interactividad a los inputs de ejercicio 2
+        // Actividad 2 - Pronunciación
+        function practiceConversation() {
+            alert('💡 Consejos de pronunciación:\n\n1. "TH" en "Thank" - Pon la lengua entre los dientes y sopla suavemente (suena como "z")\n2. "R" en inglés - Es más suave, no tan fuerte como en español\n3. Las vocales son más cortas en inglés\n4. Practica frente a un espejo observando tu boca\n5. Grábate y compara\n\n¡Lee la conversación 3 veces en voz alta!');
+        }
+
+        // Actividad 3 - Verificar respuestas
+        function checkAllAnswers() {
+            let correct = 0;
+            let total = 6;
+
+            // Ejercicio 1
+            const ex1a = document.getElementById('ex1a').value.toLowerCase().trim();
+            const ex1b = document.getElementById('ex1b').value.toLowerCase().trim();
+            const ex1c = document.getElementById('ex1c').value.toLowerCase().trim();
+
+            checkAnswer('ex1a', ex1a, 'help', 'feedback1a');
+            checkAnswer('ex1b', ex1b, 'is', 'feedback1b');
+            checkAnswer('ex1c', ex1c, 'are', 'feedback1c');
+
+            // Ejercicio 2
+            const ex2a = document.getElementById('ex2a').value.toLowerCase().trim();
+            const ex2b = document.getElementById('ex2b').value.toLowerCase().trim();
+            const ex2c = document.getElementById('ex2c').value.toLowerCase().trim();
+
+            checkAnswer('ex2a', ex2a, 'red', 'feedback2a');
+            checkAnswer('ex2b', ex2b, 'green', 'feedback2b');
+            checkAnswer('ex2c', ex2c, 'white', 'feedback2c');
+
+            // Ejercicio 3 (solo verifica que tenga contenido)
+            const ex3 = document.getElementById('exercise3').value.trim();
+            if (ex3.length > 50) {
+                correct++;
+            }
+
+            // Mostrar resumen
+            setTimeout(() => {
+                showResultsSummary(correct, total);
+            }, 500);
+        }
+
+        function checkAnswer(id, userAnswer, correctAnswer, feedbackId) {
+            const feedback = document.getElementById(feedbackId);
+            const input = document.getElementById(id);
+
+            if (userAnswer === correctAnswer) {
+                feedback.textContent = '✅ ¡Correcto!';
+                feedback.className = 'feedback show correct';
+                input.classList.add('correct');
+            } else {
+                feedback.textContent = `❌ Incorrecto`;
+                feedback.className = 'feedback show incorrect';
+                input.classList.add('incorrect');
+            }
+        }
+
+        function showResultsSummary(correct, total) {
+            const percentage = Math.round((correct / total) * 100);
+            const summary = document.getElementById('resultsSummary');
+            const content = document.getElementById('resultsContent');
+
+            let message = '';
+            if (percentage >= 80) {
+                message = '🌟 ¡Excelente trabajo!';
+            } else if (percentage >= 60) {
+                message = '👍 ¡Buen trabajo! Sigue practicando';
+            } else {
+                message = '📚 Necesitas practicar más';
+            }
+
+            content.innerHTML = `
+                <p style="font-size: 1.2rem; margin-bottom: 1rem;"><strong>${message}</strong></p>
+                <p style="font-size: 1.1rem;">Respuestas correctas: ${correct} de ${total}</p>
+                <p style="font-size: 2rem; color: #6B2D8E; font-weight: bold; margin: 1rem 0;">${percentage}%</p>
+            `;
+
+            summary.classList.add('show');
+            summary.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showCorrectAnswers() {
+            alert('✅ Respuestas Correctas:\n\nEjercicio 1:\n1. help (ayuda)\n2. is (es)\n3. are (son)\n\nEjercicio 2:\n🍎 Apple = RED (rojo)\n🌿 Leaf = GREEN (verde)\n☁️ Cloud = WHITE (blanco)\n\n¡Recuerda practicar la pronunciación!');
+        }
+
+        // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('#exercise2 input[type="text"]');
-            const answers = ['red', 'green', 'white'];
-            
-            inputs.forEach((input, index) => {
-                input.addEventListener('blur', function() {
-                    if (this.value.toLowerCase().trim() === answers[index]) {
-                        this.style.borderColor = '#2E7D32';
-                        this.style.background = '#CDE9D6';
-                    } else {
-                        this.style.borderColor = '#C62828';
-                        this.style.background = '#F8D3CF';
-                    }
-                });
-            });
+            document.getElementById('objectEmoji').textContent = objects[0].emoji;
+            document.getElementById('objectName').textContent = objects[0].name;
         });
     </script>
 </body>
