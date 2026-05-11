@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operaciones Combinadas de Raíces Cuadradas - Parte 1</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #04071B;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #054F8E 0%, #04071B 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Navbar/Breadcrumbs */
+        .navbar {
+            background-color: #D2E4FD;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #054F8E;
+        }
+
+        .navbar a {
+            color: #054F8E;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #04071B;
+            text-decoration: underline;
+        }
+
+        .navbar span {
+            color: #054F8E;
+            margin: 0 0.5rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Section Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #054F8E;
+        }
+
+        .card-problema {
+            border-left-color: #F5B7BC;
+            background: linear-gradient(to right, #FFF1CB, white);
+        }
+
+        .card-concepto {
+            border-left-color: #CDE9D6;
+            background: linear-gradient(to right, #D2E4FD, white);
+        }
+
+        .card-ejemplo {
+            border-left-color: #F8D3CF;
+            background: linear-gradient(to right, #F8D3CF, white);
+        }
+
+        .card h2 {
+            color: #054F8E;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .icon-p { background-color: #F5B7BC; color: #04071B; }
+        .icon-s { background-color: #CDE9D6; color: #04071B; }
+        .icon-c { background-color: #054F8E; }
+        .icon-e { background-color: #F8D3CF; color: #04071B; }
+
+        /* Step boxes */
+        .step {
+            background: #FFF1CB;
+            border-left: 4px solid #054F8E;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #04071B;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .formula-box {
+            background: white;
+            border: 2px solid #054F8E;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+
+        .tip-box {
+            background: #CDE9D6;
+            border-left: 4px solid #054F8E;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .tip-box strong {
+            color: #04071B;
+        }
+
+        /* Calculator Section */
+        .calculator {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 3px solid #054F8E;
+        }
+
+        .calc-title {
+            text-align: center;
+            color: #054F8E;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .calc-steps {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .calc-step {
+            background: #F5F7FA;
+            border: 2px solid #D2E4FD;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .calc-step-label {
+            background: #054F8E;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .calc-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #054F8E;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            background: white;
+        }
+
+        .calc-input:focus {
+            outline: none;
+            border-color: #F5B7BC;
+            box-shadow: 0 0 0 3px rgba(245, 183, 188, 0.3);
+        }
+
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #F8F9FA;
+            border-radius: 8px;
+        }
+
+        .key {
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            border: 2px solid #054F8E;
+            color: #054F8E;
+        }
+
+        .key:hover {
+            background: #054F8E;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(5, 79, 142, 0.3);
+        }
+
+        .key:active {
+            transform: translateY(0);
+        }
+
+        .key.operator {
+            background: #F5B7BC;
+            border-color: #F5B7BC;
+            color: #04071B;
+        }
+
+        .key.operator:hover {
+            background: #04071B;
+            color: white;
+        }
+
+        .key.function {
+            background: #CDE9D6;
+            border-color: #CDE9D6;
+            color: #04071B;
+        }
+
+        .key.function:hover {
+            background: #054F8E;
+            color: white;
+        }
+
+        .key.clear {
+            background: #F8D3CF;
+            border-color: #F8D3CF;
+            color: #04071B;
+        }
+
+        .key.clear:hover {
+            background: #04071B;
+            color: white;
+        }
+
+        .key.equals {
+            background: #054F8E;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .key.equals:hover {
+            background: #04071B;
+        }
+
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: #CDE9D6;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #054F8E;
+        }
+
+        .explanation {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #FFF1CB;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .keyboard {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .calc-step {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        .highlight {
+            background: #FFF1CB;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        ul {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Centro Escolar Cantón Los Prados</h1>
+    </header>
+
+    <nav class="navbar">
+        <a href="#">Inicio</a> <span>›</span> 
+        <a href="#">9° Grado</a> <span>›</span> 
+        <a href="#">Matemáticas</a> <span>›</span> 
+        <a href="#">Unidad 2</a> <span>›</span> 
+        <span>Operaciones Combinadas de Raíces Cuadradas - Parte 1</span>
+    </nav>
+
+    <div class="container">
+        <!-- Sección P - Problema -->
+        <div class="card card-problema">
+            <h2><span class="icon icon-p">P</span> Problema Inicial</h2>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                Vamos a resolver: <span class="highlight">\(\sqrt{3}(\sqrt{3} + 5)\)</span>
+            </p>
+
+            <div class="step">
+                <div class="step-title">🎯 Paso 1: Entender el problema</div>
+                <p>Tenemos una <strong>raíz cuadrada multiplicando un paréntesis</strong>. Esto es como tener:
+                <br><br>
+                <em>"3 raíces de 3, multiplicando a (3 raíces de 3 más 5)"</em></p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">💡 Paso 2: Usar una letra para simplificar</div>
+                <p>Para hacerlo más fácil, vamos a llamarle <strong>"a"</strong> a \(\sqrt{3}\):</p>
+                <div class="formula-box">
+                    Si \(\sqrt{3} = a\)<br><br>
+                    Entonces: \(\sqrt{3}(\sqrt{3} + 5) = a(a + 5)\)
+                </div>
+                <div class="tip-box">
+                    <strong>💭 Piensa así:</strong> Es como si tuviéramos "a" cajas con "a + 5" dulces cada una. 
+                    ¿Cuántos dulces hay en total?
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">🔢 Paso 3: Aplicar la propiedad distributiva</div>
+                <p>La <strong>propiedad distributiva</strong> dice que multiplicamos "a" por cada cosa dentro del paréntesis:</p>
+                <div class="formula-box">
+                    \(a(a + 5) = a \times a + a \times 5 = a^2 + 5a\)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">🔄 Paso 4: Regresar a la raíz cuadrada</div>
+                <p>Ahora regresamos \(\sqrt{3}\) en lugar de "a":</p>
+                <div class="formula-box">
+                    \(a^2 + 5a = (\sqrt{3})^2 + 5(\sqrt{3})\)
+                </div>
+                <div class="tip-box">
+                    <strong>⚡ Dato importante:</strong> Cuando elevas al cuadrado una raíz cuadrada, ¡se cancelan!
+                    <br>\((\sqrt{3})^2 = 3\)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">✅ Paso 5: Resultado final</div>
+                <div class="formula-box" style="background: #CDE9D6; border-color: #054F8E;">
+                    \((\sqrt{3})^2 + 5\sqrt{3} = 3 + 5\sqrt{3}\)
+                </div>
+                <p><strong>¡Listo!</strong> La respuesta es: \(\mathbf{3 + 5\sqrt{3}}\)</p>
+            </div>
+        </div>
+
+        <!-- Sección C - Concepto -->
+        <div class="card card-concepto">
+            <h2><span class="icon icon-c">C</span> Concepto Clave</h2>
+            
+            <div style="background: white; padding: 2rem; border-radius: 8px; margin: 1rem 0;">
+                <h3 style="color: #054F8E; margin-bottom: 1rem;">📚 La Propiedad Distributiva</h3>
+                
+                <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                    Imagina que tienes <strong>3 bolsas</strong>, y cada bolsa tiene <strong>2 manzanas y 4 naranjas</strong>.
+                    <br><br>
+                    ¿Cuántas frutas tienes en total?
+                </p>
+
+                <div class="formula-box">
+                    \(3(2 + 4) = 3 \times 2 + 3 \times 4 = 6 + 12 = 18\) frutas
+                </div>
+
+                <h4 style="color: #04071B; margin: 1.5rem 0 1rem 0;">🎓 Fórmula General:</h4>
+                <div class="formula-box" style="background: #D2E4FD;">
+                    Para cualquier número real \(a\), \(b\) y \(c\):<br><br>
+                    \(\mathbf{a(b + c) = ab + ac}\)
+                </div>
+
+                <div class="tip-box" style="margin-top: 1.5rem;">
+                    <strong>🌟 Con raíces cuadradas funciona igual:</strong><br><br>
+                    \(\sqrt{5}(\sqrt{6} + \sqrt{5}) = \sqrt{5} \times \sqrt{6} + \sqrt{5} \times \sqrt{5}\)<br><br>
+                    \(= \sqrt{30} + 5\)
+                </div>
+
+                <ul style="margin-top: 1.5rem; font-size: 1.05rem;">
+                    <li>✅ La propiedad distributiva <strong>SIEMPRE</strong> funciona con números reales</li>
+                    <li>✅ Funciona <strong>perfecto</strong> con raíces cuadradas</li>
+                    <li>✅ Solo multiplica el número de fuera por CADA término del paréntesis</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sección E - Ejemplo -->
+        <div class="card card-ejemplo">
+            <h2><span class="icon icon-e">E</span> Ejemplo Paso a Paso</h2>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+                Resolvamos: <span class="highlight">\(\sqrt{5}(\sqrt{45} + 7)\)</span>
+            </p>
+
+            <div class="step">
+                <div class="step-title">🔍 Paso 1: Simplificar la raíz si se puede</div>
+                <p>Antes de distribuir, revisamos si \(\sqrt{45}\) se puede simplificar:</p>
+                <div class="formula-box">
+                    \(\sqrt{45} = \sqrt{9 \times 5} = \sqrt{9} \times \sqrt{5} = 3\sqrt{5}\)
+                </div>
+                <div class="tip-box">
+                    <strong>💡 Tip:</strong> Busca cuadrados perfectos dentro de la raíz (4, 9, 16, 25, 36, 49...)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">📝 Paso 2: Reescribir el ejercicio</div>
+                <div class="formula-box">
+                    \(\sqrt{5}(\sqrt{45} + 7) = \sqrt{5}(3\sqrt{5} + 7)\)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">⚡ Paso 3: Aplicar propiedad distributiva</div>
+                <p>Multiplicamos \(\sqrt{5}\) por cada término:</p>
+                <div class="formula-box">
+                    \(\sqrt{5} \times 3\sqrt{5} + \sqrt{5} \times 7\)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">🧮 Paso 4: Resolver cada multiplicación</div>
+                <p><strong>Primer término:</strong> \(\sqrt{5} \times 3\sqrt{5} = 3 \times (\sqrt{5})^2 = 3 \times 5 = 15\)</p>
+                <p><strong>Segundo término:</strong> \(\sqrt{5} \times 7 = 7\sqrt{5}\)</p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">🎉 Paso 5: Resultado final</div>
+                <div class="formula-box" style="background: #CDE9D6; border-color: #054F8E;">
+                    \(15 + 7\sqrt{5}\)
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculadora Interactiva -->
+        <div class="calculator">
+            <h2 class="calc-title">🧮 Calculadora de Raíces Cuadradas</h2>
+            
+            <div class="calc-steps">
+                <div class="calc-step">
+                    <span class="calc-step-label">Expresión</span>
+                    <input type="text" class="calc-input" id="inputExpr" placeholder="Ej: √3(√3+5)" readonly>
+                </div>
+                <div class="calc-step">
+                    <span class="calc-step-label">Paso 1</span>
+                    <input type="text" class="calc-input" id="step1" placeholder="Simplificación" readonly>
+                </div>
+                <div class="calc-step">
+                    <span class="calc-step-label">Resultado</span>
+                    <input type="text" class="calc-input" id="result" placeholder="Resultado final" readonly>
+                </div>
+            </div>
+
+            <div class="keyboard">
+                <button class="key function" onclick="addKey('√(')">√(</button>
+                <button class="key function" onclick="addKey('(')">(</button>
+                <button class="key function" onclick="addKey(')')">)</button>
+                <button class="key clear" onclick="clearAll()">C</button>
+                <button class="key clear" onclick="deleteLast()">⌫</button>
+                
+                <button class="key" onclick="addKey('7')">7</button>
+                <button class="key" onclick="addKey('8')">8</button>
+                <button class="key" onclick="addKey('9')">9</button>
+                <button class="key operator" onclick="addKey('+')">+</button>
+                <button class="key operator" onclick="addKey('-')">-</button>
+                
+                <button class="key" onclick="addKey('4')">4</button>
+                <button class="key" onclick="addKey('5')">5</button>
+                <button class="key" onclick="addKey('6')">6</button>
+                <button class="key operator" onclick="addKey('*')">×</button>
+                <button class="key operator" onclick="addKey('/')">÷</button>
+                
+                <button class="key" onclick="addKey('1')">1</button>
+                <button class="key" onclick="addKey('2')">2</button>
+                <button class="key" onclick="addKey('3')">3</button>
+                <button class="key" onclick="addKey('^2')">x²</button>
+                <button class="key function" onclick="addKey('√')">√</button>
+                
+                <button class="key" onclick="addKey('0')">0</button>
+                <button class="key" onclick="addKey('.')">.</button>
+                <button class="key equals" onclick="calculate()">Calcular =</button>
+            </div>
+
+            <div class="result-box" id="explanation">
+                Ingresa una expresión y presiona Calcular
+            </div>
+
+            <div class="explanation">
+                <strong>Instrucciones:</strong> Usa el teclado virtual para escribir expresiones como: 
+                √3(√3+5) o √5(√45+7). La calculadora te mostrará el proceso paso a paso.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = '';
+
+        function addKey(value) {
+            currentInput += value;
+            document.getElementById('inputExpr').value = currentInput;
+        }
+
+        function clearAll() {
+            currentInput = '';
+            document.getElementById('inputExpr').value = '';
+            document.getElementById('step1').value = '';
+            document.getElementById('result').value = '';
+            document.getElementById('explanation').textContent = 'Ingresa una expresión y presiona Calcular';
+        }
+
+        function deleteLast() {
+            currentInput = currentInput.slice(0, -1);
+            document.getElementById('inputExpr').value = currentInput;
+        }
+
+        function parseSqrt(str) {
+            // Reemplazar √45 con Math.sqrt(45)
+            str = str.replace(/√(\d+)/g, 'Math.sqrt($1)');
+            str = str.replace(/√\(/g, 'Math.sqrt(');
+            return str;
+        }
+
+        function calculate() {
+            const expr = currentInput;
+            if (!expr) {
+                document.getElementById('explanation').textContent = '⚠️ Ingresa una expresión primero';
+                return;
+            }
+
+            try {
+                // Paso 1: Mostrar simplificación
+                let step1Text = expr;
+                
+                // Buscar raíces que se puedan simplificar
+                const sqrtMatches = expr.match(/√(\d+)/g);
+                if (sqrtMatches) {
+                    sqrtMatches.forEach(match => {
+                        const num = parseInt(match.replace('√', ''));
+                        const simplified = simplifySqrt(num);
+                        if (simplified !== match) {
+                            step1Text = step1Text.replace(match, simplified);
+                        }
+                    });
+                }
+                
+                document.getElementById('step1').value = step1Text;
+
+                // Paso 2: Calcular resultado numérico
+                let jsExpr = parseSqrt(expr);
+                const result = eval(jsExpr);
+                
+                // Paso 3: Mostrar resultado
+                const resultText = formatResult(result);
+                document.getElementById('result').value = resultText;
+
+                // Explicación
+                document.getElementById('explanation').innerHTML = 
+                    `<strong>✓ Resultado:</strong> ${resultText}<br>
+                     <small>Valor aproximado: ${result.toFixed(4)}</small>`;
+
+            } catch (error) {
+                document.getElementById('explanation').textContent = 
+                    '⚠️ Error en la expresión. Verifica la sintaxis.';
+            }
+        }
+
+        function simplifySqrt(num) {
+            // Buscar el cuadrado perfecto más grande que divida al número
+            for (let i = Math.floor(Math.sqrt(num)); i >= 2; i--) {
+                if (num % (i * i) === 0) {
+                    const remaining = num / (i * i);
+                    if (remaining === 1) {
+                        return i.toString();
+                    } else {
+                        return `${i}√${remaining}`;
+                    }
+                }
+            }
+            return `√${num}`;
+        }
+
+        function formatResult(num) {
+            // Intentar expresar el resultado en forma simplificada
+            const sqrt5 = Math.sqrt(5);
+            const sqrt3 = Math.sqrt(3);
+            const sqrt2 = Math.sqrt(2);
+            
+            // Verificar si es de la forma a + b√n
+            for (let b = 1; b <= 10; b++) {
+                for (let a = 0; a <= 20; a++) {
+                    if (Math.abs(num - (a + b * sqrt5)) < 0.0001) {
+                        return a === 0 ? `${b}√5` : `${a} + ${b}√5`;
+                    }
+                    if (Math.abs(num - (a + b * sqrt3)) < 0.0001) {
+                        return a === 0 ? `${b}√3` : `${a} + ${b}√3`;
+                    }
+                    if (Math.abs(num - (a + b * sqrt2)) < 0.0001) {
+                        return a === 0 ? `${b}√2` : `${a} + ${b}√2`;
+                    }
+                }
+            }
+            
+            return num.toString();
+        }
+
+        // Permitir usar el teclado físico
+        document.addEventListener('keydown', function(e) {
+            const validKeys = '0123456789+-*/().^';
+            if (validKeys.includes(e.key)) {
+                addKey(e.key);
+            } else if (e.key === 'Backspace') {
+                deleteLast();
+            } else if (e.key === 'Enter') {
+                calculate();
+            } else if (e.key === 'Escape') {
+                clearAll();
+            }
+        });
+    </script>
+</body>
+</html>
