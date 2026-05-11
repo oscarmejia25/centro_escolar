@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class 3: Materials - Unit 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #04071B;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6B2D8E 0%, #4A1F6B 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: #E8D5F0;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #6B2D8E;
+        }
+
+        .navbar a {
+            color: #6B2D8E;
+            text-decoration: none;
+        }
+
+        .navbar span {
+            color: #6B2D8E;
+            margin: 0 0.5rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #6B2D8E;
+        }
+
+        .card h2 {
+            color: #6B2D8E;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .icon-pre { background-color: #F5B7BC; color: #04071B; }
+        .icon-during { background-color: #6B2D8E; }
+        .icon-post { background-color: #F8D3CF; color: #04071B; }
+
+        .phase-section {
+            background: linear-gradient(to right, #F8F0FA, white);
+            border: 2px solid #D4B8E0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .phase-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.3rem;
+            color: #6B2D8E;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .time-badge {
+            background: #6B2D8E;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .activity-box {
+            background: white;
+            border: 2px solid #E8D5F0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .conversation-box {
+            background: linear-gradient(135deg, #FFF9E6, #FFF0CC);
+            border: 3px solid #FFD700;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .conversation-line {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border-left: 4px solid #6B2D8E;
+            border-radius: 6px;
+        }
+
+        .speaker {
+            font-weight: 700;
+            color: #6B2D8E;
+            margin-bottom: 0.3rem;
+        }
+
+        .english-text {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            color: #04071B;
+        }
+
+        .pronunciation {
+            font-style: italic;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .vocabulary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .vocab-card {
+            background: white;
+            border: 2px solid #D4B8E0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .vocab-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .vocab-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .vocab-word {
+            font-weight: 600;
+            color: #6B2D8E;
+            margin-bottom: 0.3rem;
+        }
+
+        .vocab-pronunciation {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .interactive-btn {
+            background: #6B2D8E;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .interactive-btn:hover {
+            background: #4A1F6B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #D4B8E0;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: #F8F0FA;
+            border-color: #6B2D8E;
+        }
+
+        .quiz-option.correct {
+            background: #CDE9D6;
+            border-color: #2E7D32;
+        }
+
+        .quiz-option.incorrect {
+            background: #F8D3CF;
+            border-color: #C62828;
+        }
+
+        .highlight {
+            background: #FFF1CB;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tip-box {
+            background: #E3F2FD;
+            border-left: 4px solid #1976D2;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .vocabulary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Centro Escolar Cantón Los Prados</h1>
+    </header>
+
+    <nav class="navbar">
+        <a href="#">Inicio</a> <span>›</span> 
+        <a href="#">PreA1</a> <span>›</span> 
+        <a href="#">Inglés</a> <span>›</span> 
+        <a href="#">Unidad 2</a> <span>›</span> 
+        <span>Class 3: Materials</span>
+    </nav>
+
+    <div class="container">
+        <!-- Introducción -->
+        <div class="card">
+            <h2>📚 Class 3: Materials - Classroom Objects & Colors</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                En esta clase aprenderás a identificar y describir objetos del salón de clases y sus colores en inglés.
+            </p>
+            <div class="tip-box">
+                <strong>🎯 Objetivo:</strong> Al final de esta clase podrás preguntar y responder sobre objetos del salón y sus colores.
+            </div>
+        </div>
+
+        <!-- Actividad Pre -->
+        <div class="card">
+            <h2><span class="icon icon-pre">1</span> Actividad Pre - Brainstorming</h2>
+            
+            <div class="phase-section">
+                <div class="phase-title">
+                    <span>⏱️</span>
+                    <span>Pre-Activity</span>
+                    <span class="time-badge">15 minutos</span>
+                </div>
+
+                <div class="activity-box">
+                    <h3 style="color: #6B2D8E; margin-bottom: 1rem;">🎨 Mini Board Virtual: Colores y Objetos</h3>
+                    <p style="margin-bottom: 1rem;">
+                        <strong>Instrucciones:</strong> En lugar de mini pizarras físicas, usarás tu cuaderno o una hoja de papel. Cuando veas un objeto del salón, escribe su color en inglés.
+                    </p>
+
+                    <h4 style="color: #04071B; margin: 1rem 0 0.5rem 0;">Vocabulario de Colores:</h4>
+                    <div class="vocabulary-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-icon">⚫</div>
+                            <div class="vocab-word">Black</div>
+                            <div class="vocab-pronunciation">/blak/ (blac)</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-icon">🔴</div>
+                            <div class="vocab-word">Red</div>
+                            <div class="vocab-pronunciation">/red/ (red)</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-icon">💗</div>
+                            <div class="vocab-word">Pink</div>
+                            <div class="vocab-pronunciation">/pɪŋk/ (pink)</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-icon">🟢</div>
+                            <div class="vocab-word">Green</div>
+                            <div class="vocab-pronunciation">/grin/ (grin)</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-icon">🔵</div>
+                            <div class="vocab-word">Blue</div>
+                            <div class="vocab-pronunciation">/blu/ (blu)</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-icon">🟡</div>
+                            <div class="vocab-word">Yellow</div>
+                            <div class="vocab-pronunciation">/ˈjeloʊ/ (yelou)</div>
+                        </div>
+                    </div>
+
+                    <h4 style="color: #04071B; margin: 1rem 0 0.5rem 0;">Objetos del Salón:</h4>
+                    <div class="vocabulary-grid">
+                        <div class="vocab-card">
+                            <div class="vocab-icon">✏️</div>
+                            <div class="vocab-word">Pencil</div>
+                            <div class="vocab-pronunciation">/ˈpensl/ (pensol)</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-icon">📝</div>
+                            <div class="vocab-word">Eraser</div>
+                            <div class="vocab-pronunciation">/ɪˈreɪsər/ (ireiser)</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-icon">🖊️</div>
+                            <div class="vocab-word">Marker</div>
+                            <div class="vocab-pronunciation">/ˈmɑrkər/ (marker)</div>
+                        </div>
+                        <div class="vocab-card">
+                            <div class="vocab-icon">📚</div>
+                            <div class="vocab-word">Book</div>
+                            <div class="vocab-pronunciation">/bʊk/ (buk)</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; text-align: center;">
+                        <button class="interactive-btn" onclick="startBrainstorming()">🎲 Practicar Colores</button>
+                    </div>
+
+                    <div id="brainstormingResult" style="margin-top: 1rem; display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actividad During -->
+        <div class="card">
+            <h2><span class="icon icon-during">2</span> Actividad During - Role Play</h2>
+            
+            <div class="phase-section">
+                <div class="phase-title">
+                    <span>⏱️</span>
+                    <span>During Activity</span>
+                    <span class="time-badge">15 minutos</span>
+                </div>
+
+                <div class="activity-box">
+                    <h3 style="color: #6B2D8E; margin-bottom: 1rem;">🎭 Role-Play: English Experts</h3>
+                    <p style="margin-bottom: 1rem;">
+                        <strong>Instrucciones:</strong> Practica la siguiente conversación. Tú serás tanto la persona A como la B. Lee en voz alta prestando atención a la pronunciación.
+                    </p>
+
+                    <div class="conversation-box">
+                        <h4 style="color: #6B2D8E; margin-bottom: 1rem; text-align: center;">💬 Conversación: Asking for Help</h4>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person A:</div>
+                            <div class="english-text">Good morning/afternoon! I need your help.</div>
+                            <div class="pronunciation">/gud morning/ o /gud afternun/ - ai nid yor jelp</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>Buenos días/tardes! Necesito tu ayuda.</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person B:</div>
+                            <div class="english-text">Hi! What can I do for you?</div>
+                            <div class="pronunciation">/jai/ - uat can ai du for yu?</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>¡Hola! ¿Qué puedo hacer por ti?</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person A:</div>
+                            <div class="english-text">What is it?</div>
+                            <div class="pronunciation">/uat is it?</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>¿Qué es?</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person B:</div>
+                            <div class="english-text">Oh, it is an eraser.</div>
+                            <div class="pronunciation">/ou, it is an ireiser/ (ou, it is an ireiser)</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>Oh, es un borrador.</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person A:</div>
+                            <div class="english-text">What color is it?</div>
+                            <div class="pronunciation">/uat calar is it?</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>¿De qué color es?</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person B:</div>
+                            <div class="english-text">It's pink and blue.</div>
+                            <div class="pronunciation">/its pink and blu/ (its pink and blu)</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>Es rosado y azul.</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person A:</div>
+                            <div class="english-text">What are they?</div>
+                            <div class="pronunciation">/uat ar dei?</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>¿Qué son ellos?</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person B:</div>
+                            <div class="english-text">They are markers.</div>
+                            <div class="pronunciation">/dei ar markers/ (dei ar markers)</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>Son marcadores.</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person A:</div>
+                            <div class="english-text">What color are they?</div>
+                            <div class="pronunciation">/uat calar ar dei?</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>¿De qué color son?</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person B:</div>
+                            <div class="english-text">They are red, green and yellow.</div>
+                            <div class="pronunciation">/dei ar red, grin and yelou/ (dei ar red, grin and yelou)</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>Son rojo, verde y amarillo.</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person A:</div>
+                            <div class="english-text">Thank you for your help!</div>
+                            <div class="pronunciation">/zank yu for yor jelp/ (zank yu for yor jelp)</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>¡Gracias por tu ayuda!</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person B:</div>
+                            <div class="english-text">Anytime! Have a good day!</div>
+                            <div class="pronunciation">/enitaim! jav a gud dei/ (enitaim! jav a gud dei)</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>¡De nada! ¡Que tengas un buen día!</em></div>
+                        </div>
+
+                        <div class="conversation-line">
+                            <div class="speaker">Person A:</div>
+                            <div class="english-text">Same to you!</div>
+                            <div class="pronunciation">/seim tu yu/ (seim tu yu)</div>
+                            <div style="margin-top: 0.3rem; color: #666;"><em>¡Igualmente!</em></div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button class="interactive-btn" onclick="practiceConversation()">🎤 Practicar Pronunciación</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actividad Post -->
+        <div class="card">
+            <h2><span class="icon icon-post">3</span> Actividad Post - Practice</h2>
+            
+            <div class="phase-section">
+                <div class="phase-title">
+                    <span>⏱️</span>
+                    <span>Post Activity</span>
+                    <span class="time-badge">15 minutos</span>
+                </div>
+
+                <div class="activity-box">
+                    <h3 style="color: #6B2D8E; margin-bottom: 1rem;">✍️ Ejercicios de Práctica Individual</h3>
+
+                    <h4 style="color: #04071B; margin: 1.5rem 0 1rem 0;">Ejercicio 1: Completa la conversación</h4>
+                    <div id="exercise1">
+                        <p style="margin-bottom: 1rem;">Arrastra o selecciona la palabra correcta:</p>
+                        <div class="quiz-option" onclick="checkAnswer1(this, false)">
+                            A: Good morning! I need your <input type="text" placeholder="???">
+                            <br><small>Respuesta: help (ayuda)</small>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer1(this, false)">
+                            B: What color <input type="text" placeholder="???"> it?
+                            <br><small>Respuesta: is (es)</small>
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer1(this, true)">
+                            B: They <input type="text" placeholder="???"> markers.
+                            <br><small>Respuesta: are (son)</small>
+                        </div>
+                    </div>
+
+                    <h4 style="color: #04071B; margin: 1.5rem 0 1rem 0;">Ejercicio 2: Relaciona objetos con colores</h4>
+                    <div id="exercise2">
+                        <p style="margin-bottom: 1rem;">Escribe en inglés el color de cada objeto:</p>
+                        <div class="vocabulary-grid">
+                            <div class="vocab-card">
+                                <div class="vocab-icon">🍎</div>
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Apple (Manzana)</div>
+                                <input type="text" placeholder="Color en inglés" style="width: 100%; padding: 0.5rem; border: 2px solid #D4B8E0; border-radius: 4px;">
+                                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">Respuesta: Red</div>
+                            </div>
+                            <div class="vocab-card">
+                                <div class="vocab-icon">🌿</div>
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Leaf (Hoja)</div>
+                                <input type="text" placeholder="Color en inglés" style="width: 100%; padding: 0.5rem; border: 2px solid #D4B8E0; border-radius: 4px;">
+                                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">Respuesta: Green</div>
+                            </div>
+                            <div class="vocab-card">
+                                <div class="vocab-icon">☁️</div>
+                                <div style="font-weight: 600; margin-bottom: 0.5rem;">Cloud (Nube)</div>
+                                <input type="text" placeholder="Color en inglés" style="width: 100%; padding: 0.5rem; border: 2px solid #D4B8E0; border-radius: 4px;">
+                                <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">Respuesta: White</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 style="color: #04071B; margin: 1.5rem 0 1rem 0;">Ejercicio 3: Crea tu propia conversación</h4>
+                    <div class="tip-box">
+                        <strong>📝 Tu tarea:</strong> Escribe una conversación similar cambiando los objetos y colores. Usa al menos 3 objetos diferentes del salón de clases.
+                    </div>
+                    <textarea style="width: 100%; min-height: 200px; padding: 1rem; border: 2px solid #D4B8E0; border-radius: 8px; font-family: inherit; font-size: 1rem; margin-top: 1rem;" placeholder="Escribe tu conversación aquí...
+
+Ejemplo:
+A: Good afternoon! I need your help.
+B: Hi! What can I do for you?
+A: What is it?
+B: It's a book.
+A: What color is it?
+B: It's blue and yellow.
+..."></textarea>
+
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button class="interactive-btn" onclick="showAnswers()">✅ Ver Respuestas Correctas</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarea -->
+        <div class="card">
+            <h2>📋 Tarea para la Próxima Clase</h2>
+            <div class="tip-box" style="background: #FFF9E6; border-color: #FFD700;">
+                <strong>📌 For next class:</strong> Trae de casa <span class="highlight">cinco páginas recicladas</span> (pueden ser de periódico, revistas viejas, etc.), sin importar su color o tamaño. Las usaremos para crear materiales.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startBrainstorming() {
+            const colors = ['Red', 'Blue', 'Green', 'Yellow', 'Pink', 'Black', 'White', 'Orange'];
+            const objects = ['pencil', 'eraser', 'marker', 'book', 'notebook', 'ruler'];
+            
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            const randomObject = objects[Math.floor(Math.random() * objects.length)];
+            
+            const resultDiv = document.getElementById('brainstormingResult');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div style="background: #FFF1CB; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                    <h4 style="color: #6B2D8E; margin-bottom: 1rem;">🎨 ¿De qué color es?</h4>
+                    <div style="font-size: 3rem; margin: 1rem 0;">📝</div>
+                    <p style="font-size: 1.2rem; margin-bottom: 1rem;">
+                        <strong>${randomObject}</strong> (objeto)
+                    </p>
+                    <p style="color: #666; margin-bottom: 1rem;">Escribe el color en tu cuaderno:</p>
+                    <button class="interactive-btn" onclick="this.parentElement.innerHTML += '<div style=\'margin-top: 1rem; font-size: 1.2rem; color: #6B2D8E; font-weight: bold;\'><br>Respuesta: <span style=\'color: #2E7D32;\'>${randomColor}</span></div>'">
+                        Mostrar Respuesta
+                    </button>
+                </div>
+            `;
+        }
+
+        function practiceConversation() {
+            alert('💡 Consejo de pronunciación:\n\n1. Lee la conversación en voz alta 3 veces\n2. Grábate y compara con la pronunciación escrita\n3. Presta atención especial a:\n   - "TH" en "Thank" (suena como "z" suave)\n   - "R" en inglés es más suave que en español\n   - Las vocales son más cortas en inglés\n\n¡Practica frente a un espejo!');
+        }
+
+        function checkAnswer1(element, isCorrect) {
+            element.classList.remove('correct', 'incorrect');
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+            }
+        }
+
+        function showAnswers() {
+            alert('✅ Respuestas del Ejercicio 1:\n\n1. A: Good morning! I need your HELP\n2. B: What color IS it?\n3. B: They ARE markers\n\nEjercicio 2:\n🍎 Apple = RED (rojo)\n🌿 Leaf = GREEN (verde)\n☁️ Cloud = WHITE (blanco)\n\n¡Recuerda practicar la pronunciación!');
+        }
+
+        // Agregar interactividad a los inputs de ejercicio 2
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('#exercise2 input[type="text"]');
+            const answers = ['red', 'green', 'white'];
+            
+            inputs.forEach((input, index) => {
+                input.addEventListener('blur', function() {
+                    if (this.value.toLowerCase().trim() === answers[index]) {
+                        this.style.borderColor = '#2E7D32';
+                        this.style.background = '#CDE9D6';
+                    } else {
+                        this.style.borderColor = '#C62828';
+                        this.style.background = '#F8D3CF';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
