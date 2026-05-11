@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operaciones Combinadas de Raíces Cuadradas - Calculadora</title>
+    <title>Operaciones Combinadas de Raíces Cuadradas - Parte 1</title>
     <style>
         * {
             margin: 0;
@@ -48,9 +48,91 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 2rem 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #054F8E;
+        }
+
+        .card-problema {
+            border-left-color: #F5B7BC;
+            background: linear-gradient(to right, #FFF1CB, white);
+        }
+
+        .card-concepto {
+            border-left-color: #CDE9D6;
+            background: linear-gradient(to right, #D2E4FD, white);
+        }
+
+        .card-ejemplo {
+            border-left-color: #F8D3CF;
+            background: linear-gradient(to right, #F8D3CF, white);
+        }
+
+        .card h2 {
+            color: #054F8E;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .icon-p { background-color: #F5B7BC; color: #04071B; }
+        .icon-c { background-color: #054F8E; }
+        .icon-e { background-color: #F8D3CF; color: #04071B; }
+
+        .step {
+            background: #FFF1CB;
+            border-left: 4px solid #054F8E;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #04071B;
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-box {
+            background: white;
+            border: 2px solid #054F8E;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+
+        .tip-box {
+            background: #CDE9D6;
+            border-left: 4px solid #054F8E;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
         }
 
         .calculator {
@@ -177,6 +259,22 @@
             display: none;
         }
 
+        .highlight {
+            background: #FFF1CB;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        ul {
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
         @media (max-width: 768px) {
             .keyboard {
                 grid-template-columns: repeat(4, 1fr);
@@ -198,10 +296,128 @@
         <a href="#">9° Grado</a> <span>›</span> 
         <a href="#">Matemáticas</a> <span>›</span> 
         <a href="#">Unidad 2</a> <span>›</span> 
-        <span>Calculadora de Raíces</span>
+        <span>Operaciones Combinadas - Parte 1</span>
     </nav>
 
     <div class="container">
+        <!-- Sección P -->
+        <div class="card card-problema">
+            <h2><span class="icon icon-p">P</span> Problema Inicial</h2>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                Resolvamos: <span class="highlight">√3(√3 + 5)</span>
+            </p>
+
+            <div class="step">
+                <div class="step-title">🎯 Paso 1: Entender el problema</div>
+                <p>Tenemos una raíz cuadrada multiplicando un paréntesis. Usaremos la propiedad distributiva.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">💡 Paso 2: Sustituir para facilitar</div>
+                <div class="formula-box">
+                    Si √3 = a<br><br>
+                    Entonces: √3(√3 + 5) = a(a + 5)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">🔢 Paso 3: Propiedad distributiva</div>
+                <div class="formula-box">
+                    a(a + 5) = a × a + a × 5 = a² + 5a
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">🔄 Paso 4: Regresar a la raíz</div>
+                <div class="formula-box">
+                    a² + 5a = (√3)² + 5(√3) = 3 + 5√3
+                </div>
+                <div class="tip-box">
+                    <strong>⚡ Recuerda:</strong> (√3)² = 3 porque la raíz y el cuadrado se cancelan
+                </div>
+            </div>
+
+            <div class="step" style="background: #CDE9D6;">
+                <div class="step-title">✅ Resultado Final</div>
+                <div class="formula-box" style="font-size: 1.5rem; background: white;">
+                    3 + 5√3
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección C -->
+        <div class="card card-concepto">
+            <h2><span class="icon icon-c">C</span> Concepto Clave</h2>
+            
+            <h3 style="color: #054F8E; margin-bottom: 1rem;">📚 Propiedad Distributiva</h3>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                Cuando multiplicas un número por un paréntesis, multiplicas por CADA término:
+            </p>
+
+            <div class="formula-box">
+                <strong>Fórmula:</strong><br><br>
+                a(b + c) = ab + ac
+            </div>
+
+            <div class="tip-box">
+                <strong>🌟 Con raíces funciona igual:</strong><br><br>
+                √5(√6 + √5) = √5×√6 + √5×√5 = √30 + 5
+            </div>
+
+            <ul style="margin-top: 1.5rem; font-size: 1.05rem;">
+                <li>✅ Multiplica el número de fuera por CADA término del paréntesis</li>
+                <li>✅ √a × a = a (se cancelan)</li>
+                <li>✅ √a × √b = √(ab)</li>
+            </ul>
+        </div>
+
+        <!-- Sección E -->
+        <div class="card card-ejemplo">
+            <h2><span class="icon icon-e">E</span> Ejemplo Paso a Paso</h2>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+                Resolvamos: <span class="highlight">√5(√45 + 7)</span>
+            </p>
+
+            <div class="step">
+                <div class="step-title">🔍 Paso 1: Simplificar √45</div>
+                <div class="formula-box">
+                    √45 = √(9×5) = √9 × 5 = 3√5
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">📝 Paso 2: Reescribir</div>
+                <div class="formula-box">
+                    √5(3√5 + 7)
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">⚡ Paso 3: Distribuir</div>
+                <div class="formula-box">
+                    √5 × 3√5 + √5 × 7
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-title">🧮 Paso 4: Resolver</div>
+                <div class="formula-box">
+                    3(√5)² + 7√5 = 3×5 + 7√5 = 15 + 7√5
+                </div>
+            </div>
+
+            <div class="step" style="background: #CDE9D6;">
+                <div class="step-title">🎉 Resultado Final</div>
+                <div class="formula-box" style="font-size: 1.5rem; background: white;">
+                    15 + 7√5
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculadora -->
         <div class="calculator">
             <h2 class="calc-title">🧮 Calculadora de Raíces Cuadradas</h2>
             
@@ -300,11 +516,8 @@
             }
 
             try {
-                // Limpiar expresión
                 let cleanExpr = expr.replace(/\s/g, '');
                 
-                // Detectar tipo de expresión
-                // Patrón: √a(√b±c)
                 const pattern1 = /^√(\d+)\(√(\d+)([+-])(\d+)\)$/;
                 const match1 = cleanExpr.match(pattern1);
                 
@@ -314,19 +527,14 @@
                     const operator = match1[3];
                     const constant = parseInt(match1[4]);
                     
-                    // Simplificar raíz interior si es posible
                     const simplified = simplifySqrt(innerSqrt);
                     
-                    // Calcular primer término
                     let term1;
                     if (simplified.perfect) {
-                        // √a × b = b√a (si b es resultado de √(b²))
                         term1 = simplified.coef * outerSqrt;
                     } else if (outerSqrt === innerSqrt) {
-                        // √a × a = a
                         term1 = outerSqrt;
                     } else {
-                        // √a × b√c = b√(ac)
                         const product = outerSqrt * simplified.sqrt;
                         const termSimplified = simplifySqrt(product);
                         term1 = simplified.coef !== 1 ? 
@@ -336,17 +544,13 @@
                             termSimplified.text;
                     }
                     
-                    // Segundo término
                     const term2 = `${constant}√${outerSqrt}`;
-                    
-                    // Resultado
                     const result = `${term1} ${operator} ${term2}`;
                     resultBox.innerHTML = `<div style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #666;">Resultado:</div>${result}`;
                     resultContainer.classList.add('active');
                     return;
                 }
                 
-                // Patrón: √a(b±√c)
                 const pattern2 = /^√(\d+)\((\d+)([+-])√(\d+)\)$/;
                 const match2 = cleanExpr.match(pattern2);
                 
@@ -366,7 +570,6 @@
                     return;
                 }
                 
-                // Patrón: √a(√b±√c)
                 const pattern3 = /^√(\d+)\(√(\d+)([+-])√(\d+)\)$/;
                 const match3 = cleanExpr.match(pattern3);
                 
@@ -387,7 +590,6 @@
                     return;
                 }
                 
-                // Patrón: a(√b±c)
                 const pattern4 = /^(\d+)\(√(\d+)([+-])(\d+)\)$/;
                 const match4 = cleanExpr.match(pattern4);
                 
@@ -409,7 +611,6 @@
                     return;
                 }
                 
-                // Patrón: √a(b±c)
                 const pattern5 = /^√(\d+)\((\d+)([+-])(\d+)\)$/;
                 const match5 = cleanExpr.match(pattern5);
                 
@@ -427,7 +628,6 @@
                     return;
                 }
                 
-                // Patrón: √a(√b)
                 const pattern6 = /^√(\d+)\(√(\d+)\)$/;
                 const match6 = cleanExpr.match(pattern6);
                 
@@ -451,7 +651,6 @@
             }
         }
 
-        // Teclado físico
         document.addEventListener('keydown', function(e) {
             const validKeys = '0123456789+-().';
             if (validKeys.includes(e.key)) {
