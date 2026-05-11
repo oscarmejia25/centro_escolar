@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Análisis Gráfico de la Pendiente Positiva</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -100,7 +99,7 @@
 
         .problem-text {
             font-size: 1.1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
             padding: 1rem;
             background: white;
             border-radius: 8px;
@@ -115,34 +114,39 @@
             color: #054F8E;
         }
 
-        .formula-box {
-            background: white;
-            border: 2px solid #054F8E;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            text-align: center;
-            font-size: 1.2rem;
+        .graphs-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
         }
 
-        .graph-container {
+        .graph-box {
             background: white;
             border: 2px solid #D2E4FD;
             border-radius: 8px;
             padding: 1rem;
-            margin: 1rem 0;
-            position: relative;
-            height: 400px;
-        }
-
-        .graph-title {
             text-align: center;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #054F8E;
         }
 
-        .step {
+        .graph-box h3 {
+            color: #054F8E;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .graph-svg {
+            width: 100%;
+            height: 350px;
+            border: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .solution-section {
+            margin-top: 2rem;
+        }
+
+        .solution-box {
             background: #FFF1CB;
             border-left: 4px solid #054F8E;
             padding: 1.5rem;
@@ -150,10 +154,32 @@
             border-radius: 8px;
         }
 
-        .step-title {
-            font-weight: 600;
+        .solution-box h4 {
             color: #04071B;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .answer {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            border: 1px solid #D2E4FD;
+        }
+
+        .answer strong {
+            color: #054F8E;
+        }
+
+        .formula-box {
+            background: white;
+            border: 2px solid #054F8E;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 1.1rem;
         }
 
         .tip-box {
@@ -179,118 +205,105 @@
             font-size: 1.8rem;
         }
 
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-            background: #F8F9FA;
-            padding: 1.5rem;
-            border-radius: 8px;
+        .input-group {
+            margin-bottom: 1.5rem;
         }
 
-        .slider-group {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 2px solid #D2E4FD;
-        }
-
-        .slider-label {
+        .input-label {
             display: block;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: #054F8E;
         }
 
-        .slider-value {
-            display: inline-block;
-            background: #054F8E;
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            margin-left: 0.5rem;
-            min-width: 60px;
+        .input-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"] {
+            padding: 0.8rem;
+            border: 2px solid #054F8E;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            width: 120px;
             text-align: center;
         }
 
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 4px;
-            background: #D2E4FD;
+        input[type="number"]:focus {
             outline: none;
-            -webkit-appearance: none;
+            border-color: #F5B7BC;
+            box-shadow: 0 0 0 3px rgba(245, 183, 188, 0.3);
         }
 
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+        .btn-calculate {
             background: #054F8E;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #054F8E;
-            cursor: pointer;
+            color: white;
             border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .chart-container {
-            position: relative;
-            height: 400px;
-            background: white;
-            border: 2px solid #D2E4FD;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
             border-radius: 8px;
-            padding: 1rem;
+            cursor: pointer;
+            display: block;
+            margin: 2rem auto;
+            transition: all 0.3s;
         }
 
-        .info-panel {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-top: 1.5rem;
+        .btn-calculate:hover {
+            background: #04071B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        .info-box {
+        .results-container {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .results-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-item {
             background: linear-gradient(135deg, #CDE9D6, #D2E4FD);
             border: 2px solid #054F8E;
             border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
+            padding: 1.5rem;
+            margin: 1rem 0;
         }
 
-        .info-box-title {
-            font-weight: 600;
+        .result-item h4 {
             color: #04071B;
             margin-bottom: 0.5rem;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
         }
 
-        .info-box-value {
+        .result-value {
             font-size: 1.3rem;
-            font-weight: 700;
+            font-weight: 600;
             color: #054F8E;
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
         }
 
-        .equation-display {
-            background: #054F8E;
-            color: white;
+        .error-message {
+            background: #F8D3CF;
+            border: 2px solid #04071B;
+            color: #04071B;
             padding: 1rem;
             border-radius: 8px;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-top: 1rem;
+            display: none;
         }
 
         .highlight {
@@ -300,16 +313,8 @@
             font-weight: 600;
         }
 
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
         @media (max-width: 768px) {
-            .controls,
-            .two-columns,
-            .info-panel {
+            .graphs-section {
                 grid-template-columns: 1fr;
             }
         }
@@ -349,66 +354,154 @@
                 </div>
             </div>
 
-            <div class="two-columns">
-                <div>
-                    <h3 style="color: #054F8E; margin-bottom: 1rem; text-align: center;">Función 1: y = 2x + 3</h3>
-                    <div class="step">
-                        <div class="step-title">📊 Análisis del comportamiento</div>
-                        <p>Cuando x aumenta <strong>1 unidad</strong>, y aumenta <strong>2 unidades</strong>.</p>
-                        <div class="formula-box">
-                            Si x = 0 → y = 3<br>
-                            Si x = 1 → y = 5<br>
-                            Si x = 2 → y = 7<br>
-                            <strong>¡y aumenta 2 cada vez!</strong>
-                        </div>
-                    </div>
+            <div class="graphs-section">
+                <div class="graph-box">
+                    <h3>y = 2x + 3</h3>
+                    <svg class="graph-svg" viewBox="-70 -60 440 360">
+                        <!-- Grid -->
+                        <defs>
+                            <pattern id="grid1" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e0e0e0" stroke-width="0.5"/>
+                            </pattern>
+                        </defs>
+                        <rect width="400" height="320" fill="url(#grid1)"/>
+                        
+                        <!-- Axes -->
+                        <line x1="100" y1="0" x2="100" y2="320" stroke="#04071B" stroke-width="2"/>
+                        <line x1="0" y1="160" x2="400" y2="160" stroke="#04071B" stroke-width="2"/>
+                        
+                        <!-- Arrows -->
+                        <polygon points="100,5 95,15 105,15" fill="#04071B"/>
+                        <polygon points="395,160 385,155 385,165" fill="#04071B"/>
+                        
+                        <!-- Labels -->
+                        <text x="105" y="15" font-size="12">y</text>
+                        <text x="385" y="155" font-size="12">x</text>
+                        <text x="105" y="165" font-size="10">O</text>
+                        
+                        <!-- Numbers on axes -->
+                        <text x="95" y="165" font-size="10">0</text>
+                        <text x="135" y="165" font-size="10">1</text>
+                        <text x="175" y="165" font-size="10">2</text>
+                        <text x="65" y="165" font-size="10">-1</text>
+                        <text x="25" y="165" font-size="10">-2</text>
+                        
+                        <text x="105" y="125" font-size="10">1</text>
+                        <text x="105" y="85" font-size="10">2</text>
+                        <text x="105" y="45" font-size="10">3</text>
+                        <text x="105" y="205" font-size="10">-1</text>
+                        <text x="105" y="245" font-size="10">-2</text>
+                        
+                        <!-- Line y = 2x + 3 -->
+                        <line x1="0" y1="260" x2="200" y2="0" stroke="#054F8E" stroke-width="3"/>
+                        
+                        <!-- Equation -->
+                        <text x="220" y="40" font-size="14" fill="#054F8E" font-weight="bold">y = 2x + 3</text>
+                        
+                        <!-- Points marked -->
+                        <circle cx="100" cy="100" r="4" fill="#F5B7BC"/>
+                        <circle cx="140" cy="60" r="4" fill="#F5B7BC"/>
+                        <circle cx="180" cy="20" r="4" fill="#F5B7BC"/>
+                        
+                        <!-- Arrows showing increase -->
+                        <path d="M 100 100 L 140 100" stroke="#F5B7BC" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <path d="M 140 100 L 140 60" stroke="#F5B7BC" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#F5B7BC"/>
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
 
-                    <div class="step">
-                        <div class="step-title">🎯 Cuando x = 8</div>
-                        <div class="formula-box">
-                            y = 2(8) + 3<br>
-                            y = 16 + 3<br>
-                            <strong>y = 19</strong>
-                        </div>
-                    </div>
+                <div class="graph-box">
+                    <h3>y = ½x + 3</h3>
+                    <svg class="graph-svg" viewBox="-70 -60 440 360">
+                        <!-- Grid -->
+                        <rect width="400" height="320" fill="url(#grid1)"/>
+                        
+                        <!-- Axes -->
+                        <line x1="100" y1="0" x2="100" y2="320" stroke="#04071B" stroke-width="2"/>
+                        <line x1="0" y1="160" x2="400" y2="160" stroke="#04071B" stroke-width="2"/>
+                        
+                        <!-- Arrows -->
+                        <polygon points="100,5 95,15 105,15" fill="#04071B"/>
+                        <polygon points="395,160 385,155 385,165" fill="#04071B"/>
+                        
+                        <!-- Labels -->
+                        <text x="105" y="15" font-size="12">y</text>
+                        <text x="385" y="155" font-size="12">x</text>
+                        <text x="105" y="165" font-size="10">O</text>
+                        
+                        <!-- Numbers on axes -->
+                        <text x="95" y="165" font-size="10">0</text>
+                        <text x="135" y="165" font-size="10">2</text>
+                        <text x="175" y="165" font-size="10">4</text>
+                        <text x="215" y="165" font-size="10">6</text>
+                        <text x="65" y="165" font-size="10">-2</text>
+                        <text x="25" y="165" font-size="10">-4</text>
+                        
+                        <text x="105" y="125" font-size="10">1</text>
+                        <text x="105" y="85" font-size="10">2</text>
+                        <text x="105" y="45" font-size="10">3</text>
+                        
+                        <!-- Line y = 0.5x + 3 -->
+                        <line x1="0" y1="180" x2="400" y2="100" stroke="#054F8E" stroke-width="3"/>
+                        
+                        <!-- Equation -->
+                        <text x="10" y="30" font-size="14" fill="#054F8E" font-weight="bold">y = ½x + 3</text>
+                        
+                        <!-- Points marked -->
+                        <circle cx="100" cy="120" r="4" fill="#F5B7BC"/>
+                        <circle cx="180" cy="100" r="4" fill="#F5B7BC"/>
+                        <circle cx="260" cy="80" r="4" fill="#F5B7BC"/>
+                    </svg>
+                </div>
+            </div>
 
-                    <div class="step">
-                        <div class="step-title">📈 Razón de cambio</div>
-                        <div class="formula-box">
-                            Razón de cambio = 2/1 = <strong>2</strong><br><br>
-                            <em>Por cada unidad que aumenta x, y aumenta 2</em>
+            <div class="solution-section">
+                <h3 style="color: #054F8E; margin-bottom: 1rem;">Solución:</h3>
+                
+                <div class="solution-box">
+                    <h4>Función 1: y = 2x + 3</h4>
+                    
+                    <div class="answer">
+                        <strong>a) Comportamiento:</strong> Cuando x aumenta <span class="highlight">1 unidad</span>, y aumenta <span class="highlight">2 unidades</span>.
+                    </div>
+                    
+                    <div class="answer">
+                        <strong>b) Cuando x = 8:</strong><br>
+                        y = 2(8) + 3 = 16 + 3 = <span class="highlight">19</span>
+                    </div>
+                    
+                    <div class="answer">
+                        <strong>c) Razón de cambio:</strong><br>
+                        <div class="formula-box" style="margin: 0.5rem 0;">
+                            Razón de cambio = <span style="display: inline-block; text-align: center;">2<br>─<br>1</span> = <strong>2</strong>
                         </div>
+                        Al aumentar 1 en x, y aumenta 2.
                     </div>
                 </div>
 
-                <div>
-                    <h3 style="color: #054F8E; margin-bottom: 1rem; text-align: center;">Función 2: y = ½x + 3</h3>
-                    <div class="step">
-                        <div class="step-title">📊 Análisis del comportamiento</div>
-                        <p>Cuando x aumenta <strong>2 unidades</strong>, y aumenta <strong>1 unidad</strong>.</p>
-                        <div class="formula-box">
-                            Si x = 0 → y = 3<br>
-                            Si x = 2 → y = 4<br>
-                            Si x = 4 → y = 5<br>
-                            <strong>¡y aumenta 1 cada 2 de x!</strong>
-                        </div>
+                <div class="solution-box">
+                    <h4>Función 2: y = ½x + 3</h4>
+                    
+                    <div class="answer">
+                        <strong>a) Comportamiento:</strong> Cuando x aumenta <span class="highlight">2 unidades</span>, y aumenta <span class="highlight">1 unidad</span>.
                     </div>
-
-                    <div class="step">
-                        <div class="step-title">🎯 Cuando x = 8</div>
-                        <div class="formula-box">
-                            y = ½(8) + 3<br>
-                            y = 4 + 3<br>
-                            <strong>y = 7</strong>
-                        </div>
+                    
+                    <div class="answer">
+                        <strong>b) Cuando x = 8:</strong><br>
+                        y = ½(8) + 3 = 4 + 3 = <span class="highlight">7</span>
                     </div>
-
-                    <div class="step">
-                        <div class="step-title">📈 Razón de cambio</div>
-                        <div class="formula-box">
-                            Razón de cambio = 1/2 = <strong>0.5</strong><br><br>
-                            <em>Por cada unidad que aumenta x, y aumenta ½</em>
+                    
+                    <div class="answer">
+                        <strong>c) Razón de cambio:</strong><br>
+                        <div class="formula-box" style="margin: 0.5rem 0;">
+                            Razón de cambio = <span style="display: inline-block; text-align: center;">1<br>─<br>2</span> = <strong>0.5</strong>
                         </div>
+                        Al aumentar 1 en x, y aumenta ½.
                     </div>
                 </div>
             </div>
@@ -426,223 +519,110 @@
 
             <div class="formula-box" style="background: #FFF1CB;">
                 <strong>a</strong> = razón de cambio = pendiente<br><br>
-                <strong>b</strong> = valor de y cuando x = 0 (intersección)
+                <strong>b</strong> = valor de y cuando x = 0
             </div>
 
             <div class="tip-box">
                 <strong>🎯 Puntos importantes:</strong>
-                <ul style="margin-top: 0.5rem;">
+                <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
                     <li>Entre <strong>más grande sea "a"</strong>, más inclinada está la recta</li>
                     <li>Si <strong>a = 2</strong>, por cada unidad que avanza x, y sube 2</li>
-                    <li>Si <strong>a = ½</strong>, por cada unidad que avanza x, y sube ½</li>
-                    <li>Para cambiar la inclinación, solo modificas el valor de <strong>"a"</strong></li>
+                    <li>Si <strong>a = ½</strong>, por cada 2 unidades que avanza x, y sube 1</li>
+                    <li>La razón de cambio se calcula: <strong>Variación en y / Variación en x</strong></li>
                 </ul>
-            </div>
-
-            <div class="formula-box" style="margin-top: 1rem;">
-                <strong>Fórmula de la razón de cambio:</strong><br><br>
-                Razón de cambio = <span style="display: inline-block; text-align: center;">Variación en y<br>─────────────<br>Variación en x</span>
             </div>
         </div>
 
-        <!-- Calculadora Gráfica Interactiva -->
+        <!-- Calculadora -->
         <div class="calculator-section">
-            <h2 class="calculator-title">📊 Graficador Interactivo de Funciones Lineales</h2>
+            <h2 class="calculator-title">🧮 Resolvedor de Funciones Lineales</h2>
             
-            <div class="equation-display" id="equationDisplay">
-                y = 2x + 3
-            </div>
-
-            <div class="controls">
-                <div class="slider-group">
-                    <label class="slider-label">
-                        Pendiente (a) <span class="slider-value" id="slopeValue">2</span>
-                    </label>
-                    <input type="range" id="slopeSlider" min="-5" max="5" step="0.5" value="2">
-                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
-                        Controla la inclinación de la recta
-                    </div>
-                </div>
-
-                <div class="slider-group">
-                    <label class="slider-label">
-                        Intersección (b) <span class="slider-value" id="interceptValue">3</span>
-                    </label>
-                    <input type="range" id="interceptSlider" min="-5" max="10" step="1" value="3">
-                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
-                        Donde la recta corta al eje y
-                    </div>
+            <div class="input-group">
+                <label class="input-label">Ingresa los valores de la función y = ax + b:</label>
+                <div class="input-row">
+                    <span>a = </span>
+                    <input type="number" id="inputA" step="0.5" value="2" placeholder="Ej: 2">
+                    <span style="margin: 0 1rem;">b = </span>
+                    <input type="number" id="inputB" step="1" value="3" placeholder="Ej: 3">
                 </div>
             </div>
 
-            <div class="chart-container">
-                <canvas id="functionChart"></canvas>
+            <div class="input-group">
+                <label class="input-label">Valor de x para evaluar:</label>
+                <div class="input-row">
+                    <span>x = </span>
+                    <input type="number" id="inputX" step="1" value="6" placeholder="Ej: 6">
+                </div>
             </div>
 
-            <div class="info-panel">
-                <div class="info-box">
-                    <div class="info-box-title">Razón de Cambio</div>
-                    <div class="info-box-value" id="rateOfChange">2</div>
-                    <div style="font-size: 0.85rem; margin-top: 0.3rem;">
-                        Cuando x aumenta 1, y aumenta <span id="rateOfChangeText">2</span>
-                    </div>
+            <button class="btn-calculate" onclick="calculate()">Resolver</button>
+
+            <div class="error-message" id="errorMsg"></div>
+
+            <div class="results-container" id="resultsContainer">
+                <div class="result-item">
+                    <h4>a) ¿Qué sucede con y cuando x aumenta una unidad?</h4>
+                    <div class="result-value" id="resultA"></div>
                 </div>
 
-                <div class="info-box">
-                    <div class="info-box-title">Cuando x = 8</div>
-                    <div class="info-box-value" id="whenX8">y = 19</div>
-                    <div style="font-size: 0.85rem; margin-top: 0.3rem;">
-                        Sustituyendo en la ecuación
-                    </div>
+                <div class="result-item">
+                    <h4>b) ¿Qué valor le corresponde a y cuando x vale <span id="xValue"></span>?</h4>
+                    <div class="result-value" id="resultB"></div>
                 </div>
 
-                <div class="info-box">
-                    <div class="info-box-title">Punto de Corte</div>
-                    <div class="info-box-value" id="yIntercept">(0, 3)</div>
-                    <div style="font-size: 0.85rem; margin-top: 0.3rem;">
-                        Cuando x = 0
-                    </div>
+                <div class="result-item">
+                    <h4>c) Razón de cambio:</h4>
+                    <div class="result-value" id="resultC"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Inicializar el gráfico
-        const ctx = document.getElementById('functionChart').getContext('2d');
-        
-        function generateData(a, b) {
-            const data = [];
-            for (let x = -6; x <= 6; x += 0.5) {
-                const y = a * x + b;
-                data.push({x: x, y: y});
+        function calculate() {
+            const a = parseFloat(document.getElementById('inputA').value);
+            const b = parseFloat(document.getElementById('inputB').value);
+            const x = parseFloat(document.getElementById('inputX').value);
+            const errorMsg = document.getElementById('errorMsg');
+            const resultsContainer = document.getElementById('resultsContainer');
+
+            errorMsg.style.display = 'none';
+            resultsContainer.classList.remove('active');
+
+            if (isNaN(a) || isNaN(b) || isNaN(x)) {
+                errorMsg.textContent = '⚠️ Por favor ingresa todos los valores';
+                errorMsg.style.display = 'block';
+                return;
             }
-            return data;
+
+            // a) Qué sucede cuando x aumenta 1 unidad
+            const yIncrease = a;
+            let resultAText = '';
+            if (yIncrease === 1) {
+                resultAText = `Cuando x aumenta 1 unidad, y aumenta 1 unidad`;
+            } else if (yIncrease === -1) {
+                resultAText = `Cuando x aumenta 1 unidad, y disminuye 1 unidad`;
+            } else if (yIncrease > 0) {
+                resultAText = `Cuando x aumenta 1 unidad, y aumenta ${yIncrease} ${yIncrease === Math.floor(yIncrease) ? '' : '= ' + yIncrease.toFixed(2)}`;
+            } else {
+                resultAText = `Cuando x aumenta 1 unidad, y disminuye ${Math.abs(yIncrease)} ${Math.abs(yIncrease) === Math.floor(Math.abs(yIncrease)) ? '' : '= ' + Math.abs(yIncrease).toFixed(2)}`;
+            }
+
+            // b) Valor de y cuando x = valor dado
+            const y = a * x + b;
+            const resultBText = `y = ${a}(${x}) + ${b} = ${a * x} + ${b} = ${y}`;
+
+            // c) Razón de cambio
+            const resultCText = `Razón de cambio = ${a}/1 = ${a}`;
+
+            // Mostrar resultados
+            document.getElementById('resultA').textContent = resultAText;
+            document.getElementById('resultB').textContent = resultBText;
+            document.getElementById('resultC').textContent = resultCText;
+            document.getElementById('xValue').textContent = x;
+
+            resultsContainer.classList.add('active');
         }
-
-        let chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                datasets: [{
-                    label: 'y = ax + b',
-                    data: generateData(2, 3),
-                    borderColor: '#054F8E',
-                    backgroundColor: 'rgba(5, 79, 142, 0.1)',
-                    borderWidth: 3,
-                    pointRadius: 2,
-                    pointHoverRadius: 5,
-                    fill: true,
-                    tension: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        min: -6,
-                        max: 6,
-                        ticks: {
-                            stepSize: 1
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        },
-                        title: {
-                            display: true,
-                            text: 'x'
-                        }
-                    },
-                    y: {
-                        min: -5,
-                        max: 15,
-                        ticks: {
-                            stepSize: 1
-                        },
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        },
-                        title: {
-                            display: true,
-                            text: 'y'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `(${context.parsed.x.toFixed(1)}, ${context.parsed.y.toFixed(1)})`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // Actualizar cuando los sliders cambien
-        const slopeSlider = document.getElementById('slopeSlider');
-        const interceptSlider = document.getElementById('interceptSlider');
-        const slopeValue = document.getElementById('slopeValue');
-        const interceptValue = document.getElementById('interceptValue');
-        const equationDisplay = document.getElementById('equationDisplay');
-        const rateOfChange = document.getElementById('rateOfChange');
-        const rateOfChangeText = document.getElementById('rateOfChangeText');
-        const whenX8 = document.getElementById('whenX8');
-        const yIntercept = document.getElementById('yIntercept');
-
-        function updateChart() {
-            const a = parseFloat(slopeSlider.value);
-            const b = parseFloat(interceptSlider.value);
-
-            // Actualizar valores mostrados
-            slopeValue.textContent = a;
-            interceptValue.textContent = b;
-
-            // Actualizar ecuación
-            let equation = 'y = ';
-            if (a !== 0) {
-                if (a === 1) {
-                    equation += 'x';
-                } else if (a === -1) {
-                    equation += '-x';
-                } else {
-                    equation += a + 'x';
-                }
-            }
-            if (b > 0) {
-                equation += ' + ' + b;
-            } else if (b < 0) {
-                equation += ' - ' + Math.abs(b);
-            }
-            equationDisplay.textContent = equation;
-
-            // Actualizar datos del gráfico
-            chart.data.datasets[0].data = generateData(a, b);
-            chart.data.datasets[0].label = equation;
-            chart.update();
-
-            // Actualizar información
-            rateOfChange.textContent = a;
-            rateOfChangeText.textContent = a;
-            
-            const y8 = a * 8 + b;
-            whenX8.textContent = `y = ${y8}`;
-            
-            yIntercept.textContent = `(0, ${b})`;
-        }
-
-        slopeSlider.addEventListener('input', updateChart);
-        interceptSlider.addEventListener('input', updateChart);
-
-        // Inicializar
-        updateChart();
     </script>
 </body>
 </html>
