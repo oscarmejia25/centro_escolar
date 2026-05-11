@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generalización de un Patrón Numérico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #04071B;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #054F8E 0%, #04071B 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar {
+            background-color: #D2E4FD;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #054F8E;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar a {
+            color: #054F8E;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #04071B;
+            text-decoration: underline;
+        }
+
+        .navbar span {
+            color: #054F8E;
+            margin: 0 0.5rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #054F8E;
+        }
+
+        .card-problema {
+            border-left-color: #F5B7BC;
+            background: linear-gradient(to right, #FFF1CB, white);
+        }
+
+        .card-concepto {
+            border-left-color: #054F8E;
+            background: linear-gradient(to right, #D2E4FD, white);
+        }
+
+        .card-ejemplo {
+            border-left-color: #F8D3CF;
+            background: linear-gradient(to right, #F8D3CF, white);
+        }
+
+        .card h2 {
+            color: #054F8E;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .icon-p { background-color: #F5B7BC; color: #04071B; }
+        .icon-c { background-color: #054F8E; }
+        .icon-e { background-color: #F8D3CF; color: #04071B; }
+
+        .step {
+            background: #FFF1CB;
+            border-left: 4px solid #054F8E;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #04071B;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .formula-box {
+            background: white;
+            border: 2px solid #054F8E;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+
+        .tip-box {
+            background: #CDE9D6;
+            border-left: 4px solid #054F8E;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .table-pattern {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .table-pattern th {
+            background: #054F8E;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .table-pattern td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .table-pattern tr:nth-child(even) {
+            background: #F8F9FA;
+        }
+
+        .table-pattern tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight {
+            background: #FFF1CB;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .calculator {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 3px solid #054F8E;
+        }
+
+        .calc-title {
+            text-align: center;
+            color: #054F8E;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .calc-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-group {
+            background: #F8F9FA;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #D2E4FD;
+        }
+
+        .control-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #054F8E;
+        }
+
+        .control-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #054F8E;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .control-input:focus {
+            outline: none;
+            border-color: #F5B7BC;
+            box-shadow: 0 0 0 3px rgba(245, 183, 188, 0.3);
+        }
+
+        .pattern-display {
+            background: linear-gradient(135deg, #CDE9D6, #D2E4FD);
+            border: 3px solid #054F8E;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .results-table th {
+            background: #054F8E;
+            color: white;
+            padding: 0.8rem;
+        }
+
+        .results-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .results-table tr:hover {
+            background: #FFF1CB;
+        }
+
+        .variable-slider {
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        .slider-value {
+            display: inline-block;
+            background: #054F8E;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .calc-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Centro Escolar Cantón Los Prados</h1>
+    </header>
+
+    <nav class="navbar">
+        <a href="#">Inicio</a> <span>›</span> 
+        <a href="#">7° Grado</a> <span>›</span> 
+        <a href="#">Matemáticas</a> <span>›</span> 
+        <a href="#">Unidad 1</a> <span>›</span> 
+        <span>Generalización de un Patrón Numérico</span>
+    </nav>
+
+    <div class="container">
+        <!-- Sección P -->
+        <div class="card card-problema">
+            <h2><span class="icon icon-p">P</span> Problema</h2>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                Para calcular el número de pines necesarios para colocar 1, 2, 3 y 4 láminas, se usa el siguiente patrón:
+            </p>
+
+            <div class="formula-box">
+                1 lámina → 3 × 1 + 3 (pines)<br>
+                2 láminas → 3 × 2 + 3 (pines)<br>
+                3 láminas → 3 × 3 + 3 (pines)<br>
+                4 láminas → 3 × 4 + 3 (pines)
+            </div>
+
+            <div class="question" style="margin: 1.5rem 0;">
+                <strong>a)</strong> Expresa el número de pines que se necesitan para poner 5, 6 y 7 láminas.<br>
+                <strong>b)</strong> Si el número de láminas que se ponen es <span class="highlight">□</span>, ¿cuántos pines se necesitan?
+            </div>
+
+            <div class="solution-box" style="background: #CDE9D6; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+                <h4 style="color: #04071B; margin-bottom: 1rem;">Solución:</h4>
+                
+                <table class="table-pattern">
+                    <tr>
+                        <th>Número de láminas</th>
+                        <th>Número de pines</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>3 × 1 + 3</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>3 × 2 + 3</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>3 × 3 + 3</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>3 × 4 + 3</td>
+                    </tr>
+                    <tr style="background: #FFF1CB;">
+                        <td><strong>5</strong></td>
+                        <td><strong>3 × 5 + 3 = 18 pines</strong></td>
+                    </tr>
+                    <tr style="background: #FFF1CB;">
+                        <td><strong>6</strong></td>
+                        <td><strong>3 × 6 + 3 = 21 pines</strong></td>
+                    </tr>
+                    <tr style="background: #FFF1CB;">
+                        <td><strong>7</strong></td>
+                        <td><strong>3 × 7 + 3 = 24 pines</strong></td>
+                    </tr>
+                </table>
+
+                <div class="tip-box" style="margin-top: 1rem;">
+                    <strong> Generalización:</strong><br>
+                    Si el número de láminas es <span class="highlight">□</span>, se necesitan:<br>
+                    <strong>3 × □ + 3 (pines)</strong><br><br>
+                    Por ejemplo, para 22 láminas: 3 × 22 + 3 = 69 pines
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección C -->
+        <div class="card card-concepto">
+            <h2><span class="icon icon-c">C</span> Concepto Clave</h2>
+            
+            <h3 style="color: #054F8E; margin-bottom: 1rem;">📚 Generalización de Patrones</h3>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                Cuando hacemos operaciones con cantidades que <strong>cambian</strong> (variables), podemos usar un <span class="highlight">símbolo</span> (como un cuadro □, una letra x, n, etc.) para representar esa cantidad.
+            </p>
+
+            <div class="formula-box" style="background: #FFF1CB;">
+                <strong>Patrón general:</strong><br><br>
+                Si cada paso sigue la regla: <strong>multiplicar por 3 y sumar 3</strong><br><br>
+                Entonces: <strong>3 × □ + 3</strong> o <strong>3x + 3</strong>
+            </div>
+
+            <div class="tip-box">
+                <strong>🎯 ¿Por qué es útil?</strong>
+                <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                    <li>Nos permite calcular <strong>cualquier valor</strong> sin hacer la tabla completa</li>
+                    <li>El símbolo <span class="highlight">□</span> o <span class="highlight">x</span> representa <strong>cualquier número</strong></li>
+                    <li>Es el primer paso hacia el <strong>álgebra</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sección E -->
+        <div class="card card-ejemplo">
+            <h2><span class="icon icon-e">E</span> Ejemplo</h2>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                Si la cantidad de camisetas blancas que se compran se representa con <span class="highlight">□</span> y cada una vale 2 dólares:
+            </p>
+
+            <div class="question" style="margin: 1rem 0;">
+                <strong>a)</strong> ¿Cuál es el costo de la compra?<br>
+                <strong>b)</strong> ¿Cuál es el vuelto al comprar con un billete de 20 dólares?
+            </div>
+
+            <div class="solution-box" style="background: #D2E4FD; padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+                <h4 style="color: #04071B; margin-bottom: 1rem;">Solución:</h4>
+                
+                <table class="table-pattern">
+                    <tr>
+                        <th>Número de camisetas</th>
+                        <th>Cantidad de dinero</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2 × 1 = $2</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>2 × 2 = $4</td>
+                    </tr>
+                    <tr>
+                        <td>⋮</td>
+                        <td>⋮</td>
+                    </tr>
+                    <tr style="background: #FFF1CB;">
+                        <td><strong>□</strong></td>
+                        <td><strong>2 × □</strong></td>
+                    </tr>
+                </table>
+
+                <div style="margin-top: 1.5rem;">
+                    <div class="answer" style="background: white; padding: 1rem; margin: 0.5rem 0; border-radius: 6px;">
+                        <strong>a) Costo de la compra:</strong> <span class="highlight">2 × □ (dólares)</span>
+                    </div>
+                    
+                    <div class="answer" style="background: white; padding: 1rem; margin: 0.5rem 0; border-radius: 6px;">
+                        <strong>b) Vuelto con billete de $20:</strong> <span class="highlight">20 - 2 × □ (dólares)</span>
+                    </div>
+                </div>
+
+                <div class="tip-box" style="margin-top: 1rem;">
+                    <strong>💡 Ejemplo práctico:</strong><br>
+                    Si compras 5 camisetas: 20 - 2 × 5 = 20 - 10 = <strong>$10 de vuelto</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculadora de Patrones -->
+        <div class="calculator">
+            <h2 class="calc-title">🔢 Calculadora de Patrones Numéricos</h2>
+            
+            <div class="calc-controls">
+                <div class="control-group">
+                    <label class="control-label">Multiplicador (a):</label>
+                    <input type="number" class="control-input" id="multiplier" value="3" min="1" max="20" step="1">
+                    <div style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                        Cuánto se multiplica por cada unidad
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Constante (b):</label>
+                    <input type="number" class="control-input" id="constant" value="3" min="0" max="50" step="1">
+                    <div style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                        Cuánto se suma o resta fijo
+                    </div>
+                </div>
+            </div>
+
+            <div class="pattern-display" id="patternDisplay">
+                Patrón: <span style="color: #04071B;">3 × □ + 3</span>
+            </div>
+
+            <div class="control-group" style="margin-bottom: 2rem;">
+                <label class="control-label">
+                    Valor de la variable (□): 
+                    <span class="slider-value" id="variableValue">5</span>
+                </label>
+                <input type="range" class="variable-slider" id="variableSlider" min="1" max="20" value="5">
+                <input type="number" class="control-input" id="variableInput" value="5" min="1" max="100" style="margin-top: 0.5rem;">
+            </div>
+
+            <div class="formula-box" id="resultDisplay" style="font-size: 1.5rem; background: #CDE9D6;">
+                Resultado: <strong>3 × 5 + 3 = 18</strong>
+            </div>
+
+            <h3 style="color: #054F8E; margin: 2rem 0 1rem 0; text-align: center;">Tabla de Valores</h3>
+            <table class="results-table" id="resultsTable">
+                <tr>
+                    <th>□ (Variable)</th>
+                    <th>Operación</th>
+                    <th>Resultado</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const multiplierInput = document.getElementById('multiplier');
+        const constantInput = document.getElementById('constant');
+        const variableSlider = document.getElementById('variableSlider');
+        const variableInput = document.getElementById('variableInput');
+        const patternDisplay = document.getElementById('patternDisplay');
+        const resultDisplay = document.getElementById('resultDisplay');
+        const variableValueDisplay = document.getElementById('variableValue');
+        const resultsTable = document.getElementById('resultsTable');
+
+        function updatePattern() {
+            const a = parseInt(multiplierInput.value) || 0;
+            const b = parseInt(constantInput.value) || 0;
+            const x = parseInt(variableSlider.value) || parseInt(variableInput.value) || 0;
+
+            // Actualizar patrón
+            let patternText = `${a} × □`;
+            if (b > 0) patternText += ` + ${b}`;
+            else if (b < 0) patternText += ` - ${Math.abs(b)}`;
+            
+            patternDisplay.innerHTML = `Patrón: <span style="color: #04071B;">${patternText}</span>`;
+
+            // Calcular resultado
+            const result = a * x + b;
+            let operationText = `${a} × ${x}`;
+            if (b > 0) operationText += ` + ${b}`;
+            else if (b < 0) operationText += ` - ${Math.abs(b)}`;
+            
+            resultDisplay.innerHTML = `Resultado: <strong>${operationText} = ${result}</strong>`;
+
+            // Actualizar tabla
+            updateTable(a, b);
+        }
+
+        function updateTable(a, b) {
+            let tableHTML = `
+                <tr>
+                    <th>□ (Variable)</th>
+                    <th>Operación</th>
+                    <th>Resultado</th>
+                </tr>
+            `;
+
+            for (let i = 1; i <= 10; i++) {
+                const result = a * i + b;
+                let operation = `${a} × ${i}`;
+                if (b > 0) operation += ` + ${b}`;
+                else if (b < 0) operation += ` - ${Math.abs(b)}`;
+                
+                const isCurrent = i === parseInt(variableSlider.value);
+                const rowStyle = isCurrent ? 'style="background: #FFF1CB; font-weight: bold;"' : '';
+                
+                tableHTML += `
+                    <tr ${rowStyle}>
+                        <td>${i}</td>
+                        <td>${operation}</td>
+                        <td>${result}</td>
+                    </tr>
+                `;
+            }
+
+            resultsTable.innerHTML = tableHTML;
+        }
+
+        // Event listeners
+        multiplierInput.addEventListener('input', updatePattern);
+        constantInput.addEventListener('input', updatePattern);
+        
+        variableSlider.addEventListener('input', function() {
+            variableInput.value = this.value;
+            variableValueDisplay.textContent = this.value;
+            updatePattern();
+        });
+
+        variableInput.addEventListener('input', function() {
+            if (this.value >= 1 && this.value <= 100) {
+                variableSlider.value = this.value;
+                variableValueDisplay.textContent = this.value;
+                updatePattern();
+            }
+        });
+
+        // Inicializar
+        updatePattern();
+    </script>
+</body>
+</html>
