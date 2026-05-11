@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operaciones Combinadas de Raíces Cuadradas - Calculadora Avanzada</title>
+    <title>Operaciones Combinadas de Raíces Cuadradas - Calculadora</title>
     <style>
         * {
             margin: 0;
@@ -48,7 +48,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 2rem 1rem;
         }
@@ -64,15 +64,8 @@
         .calc-title {
             text-align: center;
             color: #054F8E;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-
-        .calc-subtitle {
-            text-align: center;
-            color: #666;
             margin-bottom: 2rem;
-            font-size: 0.95rem;
+            font-size: 1.8rem;
         }
 
         .input-section {
@@ -99,7 +92,7 @@
 
         .keyboard {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 0.6rem;
             margin-bottom: 1.5rem;
         }
@@ -148,48 +141,12 @@
             grid-column: span 2;
         }
 
-        .examples-section {
-            background: #FFF1CB;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-
-        .examples-title {
-            font-weight: 600;
-            color: #04071B;
-            margin-bottom: 0.5rem;
-        }
-
-        .examples-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 0.5rem;
-        }
-
-        .example-btn {
-            background: white;
-            border: 2px solid #054F8E;
-            padding: 0.8rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            font-family: 'Courier New', monospace;
-        }
-
-        .example-btn:hover {
-            background: #054F8E;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .steps-container {
+        .result-container {
             margin-top: 2rem;
             display: none;
         }
 
-        .steps-container.active {
+        .result-container.active {
             display: block;
             animation: fadeIn 0.5s;
         }
@@ -199,51 +156,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .step-card {
-            background: linear-gradient(to right, #F8F9FA, white);
-            border-left: 5px solid #054F8E;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .step-number {
-            background: #054F8E;
-            color: white;
-            display: inline-block;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
-        }
-
-        .step-content {
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .formula {
-            background: white;
-            border: 2px solid #D2E4FD;
-            border-radius: 6px;
-            padding: 1rem;
-            margin: 0.8rem 0;
-            text-align: center;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2rem;
-        }
-
-        .final-result {
+        .result-box {
             background: linear-gradient(135deg, #CDE9D6, #D2E4FD);
             border: 3px solid #054F8E;
             border-radius: 12px;
             padding: 2rem;
             text-align: center;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 600;
-            margin-top: 1.5rem;
             color: #04071B;
         }
 
@@ -257,21 +177,6 @@
             display: none;
         }
 
-        .info-box {
-            background: #D2E4FD;
-            border-left: 4px solid #054F8E;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 6px;
-        }
-
-        .highlight {
-            background: #FFF1CB;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
         @media (max-width: 768px) {
             .keyboard {
                 grid-template-columns: repeat(4, 1fr);
@@ -279,10 +184,6 @@
             
             .key.equals {
                 grid-column: span 2;
-            }
-            
-            .examples-grid {
-                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -302,11 +203,10 @@
 
     <div class="container">
         <div class="calculator">
-            <h2 class="calc-title">🧮 Calculadora de Operaciones con Raíces</h2>
-            <p class="calc-subtitle">Resuelve multiplicaciones con raíces cuadradas paso a paso</p>
+            <h2 class="calc-title">🧮 Calculadora de Raíces Cuadradas</h2>
             
             <div class="input-section">
-                <input type="text" class="calc-input" id="inputExpr" placeholder="Ej: √3(√3+5) o √5(√45+7)" readonly>
+                <input type="text" class="calc-input" id="inputExpr" placeholder="Ej: √3(√3+5)" readonly>
             </div>
 
             <div class="keyboard">
@@ -315,49 +215,35 @@
                 <button class="key function" onclick="addKey(')')">)</button>
                 <button class="key clear" onclick="clearAll()">C</button>
                 <button class="key clear" onclick="deleteLast()">⌫</button>
-                <button class="key function" onclick="addKey('√')">√</button>
                 
                 <button class="key" onclick="addKey('7')">7</button>
                 <button class="key" onclick="addKey('8')">8</button>
                 <button class="key" onclick="addKey('9')">9</button>
                 <button class="key operator" onclick="addKey('+')">+</button>
                 <button class="key operator" onclick="addKey('-')">-</button>
-                <button class="key operator" onclick="addKey('*')">×</button>
                 
                 <button class="key" onclick="addKey('4')">4</button>
                 <button class="key" onclick="addKey('5')">5</button>
                 <button class="key" onclick="addKey('6')">6</button>
-                <button class="key function" onclick="addKey('²')">x²</button>
                 <button class="key function" onclick="addKey('√')">√</button>
-                <button class="key function" onclick="addKey('√')">√</button>
+                <button class="key operator" onclick="addKey('*')">×</button>
                 
                 <button class="key" onclick="addKey('1')">1</button>
                 <button class="key" onclick="addKey('2')">2</button>
                 <button class="key" onclick="addKey('3')">3</button>
+                <button class="key function" onclick="addKey('²')">x²</button>
+                <button class="key function" onclick="addKey('√')">√</button>
+                
                 <button class="key" onclick="addKey('0')">0</button>
                 <button class="key" onclick="addKey('.')">.</button>
                 <button class="key equals" onclick="calculate()">Calcular =</button>
             </div>
 
-            <div class="examples-section">
-                <div class="examples-title">📋 Ejemplos para probar:</div>
-                <div class="examples-grid">
-                    <button class="example-btn" onclick="loadExample('√3(√3+5)')">√3(√3+5)</button>
-                    <button class="example-btn" onclick="loadExample('√5(√45+7)')">√5(√45+7)</button>
-                    <button class="example-btn" onclick="loadExample('√2(√2-3)')">√2(√2-3)</button>
-                    <button class="example-btn" onclick="loadExample('√7(√7+6)')">√7(√7+6)</button>
-                    <button class="example-btn" onclick="loadExample('√6(√24+9)')">√6(√24+9)</button>
-                    <button class="example-btn" onclick="loadExample('√3(√75-4)')">√3(√75-4)</button>
-                    <button class="example-btn" onclick="loadExample('√5(√20-6)')">√5(√20-6)</button>
-                    <button class="example-btn" onclick="loadExample('√7(√7+√3)')">√7(√7+√3)</button>
-                    <button class="example-btn" onclick="loadExample('√2(√18+√48)')">√2(√18+√48)</button>
-                    <button class="example-btn" onclick="loadExample('3(√5+2)')">3(√5+2)</button>
-                </div>
-            </div>
-
             <div class="error-message" id="errorMsg"></div>
 
-            <div class="steps-container" id="stepsContainer"></div>
+            <div class="result-container" id="resultContainer">
+                <div class="result-box" id="resultBox"></div>
+            </div>
         </div>
     </div>
 
@@ -372,8 +258,7 @@
         function clearAll() {
             currentInput = '';
             document.getElementById('inputExpr').value = '';
-            document.getElementById('stepsContainer').innerHTML = '';
-            document.getElementById('stepsContainer').classList.remove('active');
+            document.getElementById('resultContainer').classList.remove('active');
             document.getElementById('errorMsg').style.display = 'none';
         }
 
@@ -382,131 +267,31 @@
             document.getElementById('inputExpr').value = currentInput;
         }
 
-        function loadExample(expr) {
-            currentInput = expr;
-            document.getElementById('inputExpr').value = expr;
-            calculate();
-        }
-
         function simplifySqrt(num) {
-            if (num < 0) return { coef: 1, sqrt: num, text: `√(${num})`, simplified: false };
-            if (num === 0) return { coef: 0, sqrt: 0, text: '0', simplified: true };
+            if (num < 0) return { coef: 1, sqrt: num, text: `√(${num})` };
+            if (num === 0) return { coef: 0, sqrt: 0, text: '0' };
             
             for (let i = Math.floor(Math.sqrt(num)); i >= 2; i--) {
                 if (num % (i * i) === 0) {
                     const remaining = num / (i * i);
                     if (remaining === 1) {
-                        return { coef: i, sqrt: null, text: i.toString(), simplified: true, perfect: true };
+                        return { coef: i, sqrt: null, text: i.toString(), perfect: true };
                     } else {
-                        return { coef: i, sqrt: remaining, text: `${i}√${remaining}`, simplified: true, perfect: false };
+                        return { coef: i, sqrt: remaining, text: `${i}√${remaining}`, perfect: false };
                     }
                 }
             }
-            return { coef: 1, sqrt: num, text: `√${num}`, simplified: false, perfect: false };
-        }
-
-        function parseExpression(expr) {
-            // Casos a manejar:
-            // 1. √a(√b+c), √a(√b-c)
-            // 2. √a(b+√c), √a(b-√c)
-            // 3. √a(√b+√c), √a(√b-√c)
-            // 4. a(√b+c), a(√b-c)
-            // 5. √a(b+c), √a(b-c)
-            
-            expr = expr.replace(/\s/g, '');
-            
-            // Patrón: √a(√b±c)
-            const pattern1 = /^√(\d+)\(√(\d+)([+-])(\d+)\)$/;
-            const match1 = expr.match(pattern1);
-            if (match1) {
-                return {
-                    type: 'sqrt_times_sqrt_plus_const',
-                    outerSqrt: parseInt(match1[1]),
-                    innerSqrt: parseInt(match1[2]),
-                    operator: match1[3],
-                    constant: parseInt(match1[4]),
-                    original: expr
-                };
-            }
-            
-            // Patrón: √a(b±√c)
-            const pattern2 = /^√(\d+)\((\d+)([+-])√(\d+)\)$/;
-            const match2 = expr.match(pattern2);
-            if (match2) {
-                return {
-                    type: 'sqrt_times_const_plus_sqrt',
-                    outerSqrt: parseInt(match2[1]),
-                    constant: parseInt(match2[2]),
-                    operator: match2[3],
-                    innerSqrt: parseInt(match2[4]),
-                    original: expr
-                };
-            }
-            
-            // Patrón: √a(√b±√c)
-            const pattern3 = /^√(\d+)\(√(\d+)([+-])√(\d+)\)$/;
-            const match3 = expr.match(pattern3);
-            if (match3) {
-                return {
-                    type: 'sqrt_times_sqrt_plus_sqrt',
-                    outerSqrt: parseInt(match3[1]),
-                    firstSqrt: parseInt(match3[2]),
-                    operator: match3[3],
-                    secondSqrt: parseInt(match3[4]),
-                    original: expr
-                };
-            }
-            
-            // Patrón: a(√b±c) donde a es número normal
-            const pattern4 = /^(\d+)\(√(\d+)([+-])(\d+)\)$/;
-            const match4 = expr.match(pattern4);
-            if (match4) {
-                return {
-                    type: 'const_times_sqrt_plus_const',
-                    constant: parseInt(match4[1]),
-                    innerSqrt: parseInt(match4[2]),
-                    operator: match4[3],
-                    lastConst: parseInt(match4[4]),
-                    original: expr
-                };
-            }
-            
-            // Patrón: √a(b±c) donde b y c son números normales
-            const pattern5 = /^√(\d+)\((\d+)([+-])(\d+)\)$/;
-            const match5 = expr.match(pattern5);
-            if (match5) {
-                return {
-                    type: 'sqrt_times_const_plus_const',
-                    outerSqrt: parseInt(match5[1]),
-                    firstConst: parseInt(match5[2]),
-                    operator: match5[3],
-                    secondConst: parseInt(match5[4]),
-                    original: expr
-                };
-            }
-            
-            // Patrón: √a(√b) - solo multiplicación de raíces
-            const pattern6 = /^√(\d+)\(√(\d+)\)$/;
-            const match6 = expr.match(pattern6);
-            if (match6) {
-                return {
-                    type: 'sqrt_times_sqrt',
-                    firstSqrt: parseInt(match6[1]),
-                    secondSqrt: parseInt(match6[2]),
-                    original: expr
-                };
-            }
-            
-            return null;
+            return { coef: 1, sqrt: num, text: `√${num}`, perfect: false };
         }
 
         function calculate() {
             const expr = currentInput.trim();
-            const stepsContainer = document.getElementById('stepsContainer');
             const errorMsg = document.getElementById('errorMsg');
+            const resultContainer = document.getElementById('resultContainer');
+            const resultBox = document.getElementById('resultBox');
             
-            stepsContainer.innerHTML = '';
             errorMsg.style.display = 'none';
+            resultContainer.classList.remove('active');
             
             if (!expr) {
                 errorMsg.textContent = '⚠️ Ingresa una expresión';
@@ -514,329 +299,156 @@
                 return;
             }
 
-            const parsed = parseExpression(expr);
-            
-            if (!parsed) {
-                errorMsg.textContent = '⚠️ Formato no reconocido. Usa: √a(√b+c), √a(b+√c), √a(√b+√c), etc.';
-                errorMsg.style.display = 'block';
-                return;
-            }
-
             try {
-                let steps = [];
+                // Limpiar expresión
+                let cleanExpr = expr.replace(/\s/g, '');
                 
-                // Paso 1: Expresión original
-                steps.push({
-                    title: 'Expresión original',
-                    content: `<div class="formula"><strong>${expr}</strong></div>`
-                });
-
-                switch(parsed.type) {
-                    case 'sqrt_times_sqrt_plus_const':
-                        steps = solveSqrtTimesSqrtPlusConst(parsed, steps);
-                        break;
-                    case 'sqrt_times_const_plus_sqrt':
-                        steps = solveSqrtTimesConstPlusSqrt(parsed, steps);
-                        break;
-                    case 'sqrt_times_sqrt_plus_sqrt':
-                        steps = solveSqrtTimesSqrtPlusSqrt(parsed, steps);
-                        break;
-                    case 'const_times_sqrt_plus_const':
-                        steps = solveConstTimesSqrtPlusConst(parsed, steps);
-                        break;
-                    case 'sqrt_times_const_plus_const':
-                        steps = solveSqrtTimesConstPlusConst(parsed, steps);
-                        break;
-                    case 'sqrt_times_sqrt':
-                        steps = solveSqrtTimesSqrt(parsed, steps);
-                        break;
+                // Detectar tipo de expresión
+                // Patrón: √a(√b±c)
+                const pattern1 = /^√(\d+)\(√(\d+)([+-])(\d+)\)$/;
+                const match1 = cleanExpr.match(pattern1);
+                
+                if (match1) {
+                    const outerSqrt = parseInt(match1[1]);
+                    const innerSqrt = parseInt(match1[2]);
+                    const operator = match1[3];
+                    const constant = parseInt(match1[4]);
+                    
+                    // Simplificar raíz interior si es posible
+                    const simplified = simplifySqrt(innerSqrt);
+                    
+                    // Calcular primer término
+                    let term1;
+                    if (simplified.perfect) {
+                        // √a × b = b√a (si b es resultado de √(b²))
+                        term1 = simplified.coef * outerSqrt;
+                    } else if (outerSqrt === innerSqrt) {
+                        // √a × a = a
+                        term1 = outerSqrt;
+                    } else {
+                        // √a × b√c = b√(ac)
+                        const product = outerSqrt * simplified.sqrt;
+                        const termSimplified = simplifySqrt(product);
+                        term1 = simplified.coef !== 1 ? 
+                            (termSimplified.perfect ? 
+                                `${simplified.coef * termSimplified.coef}` : 
+                                `${simplified.coef}${termSimplified.text}`) : 
+                            termSimplified.text;
+                    }
+                    
+                    // Segundo término
+                    const term2 = `${constant}√${outerSqrt}`;
+                    
+                    // Resultado
+                    const result = `${term1} ${operator} ${term2}`;
+                    resultBox.innerHTML = `<div style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #666;">Resultado:</div>${result}`;
+                    resultContainer.classList.add('active');
+                    return;
                 }
-
-                // Mostrar todos los pasos
-                steps.forEach((step, index) => {
-                    const stepDiv = document.createElement('div');
-                    stepDiv.className = 'step-card';
-                    stepDiv.innerHTML = `
-                        <div class="step-number">${step.title}</div>
-                        <div class="step-content">${step.content}</div>
-                    `;
-                    stepsContainer.appendChild(stepDiv);
-                });
-
-                stepsContainer.classList.add('active');
-
+                
+                // Patrón: √a(b±√c)
+                const pattern2 = /^√(\d+)\((\d+)([+-])√(\d+)\)$/;
+                const match2 = cleanExpr.match(pattern2);
+                
+                if (match2) {
+                    const outerSqrt = parseInt(match2[1]);
+                    const constant = parseInt(match2[2]);
+                    const operator = match2[3];
+                    const innerSqrt = parseInt(match2[4]);
+                    
+                    const term1 = `${constant}√${outerSqrt}`;
+                    const product = outerSqrt * innerSqrt;
+                    const term2 = simplifySqrt(product).text;
+                    
+                    const result = `${term1} ${operator} ${term2}`;
+                    resultBox.innerHTML = `<div style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #666;">Resultado:</div>${result}`;
+                    resultContainer.classList.add('active');
+                    return;
+                }
+                
+                // Patrón: √a(√b±√c)
+                const pattern3 = /^√(\d+)\(√(\d+)([+-])√(\d+)\)$/;
+                const match3 = cleanExpr.match(pattern3);
+                
+                if (match3) {
+                    const outerSqrt = parseInt(match3[1]);
+                    const firstSqrt = parseInt(match3[2]);
+                    const operator = match3[3];
+                    const secondSqrt = parseInt(match3[4]);
+                    
+                    const product1 = outerSqrt * firstSqrt;
+                    const product2 = outerSqrt * secondSqrt;
+                    const term1 = simplifySqrt(product1).text;
+                    const term2 = simplifySqrt(product2).text;
+                    
+                    const result = `${term1} ${operator} ${term2}`;
+                    resultBox.innerHTML = `<div style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #666;">Resultado:</div>${result}`;
+                    resultContainer.classList.add('active');
+                    return;
+                }
+                
+                // Patrón: a(√b±c)
+                const pattern4 = /^(\d+)\(√(\d+)([+-])(\d+)\)$/;
+                const match4 = cleanExpr.match(pattern4);
+                
+                if (match4) {
+                    const constant = parseInt(match4[1]);
+                    const innerSqrt = parseInt(match4[2]);
+                    const operator = match4[3];
+                    const lastConst = parseInt(match4[4]);
+                    
+                    const simplified = simplifySqrt(innerSqrt);
+                    const term1 = simplified.perfect ? 
+                        `${constant * simplified.coef}` : 
+                        `${constant}${simplified.text}`;
+                    const term2 = constant * lastConst;
+                    
+                    const result = `${term1} ${operator} ${term2}`;
+                    resultBox.innerHTML = `<div style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #666;">Resultado:</div>${result}`;
+                    resultContainer.classList.add('active');
+                    return;
+                }
+                
+                // Patrón: √a(b±c)
+                const pattern5 = /^√(\d+)\((\d+)([+-])(\d+)\)$/;
+                const match5 = cleanExpr.match(pattern5);
+                
+                if (match5) {
+                    const outerSqrt = parseInt(match5[1]);
+                    const firstConst = parseInt(match5[2]);
+                    const operator = match5[3];
+                    const secondConst = parseInt(match5[4]);
+                    
+                    const sum = operator === '+' ? firstConst + secondConst : firstConst - secondConst;
+                    const result = `${sum}√${outerSqrt}`;
+                    
+                    resultBox.innerHTML = `<div style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #666;">Resultado:</div>${result}`;
+                    resultContainer.classList.add('active');
+                    return;
+                }
+                
+                // Patrón: √a(√b)
+                const pattern6 = /^√(\d+)\(√(\d+)\)$/;
+                const match6 = cleanExpr.match(pattern6);
+                
+                if (match6) {
+                    const firstSqrt = parseInt(match6[1]);
+                    const secondSqrt = parseInt(match6[2]);
+                    const product = firstSqrt * secondSqrt;
+                    const result = simplifySqrt(product).text;
+                    
+                    resultBox.innerHTML = `<div style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #666;">Resultado:</div>${result}`;
+                    resultContainer.classList.add('active');
+                    return;
+                }
+                
+                errorMsg.textContent = '⚠️ Formato no reconocido. Usa: √a(√b+c), √a(b+√c), etc.';
+                errorMsg.style.display = 'block';
+                
             } catch (error) {
-                errorMsg.textContent = '⚠️ Error al calcular: ' + error.message;
+                errorMsg.textContent = '⚠️ Error al calcular';
                 errorMsg.style.display = 'block';
             }
-        }
-
-        function solveSqrtTimesSqrtPlusConst(parsed, steps) {
-            const { outerSqrt, innerSqrt, operator, constant } = parsed;
-            
-            // Verificar si se puede simplificar la raíz interior
-            const simplified = simplifySqrt(innerSqrt);
-            if (simplified.simplified) {
-                steps.push({
-                    title: 'Paso 1: Simplificar la raíz interior',
-                    content: `
-                        <div class="formula">√${innerSqrt} = ${simplified.text}</div>
-                        <div class="info-box">
-                            Descomponemos √${innerSqrt} buscando cuadrados perfectos.
-                        </div>
-                    `
-                });
-            }
-            
-            // Aplicar propiedad distributiva
-            const innerExpr = simplified.simplified ? simplified.text : `√${innerSqrt}`;
-            steps.push({
-                title: 'Paso 2: Aplicar propiedad distributiva',
-                content: `
-                    <div class="formula">
-                        √${outerSqrt}(${innerExpr} ${operator} ${constant})<br><br>
-                        = √${outerSqrt} × ${innerExpr} ${operator} √${outerSqrt} × ${constant}
-                    </div>
-                    <div class="info-box">
-                        Multiplicamos √${outerSqrt} por cada término del paréntesis.
-                    </div>
-                `
-            });
-            
-            // Resolver primer término
-            let term1, term1Result;
-            if (simplified.simplified && !simplified.perfect) {
-                // √a × b√c = b√(ac)
-                const product = outerSqrt * simplified.sqrt;
-                const termSimplified = simplifySqrt(product);
-                term1 = `√${outerSqrt} × ${simplified.text} = ${simplified.coef}√(${outerSqrt}×${simplified.sqrt})`;
-                term1Result = termSimplified.simplified && !termSimplified.perfect ? 
-                    `${simplified.coef}√${product}` : 
-                    `${simplified.coef * outerSqrt}`;
-            } else if (simplified.perfect) {
-                // √a × b = b√a
-                term1 = `√${outerSqrt} × ${simplified.coef} = ${simplified.coef}√${outerSqrt}`;
-                term1Result = `${simplified.coef}√${outerSqrt}`;
-            } else {
-                // √a × √a = a
-                term1 = `√${outerSqrt} × √${innerSqrt} = √(${outerSqrt}×${innerSqrt})`;
-                if (outerSqrt === innerSqrt) {
-                    term1Result = `${outerSqrt}`;
-                } else {
-                    const product = outerSqrt * innerSqrt;
-                    const termSimplified = simplifySqrt(product);
-                    term1Result = termSimplified.text;
-                }
-            }
-            
-            // Resolver segundo término
-            const term2 = `${constant}√${outerSqrt}`;
-            
-            steps.push({
-                title: 'Paso 3: Resolver cada término',
-                content: `
-                    <div class="formula">
-                        <strong>Primer término:</strong><br>
-                        ${term1}<br>
-                        = <strong>${term1Result}</strong><br><br>
-                        <strong>Segundo término:</strong><br>
-                        √${outerSqrt} × ${constant} = <strong>${term2}</strong>
-                    </div>
-                `
-            });
-            
-            // Resultado final
-            const finalResult = `${term1Result} ${operator} ${term2}`;
-            steps.push({
-                title: 'Paso 4: Resultado final',
-                content: `
-                    <div class="formula" style="background: #CDE9D6; font-size: 1.4rem;">
-                        ${finalResult}
-                    </div>
-                `
-            });
-            
-            return steps;
-        }
-
-        function solveSqrtTimesConstPlusSqrt(parsed, steps) {
-            const { outerSqrt, constant, operator, innerSqrt } = parsed;
-            
-            steps.push({
-                title: 'Paso 1: Aplicar propiedad distributiva',
-                content: `
-                    <div class="formula">
-                        √${outerSqrt}(${constant} ${operator} √${innerSqrt})<br><br>
-                        = √${outerSqrt} × ${constant} ${operator} √${outerSqrt} × √${innerSqrt}
-                    </div>
-                `
-            });
-            
-            const term1 = `${constant}√${outerSqrt}`;
-            const product = outerSqrt * innerSqrt;
-            const term2Simplified = simplifySqrt(product);
-            const term2 = term2Simplified.text;
-            
-            steps.push({
-                title: 'Paso 2: Resolver cada término',
-                content: `
-                    <div class="formula">
-                        <strong>Primer término:</strong> ${constant}√${outerSqrt}<br><br>
-                        <strong>Segundo término:</strong> √${outerSqrt} × √${innerSqrt} = √${product} = ${term2}
-                    </div>
-                `
-            });
-            
-            const finalResult = `${term1} ${operator} ${term2}`;
-            steps.push({
-                title: 'Paso 3: Resultado final',
-                content: `<div class="formula" style="background: #CDE9D6; font-size: 1.4rem;">${finalResult}</div>`
-            });
-            
-            return steps;
-        }
-
-        function solveSqrtTimesSqrtPlusSqrt(parsed, steps) {
-            const { outerSqrt, firstSqrt, operator, secondSqrt } = parsed;
-            
-            steps.push({
-                title: 'Paso 1: Aplicar propiedad distributiva',
-                content: `
-                    <div class="formula">
-                        √${outerSqrt}(√${firstSqrt} ${operator} √${secondSqrt})<br><br>
-                        = √${outerSqrt} × √${firstSqrt} ${operator} √${outerSqrt} × √${secondSqrt}
-                    </div>
-                `
-            });
-            
-            const product1 = outerSqrt * firstSqrt;
-            const product2 = outerSqrt * secondSqrt;
-            const term1 = simplifySqrt(product1);
-            const term2 = simplifySqrt(product2);
-            
-            steps.push({
-                title: 'Paso 2: Multiplicar las raíces',
-                content: `
-                    <div class="formula">
-                        <strong>Primer término:</strong> √${outerSqrt} × √${firstSqrt} = √${product1} = ${term1.text}<br><br>
-                        <strong>Segundo término:</strong> √${outerSqrt} × √${secondSqrt} = √${product2} = ${term2.text}
-                    </div>
-                `
-            });
-            
-            const finalResult = `${term1.text} ${operator} ${term2.text}`;
-            steps.push({
-                title: 'Paso 3: Resultado final',
-                content: `<div class="formula" style="background: #CDE9D6; font-size: 1.4rem;">${finalResult}</div>`
-            });
-            
-            return steps;
-        }
-
-        function solveConstTimesSqrtPlusConst(parsed, steps) {
-            const { constant, innerSqrt, operator, lastConst } = parsed;
-            
-            const simplified = simplifySqrt(innerSqrt);
-            if (simplified.simplified) {
-                steps.push({
-                    title: 'Paso 1: Simplificar la raíz',
-                    content: `<div class="formula">√${innerSqrt} = ${simplified.text}</div>`
-                });
-            }
-            
-            steps.push({
-                title: 'Paso 2: Aplicar propiedad distributiva',
-                content: `
-                    <div class="formula">
-                        ${constant}(${simplified.text} ${operator} ${lastConst})<br><br>
-                        = ${constant} × ${simplified.text} ${operator} ${constant} × ${lastConst}
-                    </div>
-                `
-            });
-            
-            const term1 = simplified.perfect ? 
-                `${constant * simplified.coef}` : 
-                `${constant}${simplified.text}`;
-            const term2 = constant * lastConst;
-            
-            steps.push({
-                title: 'Paso 3: Resolver',
-                content: `
-                    <div class="formula">
-                        = ${term1} ${operator} ${term2}
-                    </div>
-                `
-            });
-            
-            const finalResult = `${term1} ${operator} ${term2}`;
-            steps.push({
-                title: 'Paso 4: Resultado final',
-                content: `<div class="formula" style="background: #CDE9D6; font-size: 1.4rem;">${finalResult}</div>`
-            });
-            
-            return steps;
-        }
-
-        function solveSqrtTimesConstPlusConst(parsed, steps) {
-            const { outerSqrt, firstConst, operator, secondConst } = parsed;
-            
-            const sum = operator === '+' ? firstConst + secondConst : firstConst - secondConst;
-            
-            steps.push({
-                title: 'Paso 1: Resolver el paréntesis',
-                content: `
-                    <div class="formula">
-                        ${firstConst} ${operator} ${secondConst} = ${sum}
-                    </div>
-                `
-            });
-            
-            steps.push({
-                title: 'Paso 2: Multiplicar por la raíz',
-                content: `
-                    <div class="formula">
-                        √${outerSqrt} × ${sum} = ${sum}√${outerSqrt}
-                    </div>
-                `
-            });
-            
-            const finalResult = `${sum}√${outerSqrt}`;
-            steps.push({
-                title: 'Paso 3: Resultado final',
-                content: `<div class="formula" style="background: #CDE9D6; font-size: 1.4rem;">${finalResult}</div>`
-            });
-            
-            return steps;
-        }
-
-        function solveSqrtTimesSqrt(parsed, steps) {
-            const { firstSqrt, secondSqrt } = parsed;
-            
-            const product = firstSqrt * secondSqrt;
-            const simplified = simplifySqrt(product);
-            
-            steps.push({
-                title: 'Paso 1: Multiplicar las raíces',
-                content: `
-                    <div class="formula">
-                        √${firstSqrt} × √${secondSqrt} = √(${firstSqrt}×${secondSqrt}) = √${product}
-                    </div>
-                `
-            });
-            
-            if (simplified.simplified) {
-                steps.push({
-                    title: 'Paso 2: Simplificar',
-                    content: `<div class="formula">√${product} = ${simplified.text}</div>`
-                });
-            }
-            
-            steps.push({
-                title: 'Paso final: Resultado',
-                content: `<div class="formula" style="background: #CDE9D6; font-size: 1.4rem;">${simplified.text}</div>`
-            });
-            
-            return steps;
         }
 
         // Teclado físico
