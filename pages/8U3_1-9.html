@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Gráfico de la Pendiente Positiva</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #04071B;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #054F8E 0%, #04071B 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: #D2E4FD;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #054F8E;
+        }
+
+        .navbar a {
+            color: #054F8E;
+            text-decoration: none;
+        }
+
+        .navbar span {
+            color: #054F8E;
+            margin: 0 0.5rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #054F8E;
+        }
+
+        .card-problema {
+            border-left-color: #F5B7BC;
+            background: linear-gradient(to right, #FFF1CB, white);
+        }
+
+        .card-concepto {
+            border-left-color: #CDE9D6;
+            background: linear-gradient(to right, #D2E4FD, white);
+        }
+
+        .card h2 {
+            color: #054F8E;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .icon-p { background-color: #F5B7BC; color: #04071B; }
+        .icon-s { background-color: #CDE9D6; color: #04071B; }
+        .icon-c { background-color: #054F8E; }
+
+        .problem-text {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .question {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .question strong {
+            color: #054F8E;
+        }
+
+        .formula-box {
+            background: white;
+            border: 2px solid #054F8E;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .graph-container {
+            background: white;
+            border: 2px solid #D2E4FD;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            position: relative;
+            height: 400px;
+        }
+
+        .graph-title {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #054F8E;
+        }
+
+        .step {
+            background: #FFF1CB;
+            border-left: 4px solid #054F8E;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #04071B;
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-box {
+            background: #CDE9D6;
+            border-left: 4px solid #054F8E;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .calculator-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 3px solid #054F8E;
+        }
+
+        .calculator-title {
+            text-align: center;
+            color: #054F8E;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            background: #F8F9FA;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .slider-group {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 2px solid #D2E4FD;
+        }
+
+        .slider-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #054F8E;
+        }
+
+        .slider-value {
+            display: inline-block;
+            background: #054F8E;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #D2E4FD;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #054F8E;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #054F8E;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            background: white;
+            border: 2px solid #D2E4FD;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .info-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #CDE9D6, #D2E4FD);
+            border: 2px solid #054F8E;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: #04071B;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .info-box-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #054F8E;
+        }
+
+        .equation-display {
+            background: #054F8E;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight {
+            background: #FFF1CB;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .controls,
+            .two-columns,
+            .info-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Centro Escolar Cantón Los Prados</h1>
+    </header>
+
+    <nav class="navbar">
+        <a href="#">Inicio</a> <span>›</span> 
+        <a href="#">9° Grado</a> <span>›</span> 
+        <a href="#">Matemáticas</a> <span>›</span> 
+        <a href="#">Unidad 1</a> <span>›</span> 
+        <span>Análisis Gráfico de la Pendiente</span>
+    </nav>
+
+    <div class="container">
+        <!-- Sección P -->
+        <div class="card card-problema">
+            <h2><span class="icon icon-p">P</span> Problema</h2>
+            
+            <div class="problem-text">
+                <p>Para la función de cada una de las gráficas, realiza lo siguiente:</p>
+                
+                <div class="question">
+                    <strong>a)</strong> ¿Qué sucede con el valor de y cuando el valor de x aumenta una unidad u otra cantidad convencional?
+                </div>
+                
+                <div class="question">
+                    <strong>b)</strong> ¿Qué valor le corresponde a y cuando x vale 8?
+                </div>
+                
+                <div class="question">
+                    <strong>c)</strong> Determina la razón de cambio.
+                </div>
+            </div>
+
+            <div class="two-columns">
+                <div>
+                    <h3 style="color: #054F8E; margin-bottom: 1rem; text-align: center;">Función 1: y = 2x + 3</h3>
+                    <div class="step">
+                        <div class="step-title">📊 Análisis del comportamiento</div>
+                        <p>Cuando x aumenta <strong>1 unidad</strong>, y aumenta <strong>2 unidades</strong>.</p>
+                        <div class="formula-box">
+                            Si x = 0 → y = 3<br>
+                            Si x = 1 → y = 5<br>
+                            Si x = 2 → y = 7<br>
+                            <strong>¡y aumenta 2 cada vez!</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">🎯 Cuando x = 8</div>
+                        <div class="formula-box">
+                            y = 2(8) + 3<br>
+                            y = 16 + 3<br>
+                            <strong>y = 19</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">📈 Razón de cambio</div>
+                        <div class="formula-box">
+                            Razón de cambio = 2/1 = <strong>2</strong><br><br>
+                            <em>Por cada unidad que aumenta x, y aumenta 2</em>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: #054F8E; margin-bottom: 1rem; text-align: center;">Función 2: y = ½x + 3</h3>
+                    <div class="step">
+                        <div class="step-title">📊 Análisis del comportamiento</div>
+                        <p>Cuando x aumenta <strong>2 unidades</strong>, y aumenta <strong>1 unidad</strong>.</p>
+                        <div class="formula-box">
+                            Si x = 0 → y = 3<br>
+                            Si x = 2 → y = 4<br>
+                            Si x = 4 → y = 5<br>
+                            <strong>¡y aumenta 1 cada 2 de x!</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">🎯 Cuando x = 8</div>
+                        <div class="formula-box">
+                            y = ½(8) + 3<br>
+                            y = 4 + 3<br>
+                            <strong>y = 7</strong>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-title">📈 Razón de cambio</div>
+                        <div class="formula-box">
+                            Razón de cambio = 1/2 = <strong>0.5</strong><br><br>
+                            <em>Por cada unidad que aumenta x, y aumenta ½</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección C -->
+        <div class="card card-concepto">
+            <h2><span class="icon icon-c">C</span> Concepto Clave</h2>
+            
+            <h3 style="color: #054F8E; margin-bottom: 1rem;">📚 La Pendiente y la Razón de Cambio</h3>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                En una función lineal <span class="highlight">y = ax + b</span>:
+            </p>
+
+            <div class="formula-box" style="background: #FFF1CB;">
+                <strong>a</strong> = razón de cambio = pendiente<br><br>
+                <strong>b</strong> = valor de y cuando x = 0 (intersección)
+            </div>
+
+            <div class="tip-box">
+                <strong>🎯 Puntos importantes:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>Entre <strong>más grande sea "a"</strong>, más inclinada está la recta</li>
+                    <li>Si <strong>a = 2</strong>, por cada unidad que avanza x, y sube 2</li>
+                    <li>Si <strong>a = ½</strong>, por cada unidad que avanza x, y sube ½</li>
+                    <li>Para cambiar la inclinación, solo modificas el valor de <strong>"a"</strong></li>
+                </ul>
+            </div>
+
+            <div class="formula-box" style="margin-top: 1rem;">
+                <strong>Fórmula de la razón de cambio:</strong><br><br>
+                Razón de cambio = <span style="display: inline-block; text-align: center;">Variación en y<br>─────────────<br>Variación en x</span>
+            </div>
+        </div>
+
+        <!-- Calculadora Gráfica Interactiva -->
+        <div class="calculator-section">
+            <h2 class="calculator-title">📊 Graficador Interactivo de Funciones Lineales</h2>
+            
+            <div class="equation-display" id="equationDisplay">
+                y = 2x + 3
+            </div>
+
+            <div class="controls">
+                <div class="slider-group">
+                    <label class="slider-label">
+                        Pendiente (a) <span class="slider-value" id="slopeValue">2</span>
+                    </label>
+                    <input type="range" id="slopeSlider" min="-5" max="5" step="0.5" value="2">
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                        Controla la inclinación de la recta
+                    </div>
+                </div>
+
+                <div class="slider-group">
+                    <label class="slider-label">
+                        Intersección (b) <span class="slider-value" id="interceptValue">3</span>
+                    </label>
+                    <input type="range" id="interceptSlider" min="-5" max="10" step="1" value="3">
+                    <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
+                        Donde la recta corta al eje y
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="functionChart"></canvas>
+            </div>
+
+            <div class="info-panel">
+                <div class="info-box">
+                    <div class="info-box-title">Razón de Cambio</div>
+                    <div class="info-box-value" id="rateOfChange">2</div>
+                    <div style="font-size: 0.85rem; margin-top: 0.3rem;">
+                        Cuando x aumenta 1, y aumenta <span id="rateOfChangeText">2</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">Cuando x = 8</div>
+                    <div class="info-box-value" id="whenX8">y = 19</div>
+                    <div style="font-size: 0.85rem; margin-top: 0.3rem;">
+                        Sustituyendo en la ecuación
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-box-title">Punto de Corte</div>
+                    <div class="info-box-value" id="yIntercept">(0, 3)</div>
+                    <div style="font-size: 0.85rem; margin-top: 0.3rem;">
+                        Cuando x = 0
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar el gráfico
+        const ctx = document.getElementById('functionChart').getContext('2d');
+        
+        function generateData(a, b) {
+            const data = [];
+            for (let x = -6; x <= 6; x += 0.5) {
+                const y = a * x + b;
+                data.push({x: x, y: y});
+            }
+            return data;
+        }
+
+        let chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'y = ax + b',
+                    data: generateData(2, 3),
+                    borderColor: '#054F8E',
+                    backgroundColor: 'rgba(5, 79, 142, 0.1)',
+                    borderWidth: 3,
+                    pointRadius: 2,
+                    pointHoverRadius: 5,
+                    fill: true,
+                    tension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        min: -6,
+                        max: 6,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        title: {
+                            display: true,
+                            text: 'x'
+                        }
+                    },
+                    y: {
+                        min: -5,
+                        max: 15,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        title: {
+                            display: true,
+                            text: 'y'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `(${context.parsed.x.toFixed(1)}, ${context.parsed.y.toFixed(1)})`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Actualizar cuando los sliders cambien
+        const slopeSlider = document.getElementById('slopeSlider');
+        const interceptSlider = document.getElementById('interceptSlider');
+        const slopeValue = document.getElementById('slopeValue');
+        const interceptValue = document.getElementById('interceptValue');
+        const equationDisplay = document.getElementById('equationDisplay');
+        const rateOfChange = document.getElementById('rateOfChange');
+        const rateOfChangeText = document.getElementById('rateOfChangeText');
+        const whenX8 = document.getElementById('whenX8');
+        const yIntercept = document.getElementById('yIntercept');
+
+        function updateChart() {
+            const a = parseFloat(slopeSlider.value);
+            const b = parseFloat(interceptSlider.value);
+
+            // Actualizar valores mostrados
+            slopeValue.textContent = a;
+            interceptValue.textContent = b;
+
+            // Actualizar ecuación
+            let equation = 'y = ';
+            if (a !== 0) {
+                if (a === 1) {
+                    equation += 'x';
+                } else if (a === -1) {
+                    equation += '-x';
+                } else {
+                    equation += a + 'x';
+                }
+            }
+            if (b > 0) {
+                equation += ' + ' + b;
+            } else if (b < 0) {
+                equation += ' - ' + Math.abs(b);
+            }
+            equationDisplay.textContent = equation;
+
+            // Actualizar datos del gráfico
+            chart.data.datasets[0].data = generateData(a, b);
+            chart.data.datasets[0].label = equation;
+            chart.update();
+
+            // Actualizar información
+            rateOfChange.textContent = a;
+            rateOfChangeText.textContent = a;
+            
+            const y8 = a * 8 + b;
+            whenX8.textContent = `y = ${y8}`;
+            
+            yIntercept.textContent = `(0, ${b})`;
+        }
+
+        slopeSlider.addEventListener('input', updateChart);
+        interceptSlider.addEventListener('input', updateChart);
+
+        // Inicializar
+        updateChart();
+    </script>
+</body>
+</html>
