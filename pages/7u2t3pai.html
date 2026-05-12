@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧬 Polimorfismos y Alelos – Aventura Genética Interactiva</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #f94144;
+            --bg: #f8f9ff;
+            --card: #ffffff;
+            --text: #1e293b;
+            --light: #64748b;
+            --border: #e2e8f0;
+            --radius: 1.2rem;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --transition: 0.25s ease;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(145deg, #eef2ff 0%, #fdf2f8 60%, #fff7ed 100%);
+            min-height: 100vh;
+            padding: 1rem;
+            color: var(--text);
+        }
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 25px 50px -10px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+        header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4a6cf7, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--light);
+            font-weight: 600;
+        }
+        .main-tabs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            background: #f1f5f9;
+            padding: 0.4rem;
+            border-radius: 3rem;
+        }
+        .main-tab {
+            flex: 1;
+            min-width: 140px;
+            padding: 0.8rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            color: #64748b;
+            text-align: center;
+        }
+        .main-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeSlide 0.4s ease;
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeSlide {
+            from { opacity:0; transform: translateY(10px); }
+            to { opacity:1; transform: translateY(0); }
+        }
+
+        .section {
+            margin-bottom: 1.6rem;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #f8fafc, #e9eef3);
+            padding: 1rem 1.3rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            user-select: none;
+        }
+        .section-header:hover { background: #e2e8f0; }
+        .section-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+        .section.open .section-body {
+            max-height: 4000px;
+            padding: 1.3rem;
+        }
+
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .concept-card {
+            background: linear-gradient(135deg, #eff6ff, #f0f9ff);
+            padding: 1.2rem;
+            border-radius: 1rem;
+            text-align: center;
+            border: 1px solid #bfdbfe;
+            transition: transform 0.2s;
+        }
+        .concept-card:hover { transform: translateY(-3px); }
+        .concept-card .emoji { font-size: 2.4rem; display: block; margin-bottom: 0.4rem; }
+        .concept-card h4 { color: #1e40af; margin-bottom: 0.2rem; }
+
+        .case-card {
+            background: #fffdf7;
+            border: 2px solid #fcd34d;
+            border-radius: 1rem;
+            padding: 1.3rem;
+            margin: 1.2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        .case-visual { flex: 1; min-width: 180px; text-align: center; }
+        .case-info { flex: 2; min-width: 250px; }
+        .protein-chain {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            justify-content: center;
+            margin: 0.8rem 0;
+        }
+        .amino-acid {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            background: #fbbf24;
+            border: 2px solid #f59e0b;
+            font-size: 0.6rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7c2d12;
+        }
+        .amino-acid.mutated {
+            background: #f87171;
+            border-color: #dc2626;
+        }
+        .bone-icon {
+            font-size: 4rem;
+            transition: 0.3s;
+        }
+        .bone-healthy { filter: drop-shadow(0 0 8px #10b981); }
+        .bone-weak { filter: drop-shadow(0 0 10px #ef4444); animation: shake 0.6s infinite; }
+        .bone-strong { filter: drop-shadow(0 0 12px #3b82f6); transform: scale(1.1); }
+        @keyframes shake {
+            0%,100%{ transform:rotate(0); }
+            25%{ transform:rotate(-3deg); }
+            75%{ transform:rotate(3deg); }
+        }
+
+        .game-area {
+            background: #f0fdf4;
+            border: 2px dashed #86efac;
+            border-radius: 1.5rem;
+            padding: 1.3rem;
+            margin: 0.8rem 0;
+        }
+        .match-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .match-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            min-width: 160px;
+        }
+        .match-item {
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 0.7rem;
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .match-item.selected {
+            background: #dbeafe;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67,97,238,0.2);
+        }
+        .match-item.matched {
+            background: #d1fae5;
+            border-color: #10b981;
+            cursor: default;
+            opacity: 0.85;
+        }
+        .drag-source {
+            cursor: grab;
+            background: #fef9c3;
+            border-color: #eab308;
+        }
+        .drag-source.dragging { opacity: 0.5; }
+        .drop-zone {
+            min-height: 60px;
+            background: #f8fafc;
+            border: 2px dashed #94a3b8;
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: #64748b;
+            transition: 0.2s;
+            padding: 0.5rem;
+        }
+        .drop-zone.drag-over {
+            background: #dbeafe;
+            border-color: var(--primary);
+            border-style: solid;
+        }
+        .drop-zone.filled {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            color: #065f46;
+            font-weight: 700;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.4rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 0.2rem;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #3651d5; transform: scale(1.03); }
+        .btn-warning { background: var(--warning); color: #1e293b; }
+        .btn-sm { padding: 0.4rem 1rem; font-size: 0.85rem; }
+
+        .feedback {
+            padding: 0.8rem;
+            border-radius: 0.8rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .feedback.correct { background: #d1fae5; color: #065f46; }
+        .feedback.incorrect { background: #fee2e2; color: #991b1b; }
+
+        textarea {
+            width: 100%;
+            min-height: 90px;
+            border-radius: 0.8rem;
+            border: 2px solid #cbd5e1;
+            padding: 0.8rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-top: 0.3rem;
+        }
+        textarea:focus { outline: none; border-color: var(--primary); }
+
+        .slider-container { margin: 1rem 0; text-align: center; }
+        input[type=range] { width: 80%; max-width: 350px; }
+
+        @media (max-width: 700px) {
+            .container { padding: 1rem; }
+            .case-card { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🧬 Polimorfismos y Alelos</h1>
+        <p class="subtitle">Cómo un cambio en el ADN puede transformar un organismo</p>
+    </header>
+
+    <div class="main-tabs">
+        <button class="main-tab active" data-tab="clase1">📘 Clase 1 (45 min)<br><small>De ADN a proteína</small></button>
+        <button class="main-tab" data-tab="clase2">📗 Clase 2 (45 min)<br><small>Variantes y simulador</small></button>
+    </div>
+
+    <!-- ========= CLASE 1 ========= -->
+    <div id="clase1" class="tab-content active">
+        <!-- Introducción -->
+        <div class="section open">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>🧠 ¿Qué son los polimorfismos y los alelos?</span>
+            </div>
+            <div class="section-body">
+                <div class="concept-grid">
+                    <div class="concept-card"><span class="emoji">📍</span><h4>Locus</h4><p>Es la dirección exacta de un gen en el ADN. Como las coordenadas de un mapa.</p></div>
+                    <div class="concept-card"><span class="emoji">🧬</span><h4>Alelo</h4><p>Versión particular de un gen. Cada persona hereda dos alelos por gen.</p></div>
+                    <div class="concept-card"><span class="emoji">🔀</span><h4>Polimorfismo</h4><p>Cambio natural en la secuencia de ADN que origina un nuevo alelo.</p></div>
+                    <div class="concept-card"><span class="emoji">⚙️</span><h4>ADN → Proteína</h4><p>La secuencia de ADN se transcribe a ARN y se traduce a proteína. 3 nucleótidos = 1 aminoácido.</p></div>
+                </div>
+                <p style="text-align:center; margin-top:1rem;">Cuando un polimorfismo acorta o alarga la secuencia de un gen, la proteína resultante puede cambiar de tamaño y de función. ¡Veamos cómo!</p>
+            </div>
+        </div>
+
+        <!-- Juego 1: Emparejar conceptos (sin drag, con clic para evitar fallos táctiles) -->
+        <div class="section open">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>🎮 Juego 1: Empareja los conceptos clave (8 min)</span>
+            </div>
+            <div class="section-body">
+                <div class="game-area" id="matchGame1">
+                    <p><strong>Instrucciones:</strong> Haz clic en un término y luego en su definición correcta.</p>
+                    <div class="match-row">
+                        <div class="match-column" id="termsCol">
+                            <div class="match-item" data-id="locus">Locus</div>
+                            <div class="match-item" data-id="alelo">Alelo</div>
+                            <div class="match-item" data-id="poli">Polimorfismo</div>
+                            <div class="match-item" data-id="traduccion">Traducción</div>
+                        </div>
+                        <div class="match-column" id="defsCol">
+                            <div class="match-item" data-id="defLocus">Dirección del gen en el ADN</div>
+                            <div class="match-item" data-id="defAlelo">Versión de un gen</div>
+                            <div class="match-item" data-id="defPoli">Cambio en la secuencia de ADN</div>
+                            <div class="match-item" data-id="defTrad">Proceso ARN → proteína</div>
+                        </div>
+                    </div>
+                    <div id="matchFeedback1" class="feedback" style="display:none;"></div>
+                    <button class="btn btn-warning btn-sm" onclick="resetMatch1()">🔄 Reiniciar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Juego calculadora -->
+        <div class="section open">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>🧮 Juego 2: Calculadora ADN → proteína (7 min)</span>
+            </div>
+            <div class="section-body">
+                <div class="game-area">
+                    <p><strong>Regla:</strong> Cada 3 nucleótidos (nt) de ADN codifican 1 aminoácido (aa).</p>
+                    <p>Longitud del ADN: <strong id="dnaLenDisplay">12</strong> nt</p>
+                    <label>Proteína esperada: <input type="number" id="proteinGuess" placeholder="?" style="width:70px; padding:0.3rem; border-radius:0.5rem; border:2px solid #cbd5e1;"> aa</label>
+                    <button class="btn btn-primary btn-sm" onclick="checkCalc()">✅ Verificar</button>
+                    <button class="btn btn-warning btn-sm" onclick="newCalc()">🔄 Nuevo</button>
+                    <div id="calcFeedback" class="feedback" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Casos a y b -->
+        <div class="section open">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>📋 Caso de estudio: Gen A y proteína A (20 min)</span>
+            </div>
+            <div class="section-body">
+                <p>El <strong>gen A</strong> produce la <strong>proteína A</strong>, que ayuda a formar la matriz extracelular de los huesos. La secuencia normal tiene <strong>200 aminoácidos</strong>.</p>
+
+                <div class="case-card">
+                    <div class="case-visual">
+                        <div class="bone-icon bone-healthy">🦴</div>
+                        <div class="protein-chain" id="proteinANormal"></div>
+                        <small>Proteína A: 200 aa</small>
+                    </div>
+                    <div class="case-info">
+                        <h4>✅ Variante a – Alelo normal (200 aa) → Huesos sanos</h4>
+                        <p><strong>Responde en tu cuaderno de trabajo:</strong> Explica cómo este alelo considerado normal puede incidir en que una persona tenga huesos sanos.</p>
+                        <textarea placeholder="Escribe aquí tus ideas antes de compartir..."></textarea>
+                    </div>
+                </div>
+
+                <div class="case-card">
+                    <div class="case-visual">
+                        <div class="bone-icon bone-weak">🦴</div>
+                        <div class="protein-chain" id="proteinADebil"></div>
+                        <small>Proteína A²: 150 aa</small>
+                    </div>
+                    <div class="case-info">
+                        <h4>⚠️ Variante b – Alelo mutado (150 aa) → Huesos débiles</h4>
+                        <p><strong>Responde en tu cuaderno de trabajo:</strong> Explica qué le sucede a la secuencia del alelo y cómo esto influye en la condición del paciente.</p>
+                        <textarea placeholder="Escribe aquí tus ideas antes de compartir..."></textarea>
+                    </div>
+                </div>
+                <p style="text-align:center; margin-top:1rem;"><em>🔍 Conclusión parcial: un polimorfismo que acorta el gen produce una proteína más corta, que puede no funcionar correctamente.</em></p>
+            </div>
+        </div>
+        <p style="text-align:center; color:var(--light);">⏱️ Fin de la Clase 1. ¡Guarda tus respuestas para la puesta en común!</p>
+    </div>
+
+    <!-- ========= CLASE 2 ========= -->
+    <div id="clase2" class="tab-content">
+        <div class="section open">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>🔄 Repaso rápido (5 min)</span>
+            </div>
+            <div class="section-body">
+                <p>Recordemos: <strong>Polimorfismo = cambio en el ADN → nuevo alelo → posible cambio en la proteína.</strong></p>
+                <ul><li>Proteína A normal: 200 aa → huesos sanos.</li><li>Proteína A² (corta, 150 aa) → huesos débiles.</li></ul>
+                <p>Hoy exploraremos qué sucede cuando la proteína se vuelve <strong>más larga</strong>.</p>
+            </div>
+        </div>
+
+        <!-- Casos c y d -->
+        <div class="section open">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>📋 Variantes c y d: cuando la proteína es más larga (15 min)</span>
+            </div>
+            <div class="section-body">
+                <div class="case-card">
+                    <div class="case-visual">
+                        <div class="bone-icon bone-strong">🦴</div>
+                        <div class="protein-chain" id="proteinCResistente"></div>
+                        <small>Proteína A³: 250 aa</small>
+                    </div>
+                    <div class="case-info">
+                        <h4>💪 Variante c – Alelo A³ (250 aa) → Huesos más resistentes</h4>
+                        <p><strong>Responde en tu cuaderno de trabajo:</strong> Explica qué le sucede a la secuencia del alelo y cómo esto influye en la condición de la persona.</p>
+                        <textarea placeholder="Escribe tus ideas..."></textarea>
+                    </div>
+                </div>
+                <div class="case-card">
+                    <div class="case-visual">
+                        <div class="bone-icon bone-weak">🦴💔</div>
+                        <div class="protein-chain" id="proteinDDebilMusc"></div>
+                        <small>Proteína A⁴: 300 aa</small>
+                    </div>
+                    <div class="case-info">
+                        <h4>🚨 Variante d – Alelo A⁴ (300 aa) → Huesos y músculos débiles</h4>
+                        <p><strong>Responde en tu cuaderno de trabajo:</strong> Explica qué le sucede a la secuencia del alelo y cómo esto influye en la condición del paciente.</p>
+                        <textarea placeholder="Escribe tus ideas..."></textarea>
+                    </div>
+                </div>
+                <p style="text-align:center; font-weight:700;">🧬 Conclusión: No todos los cambios son beneficiosos. La función de una proteína depende de su forma y tamaño correctos.</p>
+            </div>
+        </div>
+
+        <!-- Juego 3: Drag & Drop real -->
+        <div class="section open">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>🏷️ Juego 3: Arrastra cada variante a su condición (10 min)</span>
+            </div>
+            <div class="section-body">
+                <div class="game-area" id="dragGame">
+                    <p><strong>Arrastra</strong> cada tarjeta de proteína hasta el cuadro que describe su efecto en los huesos.</p>
+                    <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin:1rem 0;" id="dragSources">
+                        <div class="match-item drag-source" draggable="true" data-variant="normal" id="dragNormal">200 aa (Normal)</div>
+                        <div class="match-item drag-source" draggable="true" data-variant="debil" id="dragDebil">150 aa (A²)</div>
+                        <div class="match-item drag-source" draggable="true" data-variant="resistente" id="dragResistente">250 aa (A³)</div>
+                        <div class="match-item drag-source" draggable="true" data-variant="debilMuscular" id="dragDebilMusc">300 aa (A⁴)</div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:500px; margin:0 auto;">
+                        <div class="drop-zone" data-accept="normal">Huesos sanos</div>
+                        <div class="drop-zone" data-accept="debil">Huesos débiles</div>
+                        <div class="drop-zone" data-accept="resistente">Huesos resistentes</div>
+                        <div class="drop-zone" data-accept="debilMuscular">Huesos y músculos débiles</div>
+                    </div>
+                    <div id="dragFeedback" class="feedback" style="display:none;"></div>
+                    <button class="btn btn-warning btn-sm" onclick="resetDragGame()" style="margin-top:1rem;">🔄 Reiniciar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulador -->
+        <div class="section open">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>🕹️ Simulador: Efecto de la longitud proteica (10 min)</span>
+            </div>
+            <div class="section-body">
+                <div class="game-area">
+                    <p>Desliza para cambiar la cantidad de aminoácidos y observa el efecto en los huesos.</p>
+                    <input type="range" id="proteinSlider" min="80" max="380" value="200" step="5" oninput="updateSim()">
+                    <p>Longitud: <strong id="sliderValue">200</strong> aminoácidos</p>
+                    <div style="text-align:center;">
+                        <span id="simBone" class="bone-icon bone-healthy" style="font-size:5rem;">🦴</span>
+                        <div class="protein-chain" id="simChain" style="justify-content:center;"></div>
+                    </div>
+                    <div id="simFeedback" class="feedback" style="display:inline-block;">🟢 Normal: huesos sanos</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reflexión -->
+        <div class="section open">
+            <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
+                <span>💡 Reflexión final (5 min)</span>
+            </div>
+            <div class="section-body">
+                <p><strong>En tu cuaderno de trabajo, responde:</strong></p>
+                <ol>
+                    <li>¿Qué relación hay entre la secuencia de ADN y la función de una proteína?</li>
+                    <li>¿Puede un polimorfismo ser beneficioso? Da un ejemplo de los casos vistos.</li>
+                    <li>¿Por qué una proteína más larga no siempre es mejor?</li>
+                </ol>
+            </div>
+        </div>
+        <p style="text-align:center; color:var(--light);">⏱️ Fin de la Clase 2. ¡Excelente trabajo!</p>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========== PESTAÑAS PRINCIPALES ==========
+        document.querySelectorAll('.main-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const target = this.getAttribute('data-tab');
+                document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                document.getElementById(target).classList.add('active');
+            });
+        });
+
+        // ========== DIBUJAR CADENAS DE PROTEÍNAS ==========
+        function drawChain(containerId, length, mutated = false) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            const show = Math.min(length, 35);
+            for (let i = 0; i < show; i++) {
+                const aa = document.createElement('span');
+                aa.className = 'amino-acid' + (mutated ? ' mutated' : '');
+                aa.textContent = 'aa';
+                container.appendChild(aa);
+            }
+            if (length > 35) {
+                const dots = document.createElement('span');
+                dots.textContent = ' ...';
+                container.appendChild(dots);
+            }
+        }
+        drawChain('proteinANormal', 200);
+        drawChain('proteinADebil', 150, true);
+        drawChain('proteinCResistente', 250);
+        drawChain('proteinDDebilMusc', 300, true);
+
+        // ========== JUEGO 1: EMPAREJAR CONCEPTOS (CLIC) ==========
+        let selTerm = null, selDef = null;
+        const correctMatches1 = {
+            locus: 'defLocus',
+            alelo: 'defAlelo',
+            poli: 'defPoli',
+            traduccion: 'defTrad'
+        };
+        const matchedSet1 = new Set();
+
+        document.getElementById('matchGame1').addEventListener('click', function(e) {
+            const item = e.target.closest('.match-item');
+            if (!item || item.classList.contains('matched')) return;
+            const parentId = item.parentElement.id;
+            if (parentId === 'termsCol') {
+                document.querySelectorAll('#termsCol .match-item').forEach(el => el.classList.remove('selected'));
+                if (selTerm === item) { selTerm = null; return; }
+                item.classList.add('selected');
+                selTerm = item;
+            } else if (parentId === 'defsCol') {
+                document.querySelectorAll('#defsCol .match-item').forEach(el => el.classList.remove('selected'));
+                if (selDef === item) { selDef = null; return; }
+                item.classList.add('selected');
+                selDef = item;
+            }
+            if (selTerm && selDef) {
+                const termId = selTerm.dataset.id;
+                const defId = selDef.dataset.id;
+                const fb = document.getElementById('matchFeedback1');
+                if (correctMatches1[termId] === defId && !matchedSet1.has(termId)) {
+                    selTerm.classList.add('matched');
+                    selDef.classList.add('matched');
+                    selTerm.classList.remove('selected');
+                    selDef.classList.remove('selected');
+                    matchedSet1.add(termId);
+                    fb.style.display = 'block';
+                    fb.className = 'feedback correct';
+                    fb.textContent = matchedSet1.size === 4 ? '🎉 ¡Todos correctos!' : '✅ ¡Correcto!';
+                } else {
+                    fb.style.display = 'block';
+                    fb.className = 'feedback incorrect';
+                    fb.textContent = '❌ Intenta otra combinación.';
+                }
+                selTerm = null;
+                selDef = null;
+                document.querySelectorAll('#matchGame1 .match-item.selected').forEach(el => el.classList.remove('selected'));
+            }
+        });
+        window.resetMatch1 = function() {
+            document.querySelectorAll('#matchGame1 .match-item').forEach(el => el.classList.remove('matched', 'selected'));
+            matchedSet1.clear();
+            selTerm = selDef = null;
+            document.getElementById('matchFeedback1').style.display = 'none';
+        };
+
+        // ========== JUEGO 2: CALCULADORA ==========
+        let curDna = 12;
+        window.newCalc = function() {
+            const options = [9,12,15,18,21,24,27,30,33,36,45,60,75,90,120];
+            curDna = options[Math.floor(Math.random() * options.length)];
+            document.getElementById('dnaLenDisplay').textContent = curDna;
+            document.getElementById('proteinGuess').value = '';
+            document.getElementById('calcFeedback').style.display = 'none';
+        };
+        window.checkCalc = function() {
+            const guess = parseInt(document.getElementById('proteinGuess').value);
+            const correct = curDna / 3;
+            const fb = document.getElementById('calcFeedback');
+            fb.style.display = 'block';
+            if (isNaN(guess)) {
+                fb.className = 'feedback incorrect';
+                fb.textContent = 'Ingresa un número.';
+            } else if (guess === correct) {
+                fb.className = 'feedback correct';
+                fb.textContent = `✅ ¡Correcto! ${curDna} nt / 3 = ${correct} aa.`;
+            } else {
+                fb.className = 'feedback incorrect';
+                fb.textContent = `❌ ${curDna} nt / 3 = ${correct} aa. Intenta de nuevo.`;
+            }
+        };
+
+        // ========== JUEGO 3: DRAG & DROP REAL ==========
+        const dragSources = document.querySelectorAll('.drag-source');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const matchedVariants = new Set();
+
+        dragSources.forEach(source => {
+            source.addEventListener('dragstart', function(e) {
+                if (this.classList.contains('matched')) {
+                    e.preventDefault();
+                    return;
+                }
+                e.dataTransfer.setData('text/plain', this.dataset.variant);
+                this.classList.add('dragging');
+            });
+            source.addEventListener('dragend', function(e) {
+                this.classList.remove('dragging');
+            });
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                if (!this.classList.contains('filled')) {
+                    this.classList.add('drag-over');
+                }
+            });
+            zone.addEventListener('dragleave', function(e) {
+                this.classList.remove('drag-over');
+            });
+            zone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                const variant = e.dataTransfer.getData('text/plain');
+                const accept = this.dataset.accept;
+                const fb = document.getElementById('dragFeedback');
+                fb.style.display = 'block';
+
+                if (this.classList.contains('filled')) {
+                    fb.className = 'feedback incorrect';
+                    fb.textContent = 'Ese cuadro ya está ocupado. Reinicia para intentar de nuevo.';
+                    return;
+                }
+                if (variant === accept && !matchedVariants.has(variant)) {
+                    const sourceEl = document.querySelector(`.drag-source[data-variant="${variant}"]`);
+                    if (sourceEl) {
+                        sourceEl.classList.add('matched');
+                        sourceEl.setAttribute('draggable', 'false');
+                    }
+                    this.textContent = sourceEl ? sourceEl.textContent : variant;
+                    this.classList.add('filled');
+                    matchedVariants.add(variant);
+                    fb.className = 'feedback correct';
+                    fb.textContent = matchedVariants.size === 4 ? '🎉 ¡Clasificación completa! Muy bien.' : '✅ ¡Correcto!';
+                } else if (matchedVariants.has(variant)) {
+                    fb.className = 'feedback incorrect';
+                    fb.textContent = 'Esa variante ya fue colocada.';
+                } else {
+                    fb.className = 'feedback incorrect';
+                    fb.textContent = '❌ Esa no es la condición correcta.';
+                }
+            });
+        });
+
+        window.resetDragGame = function() {
+            dragSources.forEach(s => {
+                s.classList.remove('matched');
+                s.setAttribute('draggable', 'true');
+            });
+            dropZones.forEach(z => {
+                z.classList.remove('filled');
+                z.textContent = '';
+                // Restaurar texto original según data-accept
+                const labels = {
+                    normal: 'Huesos sanos',
+                    debil: 'Huesos débiles',
+                    resistente: 'Huesos resistentes',
+                    debilMuscular: 'Huesos y músculos débiles'
+                };
+                z.textContent = labels[z.dataset.accept] || '';
+            });
+            matchedVariants.clear();
+            document.getElementById('dragFeedback').style.display = 'none';
+        };
+
+        // ========== SIMULADOR ==========
+        window.updateSim = function() {
+            const slider = document.getElementById('proteinSlider');
+            const val = parseInt(slider.value);
+            document.getElementById('sliderValue').textContent = val;
+            const bone = document.getElementById('simBone');
+            const fb = document.getElementById('simFeedback');
+            const chain = document.getElementById('simChain');
+
+            chain.innerHTML = '';
+            const show = Math.min(val, 30);
+            for (let i=0; i<show; i++) {
+                const aa = document.createElement('span');
+                aa.className = 'amino-acid';
+                aa.textContent = 'aa';
+                chain.appendChild(aa);
+            }
+            if (val > 30) chain.appendChild(document.createTextNode(' ...'));
+
+            bone.classList.remove('bone-healthy','bone-weak','bone-strong');
+            if (val >= 190 && val <= 210) {
+                bone.classList.add('bone-healthy');
+                fb.textContent = '🟢 Normal: huesos sanos (200 aa)';
+            } else if (val >= 130 && val <= 180) {
+                bone.classList.add('bone-weak');
+                fb.textContent = '🔴 Corta: huesos débiles';
+            } else if (val >= 220 && val <= 280) {
+                bone.classList.add('bone-strong');
+                fb.textContent = '🔵 Extendida funcional: huesos resistentes';
+            } else if (val > 280 && val <= 320) {
+                bone.classList.add('bone-weak');
+                fb.textContent = '🟠 Demasiado larga: disfunción (huesos/músculos débiles)';
+            } else if (val < 130) {
+                bone.classList.add('bone-weak');
+                fb.textContent = '⚫ Muy corta: no funcional';
+            } else {
+                bone.classList.add('bone-weak');
+                fb.textContent = '🟣 Excesivamente larga: disfunción severa';
+            }
+        };
+        window.updateSim();
+    })();
+</script>
+</body>
+</html>
