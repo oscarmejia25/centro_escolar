@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 Ley de Gay-Lussac – Clase Interactiva (45 min)</title>
+    <style>
+        :root {
+            --primary: #e63946;
+            --secondary: #457b9d;
+            --accent: #f4a261;
+            --success: #2a9d8f;
+            --danger: #e76f51;
+            --bg: #fffaf5;
+            --card: #ffffff;
+            --text: #1e293b;
+            --light: #64748b;
+            --border: #e2e8f0;
+            --radius: 1.2rem;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(145deg, #fff3e6 0%, #e6f0fa 100%);
+            min-height: 100vh;
+            padding: 1rem;
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 1.8rem;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.9);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 1.2rem;
+        }
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #e63946, #f4a261);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: var(--light);
+            font-weight: 600;
+        }
+        .timer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem auto;
+            background: #f1f5f9;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            color: var(--light);
+            max-width: 300px;
+        }
+        .progress-fill {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 1rem;
+            flex: 1;
+            overflow: hidden;
+        }
+        .progress-fill span {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, #e63946, #f4a261);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .section {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 1.2rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .section-header {
+            background: #fef9f4;
+            padding: 0.8rem 1.2rem;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .section-header:hover { background: #ffedd5; }
+        .section-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+        .section.open .section-body {
+            max-height: 3500px;
+            padding: 1.2rem;
+        }
+        .section.open .section-header { background: #fff0e0; }
+        .diagram-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .info-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            min-width: 180px;
+        }
+        .formula-box {
+            background: #fef3c7;
+            padding: 0.5rem 1rem;
+            border-radius: 0.8rem;
+            font-family: monospace;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        .simulation-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f0f9ff;
+            border-radius: 1.5rem;
+        }
+        canvas {
+            border: 2px solid #457b9d;
+            border-radius: 1rem;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.55rem 1.3rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 0.3rem;
+            background: var(--primary);
+            color: white;
+        }
+        .btn:hover { transform: scale(1.03); filter: brightness(1.1); }
+        .btn-warning { background: #f97316; }
+        .btn-sm { padding: 0.35rem 1rem; font-size: 0.85rem; }
+        .feedback {
+            padding: 0.7rem;
+            border-radius: 0.7rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            display: none;
+        }
+        .feedback.correct { background: #d1fae5; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fee2e2; color: #991b1b; display: block; }
+        input[type=range] { width: 100%; max-width: 200px; }
+        input[type=number] {
+            width: 100px;
+            padding: 0.3rem;
+            border-radius: 0.5rem;
+            border: 2px solid #cbd5e1;
+            text-align: center;
+        }
+        textarea { width: 100%; min-height: 70px; border-radius: 0.8rem; border: 2px solid #cbd5e1; padding: 0.5rem; font-family: inherit; }
+        .match-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+            gap: 0.8rem;
+        }
+        .match-card {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .match-card.selected {
+            border-color: var(--primary);
+            background: #ffedd5;
+            box-shadow: 0 0 0 3px rgba(230,57,70,0.2);
+        }
+        .match-card.matched {
+            background: #d1fae5;
+            border-color: #10b981;
+            cursor: default;
+            opacity: 0.85;
+        }
+        @media (max-width: 650px) {
+            .container { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🔥 Ley de Gay-Lussac</h1>
+        <p class="subtitle">Relación entre presión y temperatura a volumen constante</p>
+        <div class="timer-bar">
+            <span>⏳ Progreso</span>
+            <div class="progress-fill"><span id="progressSpan" style="width:0%"></span></div>
+            <span id="progressText">0/5</span>
+        </div>
+    </header>
+
+    <!-- Sección 1: Introducción -->
+    <div class="section open" data-step="1">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span>💡 1. ¿Qué pasa cuando calientas un recipiente sellado? (5 min)</span>
+        </div>
+        <div class="section-body">
+            <p>Imagina que olvidas una lata de aerosol al sol o que cocinas con una olla a presión. En ambos casos el volumen está restringido. ¿Qué ocurre en el interior?</p>
+            <div class="diagram-container">
+                <div class="info-card">
+                    <span style="font-size:3rem;">🥫</span>
+                    <p><strong>Lata de aerosol</strong></p>
+                    <small>Al calentarse, la presión interna aumenta y puede explotar.</small>
+                </div>
+                <div class="info-card">
+                    <span style="font-size:3rem;">🍲</span>
+                    <p><strong>Olla a presión</strong></p>
+                    <small>La tapa hermética impide que el vapor escape; la presión eleva la temperatura de ebullición.</small>
+                </div>
+            </div>
+            <p>✏️ <strong>Anota en tu cuaderno:</strong> ¿Qué tienen en común estas situaciones? ¿Cómo crees que se relacionan la presión y la temperatura?</p>
+        </div>
+    </div>
+
+    <!-- Sección 2: Ley de Gay-Lussac -->
+    <div class="section" data-step="2">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span>🧪 2. La ley de Gay-Lussac (10 min)</span>
+        </div>
+        <div class="section-body">
+            <p>Para una masa fija de gas <strong>a volumen constante</strong>, la presión es directamente proporcional a la temperatura absoluta (Kelvin).</p>
+            <div class="formula-box" style="margin:0.8rem 0;">
+                P<sub>1</sub>/T<sub>1</sub> = P<sub>2</sub>/T<sub>2</sub><br>
+                <small>o bien: P ∝ T (V y n constantes)</small>
+            </div>
+            <p>Esto significa: si duplicas la temperatura (en Kelvin), la presión se duplica. La temperatura debe expresarse en Kelvin (K = °C + 273).</p>
+            <div class="diagram-container">
+                <div class="info-card">
+                    <svg width="180" height="140" viewBox="0 0 180 140">
+                        <rect x="10" y="10" width="160" height="120" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2" rx="8"/>
+                        <circle cx="50" cy="80" r="8" fill="#e63946"/>
+                        <circle cx="75" cy="60" r="8" fill="#e63946"/>
+                        <circle cx="90" cy="90" r="8" fill="#e63946"/>
+                        <circle cx="110" cy="50" r="8" fill="#e63946"/>
+                        <circle cx="130" cy="70" r="8" fill="#e63946"/>
+                        <text x="90" y="125" text-anchor="middle" font-size="12" fill="#64748b">Baja temperatura → baja presión</text>
+                    </svg>
+                </div>
+                <div class="info-card">
+                    <svg width="180" height="140" viewBox="0 0 180 140">
+                        <rect x="10" y="10" width="160" height="120" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2" rx="8"/>
+                        <circle cx="40" cy="90" r="8" fill="#e63946"/>
+                        <circle cx="55" cy="70" r="8" fill="#e63946"/>
+                        <circle cx="65" cy="85" r="8" fill="#e63946"/>
+                        <circle cx="80" cy="50" r="8" fill="#e63946"/>
+                        <circle cx="95" cy="75" r="8" fill="#e63946"/>
+                        <circle cx="110" cy="45" r="8" fill="#e63946"/>
+                        <circle cx="125" cy="65" r="8" fill="#e63946"/>
+                        <circle cx="140" cy="55" r="8" fill="#e63946"/>
+                        <text x="90" y="125" text-anchor="middle" font-size="12" fill="#64748b">Alta temperatura → alta presión</text>
+                    </svg>
+                </div>
+            </div>
+            <p>📌 Recuerda: el volumen <strong>no cambia</strong> (recipiente rígido). Las partículas se mueven más rápido y chocan con más fuerza contra las paredes, aumentando la presión.</p>
+        </div>
+    </div>
+
+    <!-- Sección 3: Simulación interactiva -->
+    <div class="section" data-step="3">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span>🕹️ 3. Simulador: Aumenta la temperatura y observa la presión (15 min)</span>
+        </div>
+        <div class="section-body">
+            <div class="simulation-area">
+                <canvas id="gayLussacCanvas" width="300" height="200"></canvas>
+                <div class="slider-container">
+                    <span>🌡️ Temperatura (K):</span>
+                    <input type="range" id="tempSlider" min="200" max="400" value="300" step="5" oninput="updateSim()">
+                    <span id="tempDisplay" style="font-weight:bold;">300 K</span>
+                </div>
+                <div style="text-align:center;">
+                    <strong>Presion: </strong><span id="pressureDisplay" style="font-size:1.4rem; font-weight:bold; color:#e63946;">1.0 atm</span>
+                </div>
+                <p style="font-size:0.9rem; color:var(--light);">Mueve el deslizador para cambiar la temperatura. La presión se calcula con la ley de Gay‑Lussac (P/T = constante).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 4: Juego de cálculo -->
+    <div class="section" data-step="4">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span>🧮 4. Juego: Calcula la presión final (10 min)</span>
+        </div>
+        <div class="section-body">
+            <div class="game-area" style="background:#f0fdf4; border:2px dashed #86efac; border-radius:1.5rem; padding:1.3rem; text-align:center;">
+                <p>Un gas a <strong id="givenP">2.0 atm</strong> y <strong id="givenT1">300 K</strong> se calienta hasta <strong id="givenT2">450 K</strong>. ¿Cuál será la nueva presión?</p>
+                <div class="formula-box" id="formulaDisplay">P<sub>2</sub> = (P<sub>1</sub> × T<sub>2</sub>) / T<sub>1</sub></div>
+                <p>Tu respuesta: <input type="number" id="answerPressure" placeholder="?"> atm</p>
+                <button class="btn" onclick="checkCalculation()">✅ Verificar</button>
+                <button class="btn btn-warning btn-sm" onclick="newProblem()">🔄 Nuevo problema</button>
+                <div id="calcFeedback" class="feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 5: Cierre y reflexión -->
+    <div class="section" data-step="5">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span>✅ 5. Cierre y autoevaluación (5 min)</span>
+        </div>
+        <div class="section-body">
+            <p><strong>Completa las frases en tu cuaderno:</strong></p>
+            <ol>
+                <li>La ley de Gay-Lussac establece que, a volumen constante, la presión de un gas es __________ proporcional a su temperatura absoluta.</li>
+                <li>La temperatura debe expresarse siempre en __________ para usar la fórmula.</li>
+                <li>Un ejemplo cotidiano donde se aplica esta ley es la __________.</li>
+            </ol>
+            <p><strong>Discute con tu equipo:</strong> ¿Por qué no se debe arrojar una lata de aerosol al fuego? Explica usando la ley de Gay‑Lussac.</p>
+            <textarea placeholder="Escribe tu explicación..."></textarea>
+        </div>
+    </div>
+    <p style="text-align:center; color:var(--light); margin-top:1rem;">⏱️ ¡Clase completada! Ahora entiendes cómo la temperatura y la presión se relacionan en un gas atrapado.</p>
+</div>
+
+<script>
+    (function() {
+        // Control de secciones colapsables
+        window.toggleSection = function(header) {
+            const section = header.parentElement;
+            section.classList.toggle('open');
+            updateProgress();
+        };
+        document.querySelectorAll('.section-header').forEach(h => {
+            h.addEventListener('click', () => setTimeout(updateProgress, 50));
+        });
+
+        function updateProgress() {
+            const sections = document.querySelectorAll('.section');
+            let open = 0;
+            sections.forEach(s => { if (s.classList.contains('open')) open++; });
+            const total = sections.length;
+            document.getElementById('progressSpan').style.width = (open/total*100)+'%';
+            document.getElementById('progressText').textContent = open+'/'+total;
+        }
+        updateProgress();
+
+        // ========== SIMULADOR CANVAS ==========
+        const canvas = document.getElementById('gayLussacCanvas');
+        const ctx = canvas.getContext('2d');
+        const particles = [];
+        const PARTICLE_COUNT = 20;
+        const width = canvas.width, height = canvas.height;
+        const containerPad = 15;
+
+        function initParticles() {
+            for (let i=0; i<PARTICLE_COUNT; i++) {
+                particles.push({
+                    x: containerPad + Math.random()*(width - containerPad*2),
+                    y: containerPad + Math.random()*(height - containerPad*2),
+                    vx: (Math.random()-0.5)*2,
+                    vy: (Math.random()-0.5)*2
+                });
+            }
+        }
+        initParticles();
+
+        function drawContainer() {
+            ctx.strokeStyle = '#457b9d';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(containerPad, containerPad, width-containerPad*2, height-containerPad*2);
+        }
+
+        function drawParticles() {
+            ctx.fillStyle = '#e63946';
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 6, 0, Math.PI*2);
+                ctx.fill();
+            });
+        }
+
+        function updateParticlePositions(speedFactor) {
+            for (let p of particles) {
+                p.x += p.vx * speedFactor;
+                p.y += p.vy * speedFactor;
+                // Rebote en paredes del contenedor
+                if (p.x < containerPad+6) { p.x = containerPad+6; p.vx *= -1; }
+                if (p.x > width-containerPad-6) { p.x = width-containerPad-6; p.vx *= -1; }
+                if (p.y < containerPad+6) { p.y = containerPad+6; p.vy *= -1; }
+                if (p.y > height-containerPad-6) { p.y = height-containerPad-6; p.vy *= -1; }
+            }
+        }
+
+        let currentTemp = 300; // K
+        let basePressure = 1.0; // atm at 300K
+        const tempRef = 300; // reference temperature for base pressure
+
+        function updateSim() {
+            const slider = document.getElementById('tempSlider');
+            currentTemp = parseFloat(slider.value);
+            document.getElementById('tempDisplay').textContent = currentTemp + ' K';
+            // Calcular presión usando Gay-Lussac: P/T = constante => P = (P_ref / T_ref) * T
+            const newPressure = (basePressure / tempRef) * currentTemp;
+            document.getElementById('pressureDisplay').textContent = newPressure.toFixed(2) + ' atm';
+            // Factor de velocidad de partículas (proporcional a la raíz cuadrada de la temperatura)
+            const speedFactor = Math.sqrt(currentTemp / tempRef);
+            // Redibujar
+            ctx.clearRect(0, 0, width, height);
+            drawContainer();
+            updateParticlePositions(speedFactor);
+            drawParticles();
+            requestAnimationFrame(() => {});
+        }
+
+        // Animación continua
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            drawContainer();
+            updateParticlePositions(Math.sqrt(currentTemp / tempRef));
+            drawParticles();
+            requestAnimationFrame(animate);
+        }
+        animate();
+        // Inicializar visual
+        updateSim();
+
+        // ========== JUEGO DE CÁLCULO ==========
+        let currentProblem = {
+            P1: 2.0,
+            T1: 300,
+            T2: 450
+        };
+
+        function updateProblemDisplay() {
+            document.getElementById('givenP').textContent = currentProblem.P1.toFixed(1) + ' atm';
+            document.getElementById('givenT1').textContent = currentProblem.T1 + ' K';
+            document.getElementById('givenT2').textContent = currentProblem.T2 + ' K';
+            document.getElementById('answerPressure').value = '';
+            document.getElementById('calcFeedback').style.display = 'none';
+        }
+
+        window.newProblem = function() {
+            const P1 = Math.floor(Math.random()*3 + 1) + (Math.random()>0.5?0.5:0); // 1.0,1.5,2.0,...3.5
+            const T1 = Math.floor(Math.random()*100 + 250); // 250-349
+            const T2 = T1 + Math.floor(Math.random()*80 + 20); // ensure higher temp
+            currentProblem = { P1, T1, T2 };
+            updateProblemDisplay();
+        };
+
+        window.checkCalculation = function() {
+            const { P1, T1, T2 } = currentProblem;
+            const correct = (P1 * T2) / T1;
+            const correctRounded = Math.round(correct * 10) / 10;
+            const guess = parseFloat(document.getElementById('answerPressure').value);
+            const fb = document.getElementById('calcFeedback');
+            fb.style.display = 'block';
+            if (isNaN(guess)) {
+                fb.className = 'feedback incorrect';
+                fb.textContent = '❌ Ingresa un número válido.';
+            } else if (Math.abs(guess - correctRounded) < 0.15) {
+                fb.className = 'feedback correct';
+                fb.textContent = `✅ ¡Correcto! P₂ = (${P1.toFixed(1)} × ${T2}) / ${T1} = ${correctRounded.toFixed(1)} atm`;
+            } else {
+                fb.className = 'feedback incorrect';
+                fb.textContent = `❌ Incorrecto. La presión final es ${correctRounded.toFixed(1)} atm. Usa la fórmula P₂ = (P₁·T₂)/T₁.`;
+            }
+        };
+
+        // Inicializar problema
+        updateProblemDisplay();
+
+        // ========== JUEGO DE EMPAREJAMIENTO (opcional, ya tenemos suficiente) ==========
+        // Decidí no incluir un juego extra de emparejamiento porque ya tenemos simulación y cálculo.
+    })();
+</script>
+</body>
+</html>
