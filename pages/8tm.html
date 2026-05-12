@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ Trabajo mecánico – Clase Interactiva (45 min)</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #f72585;
+            --accent: #f8961e;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg: #f8faff;
+            --card: #ffffff;
+            --text: #1e293b;
+            --light: #64748b;
+            --border: #e2e8f0;
+            --radius: 1.2rem;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(145deg, #eef2ff 0%, #fdf2f8 60%, #fff7ed 100%);
+            min-height: 100vh;
+            padding: 1rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 1.8rem;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 1.2rem;
+        }
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4a6cf7, #f72585);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: var(--light);
+            font-weight: 600;
+        }
+        .timer-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            background: #f1f5f9;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            color: var(--light);
+            max-width: 300px;
+            margin: 1rem auto;
+        }
+        .progress-fill {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 1rem;
+            flex: 1;
+            overflow: hidden;
+        }
+        .progress-fill span {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, #4a6cf7, #f72585);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .section {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 1.2rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .section-header {
+            background: #f8fafc;
+            padding: 0.8rem 1.2rem;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .section-header:hover { background: #e9eef3; }
+        .section-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+        .section.open .section-body {
+            max-height: 4000px;
+            padding: 1.2rem;
+        }
+        .section.open .section-header { background: #eef2ff; }
+        .diagram-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .scene {
+            background: #f0f9ff;
+            border: 2px solid #7dd3fc;
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            min-width: 200px;
+        }
+        .ramp {
+            width: 200px;
+            height: 100px;
+            background: linear-gradient(135deg, #94a3b8 0%, #cbd5e1 100%);
+            clip-path: polygon(0% 100%, 100% 100%, 100% 0%);
+            position: relative;
+            margin: 0 auto;
+        }
+        .box {
+            width: 40px;
+            height: 40px;
+            background: #f59e0b;
+            border-radius: 5px;
+            position: absolute;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        .force-arrow {
+            position: absolute;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        .game-area {
+            background: #f0fdf4;
+            border: 2px dashed #86efac;
+            border-radius: 1.5rem;
+            padding: 1.3rem;
+            margin: 0.8rem 0;
+        }
+        .match-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+            gap: 0.8rem;
+        }
+        .match-card {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .match-card.selected {
+            border-color: var(--primary);
+            background: #dbeafe;
+            box-shadow: 0 0 0 3px rgba(67,97,238,0.2);
+        }
+        .match-card.matched {
+            background: #d1fae5;
+            border-color: #10b981;
+            cursor: default;
+            opacity: 0.8;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.55rem 1.3rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 0.3rem;
+            background: var(--primary);
+            color: white;
+        }
+        .btn:hover { background: #3651d5; transform: scale(1.02); }
+        .btn-warning { background: #f97316; color: white; }
+        .btn-sm { padding: 0.35rem 1rem; font-size: 0.85rem; }
+        .feedback {
+            padding: 0.7rem;
+            border-radius: 0.7rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            display: none;
+        }
+        .feedback.correct { background: #d1fae5; color: #065f46; display: block; }
+        .feedback.incorrect { background: #fee2e2; color: #991b1b; display: block; }
+        input[type=range] { width: 100%; max-width: 250px; }
+        textarea { width: 100%; min-height: 70px; border-radius: 0.8rem; border: 2px solid #cbd5e1; padding: 0.5rem; font-family: inherit; }
+        .calc-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .formula-box {
+            background: #fef3c7;
+            padding: 0.5rem 1rem;
+            border-radius: 0.8rem;
+            font-family: monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>⚡ Energía para mover objetos: Trabajo (W)</h1>
+        <p class="subtitle">¿Qué es el trabajo mecánico y cómo se calcula?</p>
+        <div class="timer-bar">
+            <span>⏳ Progreso</span>
+            <div class="progress-fill"><span id="progressSpan" style="width:0%"></span></div>
+            <span id="progressText">0/4</span>
+        </div>
+    </header>
+
+    <!-- Sección 1: Introducción: dos formas de mover la caja -->
+    <div class="section open" data-step="1">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span>📦 1. Dos maneras de subir la caja (10 min)</span>
+        </div>
+        <div class="section-body">
+            <p>Imagina que Irene quiere colocar una caja pesada en la parte alta de una repisa. Puede:</p>
+            <div class="diagram-container">
+                <div class="scene">
+                    <strong>Opción A: Levantar directo</strong>
+                    <div style="position:relative; height:120px;">
+                        <div class="box" style="bottom:0; left:50%; transform:translateX(-50%);">📦</div>
+                        <span style="position:absolute; top:0; left:70%;">↑ F ≥ Peso</span>
+                    </div>
+                    <small>Recorrido corto, fuerza grande</small>
+                </div>
+                <div class="scene">
+                    <strong>Opción B: Usar rampa</strong>
+                    <div class="ramp" style="position:relative;">
+                        <div class="box" style="bottom:10px; left:20px;">📦</div>
+                        <span style="position:absolute; right:5px; top:10px; color:#f72585;">F<sub>x</sub></span>
+                    </div>
+                    <small>Recorrido largo, fuerza menor</small>
+                </div>
+            </div>
+            <p><strong>Observa:</strong> En ambos casos, Irene gasta una cantidad similar de <strong>energía</strong>. Esa energía se llama <strong>trabajo (W)</strong>.</p>
+            <p>✏️ <strong>Anota:</strong> ¿En qué situación crees que Irene se cansa menos? ¿Por qué?</p>
+        </div>
+    </div>
+
+    <!-- Sección 2: Fórmula y descomposición de la fuerza -->
+    <div class="section" data-step="2">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span>🧮 2. ¿Cómo se calcula el trabajo? (12 min)</span>
+        </div>
+        <div class="section-body">
+            <p>Cuando aplicamos una fuerza <strong>F</strong> que forma un ángulo θ con el desplazamiento, solo la componente en la dirección del movimiento realiza trabajo.</p>
+            <div class="diagram-container">
+                <div style="text-align:center;">
+                    <svg width="200" height="120" viewBox="0 0 200 120">
+                        <line x1="20" y1="100" x2="180" y2="100" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5,5"/>
+                        <rect x="60" y="85" width="30" height="15" fill="#f59e0b" rx="2"/>
+                        <line x1="75" y1="85" x2="130" y2="40" stroke="#f72585" stroke-width="3"/>
+                        <line x1="75" y1="85" x2="130" y2="85" stroke="#4361ee" stroke-width="3" stroke-dasharray="4,2"/>
+                        <text x="135" y="45" fill="#f72585" font-size="12">F</text>
+                        <text x="135" y="80" fill="#4361ee" font-size="12">F<sub>x</sub> = F·cosθ</text>
+                        <text x="10" y="115" fill="#64748b" font-size="11">Δx</text>
+                    </svg>
+                </div>
+                <div class="formula-box">
+                    W = (F · cos θ) · Δx<br>
+                    <small>Si la fuerza es paralela al desplazamiento: W = F · Δx</small>
+                </div>
+            </div>
+            <ul>
+                <li><strong>W</strong> se mide en joules (J) = N·m</li>
+                <li>Es una magnitud escalar (no tiene dirección).</li>
+                <li>Depende de F, Δx y el ángulo θ.</li>
+            </ul>
+            <p>✏️ <strong>Ejercicio mental:</strong> Si Irene empuja con 50 N una caja 3 metros hacia adelante sin ángulo, ¿cuánto trabajo realiza?</p>
+        </div>
+    </div>
+
+    <!-- Sección 3: Juego de cálculo de trabajo -->
+    <div class="section" data-step="3">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span>🎮 3. Juego: Calcula el trabajo (15 min)</span>
+        </div>
+        <div class="section-body">
+            <div class="game-area">
+                <p><strong>Instrucciones:</strong> Ajusta los valores y calcula el trabajo. Luego verifica tu respuesta.</p>
+                <div class="calc-row">
+                    <label>Fuerza (N): <input type="range" id="forceSlider" min="10" max="200" value="50" step="10" oninput="updateWorkGame()"> <span id="forceVal">50</span> N</label>
+                    <label>Ángulo θ (°): <input type="range" id="angleSlider" min="0" max="60" value="30" step="5" oninput="updateWorkGame()"> <span id="angleVal">30</span>°</label>
+                    <label>Desplazamiento (m): <input type="range" id="dispSlider" min="1" max="10" value="4" step="0.5" oninput="updateWorkGame()"> <span id="dispVal">4.0</span> m</label>
+                </div>
+                <div style="text-align:center; margin:1rem 0;">
+                    <div class="formula-box" id="formulaDisplay">W = (50 · cos30°) · 4.0 = ?</div>
+                    <p>Tu respuesta: <input type="number" id="workGuess" placeholder="?" style="width:100px; padding:0.3rem; border-radius:0.5rem; border:2px solid #cbd5e1;"> J</p>
+                    <button class="btn" onclick="checkWork()">✅ Verificar</button>
+                    <button class="btn btn-warning btn-sm" onclick="newWorkProblem()">🔄 Nuevo problema</button>
+                </div>
+                <div id="workFeedback" class="feedback"></div>
+                <p style="font-size:0.85rem; color:var(--light);">Recuerda: W = F · cos(θ) · Δx. Redondea a un decimal.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 4: Cierre y reflexión -->
+    <div class="section" data-step="4">
+        <div class="section-header" onclick="toggleSection(this)">
+            <span>💡 4. Cierre y reflexión (8 min)</span>
+        </div>
+        <div class="section-body">
+            <p><strong>Completa en tu cuaderno:</strong></p>
+            <ol>
+                <li>El trabajo es la ________ necesaria para mover un objeto.</li>
+                <li>Se calcula como el producto de la componente de la fuerza en la dirección del ________ por el ________.</li>
+                <li>Sus unidades son ________, que equivalen a joules.</li>
+            </ol>
+            <p><strong>Discute con tu equipo:</strong> ¿Por qué usar una rampa reduce la fuerza necesaria pero no el trabajo total? ¿Dónde más usamos este principio en la vida diaria?</p>
+            <textarea placeholder="Escribe tus reflexiones..."></textarea>
+        </div>
+    </div>
+    <p style="text-align:center; color:var(--light); margin-top:1rem;">⏱️ ¡Clase completada! Ahora entiendes cómo la física explica el esfuerzo al mover objetos.</p>
+</div>
+
+<script>
+    (function() {
+        // Secciones colapsables
+        window.toggleSection = function(header) {
+            const section = header.parentElement;
+            section.classList.toggle('open');
+            updateProgress();
+        };
+
+        function updateProgress() {
+            const sections = document.querySelectorAll('.section');
+            let openCount = 0;
+            sections.forEach(s => { if (s.classList.contains('open')) openCount++; });
+            const total = sections.length;
+            const percent = (openCount / total) * 100;
+            document.getElementById('progressSpan').style.width = percent + '%';
+            document.getElementById('progressText').textContent = openCount + '/' + total;
+        }
+        updateProgress();
+
+        // Actualizar progreso al hacer clic
+        document.querySelectorAll('.section-header').forEach(header => {
+            header.addEventListener('click', () => setTimeout(updateProgress, 50));
+        });
+
+        // Juego de cálculo de trabajo
+        window.updateWorkGame = function() {
+            const F = parseInt(document.getElementById('forceSlider').value);
+            const angle = parseInt(document.getElementById('angleSlider').value);
+            const d = parseFloat(document.getElementById('dispSlider').value);
+            document.getElementById('forceVal').textContent = F;
+            document.getElementById('angleVal').textContent = angle;
+            document.getElementById('dispVal').textContent = d.toFixed(1);
+            const cosAngle = Math.cos(angle * Math.PI / 180).toFixed(2);
+            document.getElementById('formulaDisplay').innerHTML = `W = (${F} · cos${angle}°) · ${d.toFixed(1)} = (${F} · ${cosAngle}) · ${d.toFixed(1)} = ?`;
+        };
+
+        window.checkWork = function() {
+            const F = parseInt(document.getElementById('forceSlider').value);
+            const angle = parseInt(document.getElementById('angleSlider').value);
+            const d = parseFloat(document.getElementById('dispSlider').value);
+            const correct = F * Math.cos(angle * Math.PI / 180) * d;
+            const correctRounded = Math.round(correct * 10) / 10; // un decimal
+            const guess = parseFloat(document.getElementById('workGuess').value);
+            const fb = document.getElementById('workFeedback');
+            fb.style.display = 'block';
+            if (isNaN(guess)) {
+                fb.className = 'feedback incorrect';
+                fb.textContent = '❌ Ingresa un número.';
+            } else if (Math.abs(guess - correctRounded) < 0.15) {
+                fb.className = 'feedback correct';
+                fb.textContent = `✅ ¡Correcto! W = ${correctRounded.toFixed(1)} J`;
+            } else {
+                fb.className = 'feedback incorrect';
+                fb.textContent = `❌ Incorrecto. El valor es ${correctRounded.toFixed(1)} J. Revisa el coseno del ángulo.`;
+            }
+        };
+
+        window.newWorkProblem = function() {
+            // valores aleatorios
+            const F = Math.floor(Math.random() * 10 + 1) * 10; // 10..100 step10
+            const angle = Math.floor(Math.random() * 7) * 5; // 0..30 step5
+            const d = Math.floor(Math.random() * 6 + 1) + (Math.random() > 0.5 ? 0.5 : 0);
+            document.getElementById('forceSlider').value = F;
+            document.getElementById('angleSlider').value = angle;
+            document.getElementById('dispSlider').value = d;
+            updateWorkGame();
+            document.getElementById('workGuess').value = '';
+            document.getElementById('workFeedback').style.display = 'none';
+        };
+
+        // Inicializar juego
+        updateWorkGame();
+    })();
+</script>
+</body>
+</html>
