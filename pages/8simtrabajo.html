@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experimento: Trabajo y Fuerza</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            color: #fff;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.8em;
+            color: #e94560;
+            text-shadow: 0 0 20px rgba(233,69,96,0.5);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* CONTROLES */
+        .controls {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .control-group label {
+            display: block;
+            font-size: 0.85em;
+            color: #a0c4ff;
+            margin-bottom: 5px;
+        }
+        .control-group input[type="range"] {
+            width: 100%;
+            accent-color: #e94560;
+        }
+        .control-group .value-display {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin-top: 3px;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #e94560, #c23152);
+            color: white;
+        }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(233,69,96,0.5); }
+        .btn-secondary {
+            background: linear-gradient(135deg, #0f3460, #16213e);
+            color: #a0c4ff;
+            border: 1px solid #a0c4ff;
+        }
+        .btn-secondary:hover { background: rgba(160,196,255,0.2); }
+        .btn-record {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+        .btn-record:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(40,167,69,0.5); }
+
+        /* CANVAS */
+        .canvas-wrapper {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        canvas {
+            border-radius: 10px;
+            background: #0a1628;
+            max-width: 100%;
+        }
+
+        /* INFO EN TIEMPO REAL */
+        .realtime-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .info-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        .info-card .label { font-size: 0.75em; color: #a0c4ff; }
+        .info-card .value { font-size: 1.4em; font-weight: bold; color: #ffd700; }
+        .info-card .unit { font-size: 0.7em; color: #888; }
+
+        /* TABLAS */
+        .tables-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        @media(max-width: 768px) { .tables-section { grid-template-columns: 1fr; } }
+        .table-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px;
+        }
+        .table-card h3 {
+            font-size: 1em;
+            color: #e94560;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82em;
+        }
+        th {
+            background: rgba(233,69,96,0.3);
+            padding: 8px 5px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #ffd700;
+            font-size: 0.8em;
+        }
+        td {
+            padding: 7px 5px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #e0e0e0;
+        }
+        tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+        tr.highlight td { background: rgba(233,69,96,0.2); color: #ffd700; font-weight: bold; }
+
+        /* RESPUESTA */
+        .answer-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(160,196,255,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .answer-box h3 { color: #a0c4ff; margin-bottom: 10px; }
+        .answer-box p { line-height: 1.7; color: #ccc; font-size: 0.9em; }
+        .answer-box strong { color: #ffd700; }
+
+        /* BOTONES ACCIÓN */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .mode-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85em;
+        }
+        .mode-btn.active {
+            background: #e94560;
+            border-color: #e94560;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>⚡ Experimento: Trabajo Realizado por una Fuerza</h1>
+
+    <!-- MODO -->
+    <div class="mode-selector">
+        <button class="mode-btn active" onclick="setMode('parallel')">Modo A: Fuerza Paralela</button>
+        <button class="mode-btn" onclick="setMode('angle')">Modo B: Fuerza con Ángulo</button>
+    </div>
+
+    <!-- CONTROLES -->
+    <div class="controls">
+        <div class="control-group">
+            <label>📏 Desplazamiento (Δx)</label>
+            <input type="range" id="displacement" min="0.1" max="0.5" step="0.05" value="0.30">
+            <div class="value-display" id="disp-val">0.30 m</div>
+        </div>
+        <div class="control-group">
+            <label>💪 Fuerza (F)</label>
+            <input type="range" id="force" min="1" max="10" step="0.5" value="5">
+            <div class="value-display" id="force-val">5.0 N</div>
+        </div>
+        <div class="control-group" id="angle-control" style="display:none;">
+            <label>📐 Ángulo (θ)</label>
+            <input type="range" id="angle" min="0" max="90" step="10" value="0">
+            <div class="value-display" id="angle-val">0°</div>
+        </div>
+        <div class="control-group" style="display:flex; flex-direction:column; justify-content:flex-end;">
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="startAnimation()">▶ Simular</button>
+                <button class="btn btn-secondary" onclick="resetAnimation()">↺ Reiniciar</button>
+                <button class="btn btn-record" onclick="recordData()">📊 Registrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CANVAS -->
+    <div class="canvas-wrapper">
+        <canvas id="simCanvas" width="900" height="320"></canvas>
+    </div>
+
+    <!-- INFO TIEMPO REAL -->
+    <div class="realtime-info">
+        <div class="info-card">
+            <div class="label">Desplazamiento</div>
+            <div class="value" id="rt-disp">0.30</div>
+            <div class="unit">metros (m)</div>
+        </div>
+        <div class="info-card">
+            <div class="label">Fuerza Aplicada</div>
+            <div class="value" id="rt-force">5.0</div>
+            <div class="unit">Newtons (N)</div>
+        </div>
+        <div class="info-card">
+            <div class="label">Ángulo θ</div>
+            <div class="value" id="rt-angle">0</div>
+            <div class="unit">grados (°)</div>
+        </div>
+        <div class="info-card">
+            <div class="label">cos θ</div>
+            <div class="value" id="rt-cos">1.0000</div>
+            <div class="unit">adimensional</div>
+        </div>
+        <div class="info-card">
+            <div class="label">F·cos θ</div>
+            <div class="value" id="rt-fcos">5.000</div>
+            <div class="unit">N</div>
+        </div>
+        <div class="info-card">
+            <div class="label">Trabajo W</div>
+            <div class="value" id="rt-work">1.500</div>
+            <div class="unit">Joules (J)</div>
+        </div>
+    </div>
+
+    <!-- TABLAS -->
+    <div class="tables-section">
+        <!-- TABLA A -->
+        <div class="table-card">
+            <h3>Tabla A – Fuerza Paralela al Desplazamiento</h3>
+            <table id="tableA">
+                <thead>
+                    <tr>
+                        <th>Δx (m)</th>
+                        <th>F (N)</th>
+                        <th>W (J)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableA-body">
+                    <tr><td colspan="3" style="color:#666; font-style:italic;">Presiona "Registrar" para agregar datos</td></tr>
+                </tbody>
+            </table>
+            <div class="action-buttons" style="margin-top:10px;">
+                <button class="btn btn-secondary" onclick="autoFillTableA()" style="font-size:0.8em; padding:8px 15px;">
+                    ✨ Autocompletar Tabla A
+                </button>
+                <button class="btn btn-secondary" onclick="clearTable('A')" style="font-size:0.8em; padding:8px 15px;">
+                    🗑 Limpiar
+                </button>
+            </div>
+        </div>
+
+        <!-- TABLA B -->
+        <div class="table-card">
+            <h3>Tabla B – Fuerza con Ángulo θ</h3>
+            <table id="tableB">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>θ (°)</th>
+                        <th>cos θ</th>
+                        <th>F (N)</th>
+                        <th>F·cos θ</th>
+                        <th>W (J)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableB-body">
+                    <tr><td colspan="6" style="color:#666; font-style:italic;">Presiona "Autocompletar Tabla B"</td></tr>
+                </tbody>
+            </table>
+            <div class="action-buttons" style="margin-top:10px;">
+                <button class="btn btn-secondary" onclick="autoFillTableB()" style="font-size:0.8em; padding:8px 15px;">
+                    ✨ Autocompletar Tabla B
+                </button>
+                <button class="btn btn-secondary" onclick="clearTable('B')" style="font-size:0.8em; padding:8px 15px;">
+                    🗑 Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESPUESTA PREGUNTA C -->
+    <div class="answer-box">
+        <h3>❓ c. ¿Por qué cuando el ángulo es de 90°, el trabajo realizado por la fuerza es nulo?</h3>
+        <p>
+            Cuando el ángulo θ = 90°, la fuerza aplicada es <strong>perpendicular</strong> al desplazamiento.
+            La fórmula del trabajo es <strong>W = F · Δx · cos θ</strong>.
+            Como <strong>cos(90°) = 0</strong>, el producto resulta <strong>W = 0 J</strong>.<br><br>
+            Físicamente, esto significa que la fuerza no tiene ninguna componente en la dirección del movimiento.
+            Toda la energía se aplica en dirección vertical (levantando o empujando hacia abajo),
+            pero <strong>ninguna parte de esa fuerza contribuye a mover el objeto horizontalmente</strong>.
+            Por tanto, aunque se aplique fuerza, no se realiza trabajo útil sobre el objeto en la dirección del desplazamiento.
+        </p>
+    </div>
+</div>
+
+<script>
+// ==================== VARIABLES ====================
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+
+let mode = 'parallel';
+let animating = false;
+let animProgress = 0;
+let animId = null;
+let tableAData = [];
+let tableBData = [];
+
+// Posiciones en canvas
+const SURFACE_Y = 220;
+const START_X = 100;
+const END_X = 700;
+const CUP_W = 55;
+const CUP_H = 65;
+
+// ==================== MODO ====================
+function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('angle-control').style.display = m === 'angle' ? 'block' : 'none';
+    resetAnimation();
+    updateRealtime();
+}
+
+// ==================== SLIDERS ====================
+document.getElementById('displacement').addEventListener('input', function() {
+    document.getElementById('disp-val').textContent = parseFloat(this.value).toFixed(2) + ' m';
+    updateRealtime();
+});
+document.getElementById('force').addEventListener('input', function() {
+    document.getElementById('force-val').textContent = parseFloat(this.value).toFixed(1) + ' N';
+    updateRealtime();
+});
+document.getElementById('angle').addEventListener('input', function() {
+    document.getElementById('angle-val').textContent = this.value + '°';
+    updateRealtime();
+});
+
+function getValues() {
+    const disp = parseFloat(document.getElementById('displacement').value);
+    const force = parseFloat(document.getElementById('force').value);
+    const angle = mode === 'angle' ? parseInt(document.getElementById('angle').value) : 0;
+    const cosA = Math.cos(angle * Math.PI / 180);
+    const fcos = force * cosA;
+    const work = fcos * disp;
+    return { disp, force, angle, cosA, fcos, work };
+}
+
+function updateRealtime() {
+    const v = getValues();
+    document.getElementById('rt-disp').textContent = v.disp.toFixed(2);
+    document.getElementById('rt-force').textContent = v.force.toFixed(1);
+    document.getElementById('rt-angle').textContent = v.angle;
+    document.getElementById('rt-cos').textContent = v.cosA.toFixed(4);
+    document.getElementById('rt-fcos').textContent = v.fcos.toFixed(3);
+    document.getElementById('rt-work').textContent = v.work.toFixed(3);
+    drawScene(animProgress);
+}
+
+// ==================== DIBUJO ====================
+function drawScene(progress) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const v = getValues();
+    const trackLength = END_X - START_X;
+    const cupX = START_X + trackLength * progress;
+
+    // Fondo
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    bgGrad.addColorStop(0, '#0a1628');
+    bgGrad.addColorStop(1, '#0d1f3c');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Superficie / Mesa
+    drawSurface();
+
+    // Marcas inicio y fin
+    drawMarker(START_X, '  INICIO', '#28a745');
+    drawMarker(END_X, '  FINAL', '#e94560');
+
+    // Regla
+    drawRuler();
+
+    // Vector desplazamiento
+    if (progress > 0) {
+        drawArrow(START_X, SURFACE_Y - CUP_H - 30, cupX, SURFACE_Y - CUP_H - 30, '#00bcd4', 'Δx = ' + v.disp.toFixed(2) + ' m', false);
+    }
+
+    // Dinamómetro y hilo
+    const angle = v.angle * Math.PI / 180;
+    const dynaOffset = 90;
+    const dynaX = cupX + CUP_W / 2 + dynaOffset * Math.cos(angle);
+    const dynaY = (SURFACE_Y - CUP_H / 2) - dynaOffset * Math.sin(angle);
+    drawDynamometer(dynaX, dynaY, cupX + CUP_W / 2, SURFACE_Y - CUP_H / 2, angle, v.force);
+
+    // Taza
+    drawCup(cupX, SURFACE_Y - CUP_H);
+
+    // Vector fuerza
+    const fvLen = 70;
+    const fvEndX = cupX + CUP_W / 2 + fvLen * Math.cos(angle);
+    const fvEndY = (SURFACE_Y - CUP_H / 2) - fvLen * Math.sin(angle);
+    drawArrow(cupX + CUP_W / 2, SURFACE_Y - CUP_H / 2, fvEndX, fvEndY, '#ffd700', 'F = ' + v.force.toFixed(1) + 'N', true);
+
+    // Ángulo
+    if (v.angle > 0) {
+        drawAngleArc(cupX + CUP_W / 2, SURFACE_Y - CUP_H / 2, angle, v.angle);
+    }
+
+    // Info trabajo
+    drawWorkInfo(v, progress);
+
+    // Arena dentro de la taza
+    drawSand(cupX, SURFACE_Y - CUP_H);
+}
+
+function drawSurface() {
+    // Mesa principal
+    const surfGrad = ctx.createLinearGradient(0, SURFACE_Y, 0, SURFACE_Y + 40);
+    surfGrad.addColorStop(0, '#8B4513');
+    surfGrad.addColorStop(1, '#5D2E0C');
+    ctx.fillStyle = surfGrad;
+    ctx.fillRect(60, SURFACE_Y, 760, 35);
+
+    // Superficie lisa
+    const surfaceGrad = ctx.createLinearGradient(0, SURFACE_Y - 8, 0, SURFACE_Y);
+    surfaceGrad.addColorStop(0, '#d4a96a');
+    surfaceGrad.addColorStop(1, '#c49a5e');
+    ctx.fillStyle = surfaceGrad;
+    ctx.fillRect(60, SURFACE_Y - 8, 760, 10);
+
+    // Líneas textura
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 0.5;
+    for (let x = 60; x < 820; x += 20) {
+        ctx.beginPath(); ctx.moveTo(x, SURFACE_Y - 8); ctx.lineTo(x, SURFACE_Y + 35); ctx.stroke();
+    }
+
+    // Patas
+    ctx.fillStyle = '#5D2E0C';
+    ctx.fillRect(80, SURFACE_Y + 35, 20, 60);
+    ctx.fillRect(720, SURFACE_Y + 35, 20, 60);
+}
+
+function drawMarker(x, label, color) {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath();
+    ctx.moveTo(x, SURFACE_Y - 10);
+    ctx.lineTo(x, SURFACE_Y - 110);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = color;
+    ctx.font = 'bold 11px Segoe UI';
+    ctx.fillText(label, x, SURFACE_Y - 115);
+}
+
+function drawRuler() {
+    ctx.fillStyle = '#f5e642';
+    ctx.globalAlpha = 0.7;
+    ctx.fillRect(START_X - 5, SURFACE_Y - 18, END_X - START_X + 10, 8);
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 30; i++) {
+        const rx = START_X + (i / 30) * (END_X - START_X);
+        ctx.beginPath();
+        ctx.moveTo(rx, SURFACE_Y - 18);
+        ctx.lineTo(rx, SURFACE_Y - (i % 5 === 0 ? 12 : 15));
+        ctx.stroke();
+    }
+}
+
+function drawCup(x, y) {
+    // Taza de cerámica
+    const cupGrad = ctx.createLinearGradient(x, y, x + CUP_W, y);
+    cupGrad.addColorStop(0, '#c0392b');
+    cupGrad.addColorStop(0.3, '#e74c3c');
+    cupGrad.addColorStop(1, '#a93226');
+    ctx.fillStyle = cupGrad;
+
+    ctx.beginPath();
+    ctx.moveTo(x + 5, y);
+    ctx.lineTo(x + CUP_W - 5, y);
+    ctx.lineTo(x + CUP_W, y + CUP_H);
+    ctx.lineTo(x, y + CUP_H);
+    ctx.closePath();
+    ctx.fill();
+
+    // Borde superior
+    ctx.fillStyle = '#f1948a';
+    ctx.fillRect(x + 3, y, CUP_W - 6, 8);
+
+    // Manija
+    ctx.strokeStyle = '#e74c3c';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.arc(x + CUP_W + 10, y + CUP_H / 2, 12, -Math.PI / 2, Math.PI / 2);
+    ctx.stroke();
+
+    // Brillo
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fillRect(x + 8, y + 10, 8, CUP_H - 20);
+}
+
+function drawSand(x, y) {
+    // Arena dentro de la taza
+    const sandGrad = ctx.createLinearGradient(x, y + CUP_H - 30, x, y + CUP_H - 5);
+    sandGrad.addColorStop(0, '#f4d03f');
+    sandGrad.addColorStop(1, '#e67e22');
+    ctx.fillStyle = sandGrad;
+    ctx.fillRect(x + 7, y + CUP_H - 30, CUP_W - 14, 25);
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = '#d4ac0d';
+    for (let i = 0; i < 10; i++) {
+        ctx.fillRect(x + 8 + (i * 4), y + CUP_H - 30, 2, 2);
+    }
+    ctx.globalAlpha = 1;
+}
+
+function drawDynamometer(x1, y1, x2, y2, angle, force) {
+    // Hilo
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3, 2]);
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Cuerpo dinamómetro
+    const len = 55;
+    const dx = Math.cos(angle);
+    const dy = -Math.sin(angle);
+
+    ctx.save();
+    ctx.translate(x1, y1);
+    ctx.rotate(-angle);
+
+    // Cuerpo
+    const dynGrad = ctx.createLinearGradient(0, -10, 0, 10);
+    dynGrad.addColorStop(0, '#bdc3c7');
+    dynGrad.addColorStop(1, '#7f8c8d');
+    ctx.fillStyle = dynGrad;
+    ctx.beginPath();
+    ctx.roundRect(0, -8, len, 16, 4);
+    ctx.fill();
+
+    // Ventanilla
+    ctx.fillStyle = '#ecf0f1';
+    ctx.fillRect(5, -5, 35, 10);
+    ctx.strokeStyle = '#95a5a6';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(5, -5, 35, 10);
+
+    // Aguja
+    const needlePos = 5 + (force / 10) * 30;
+    ctx.strokeStyle = '#e74c3c';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(needlePos, -5);
+    ctx.lineTo(needlePos, 5);
+    ctx.stroke();
+
+    // Escala
+    ctx.fillStyle = '#2c3e50';
+    ctx.font = 'bold 7px Arial';
+    ctx.fillText(force.toFixed(1) + 'N', 10, 3);
+
+    // Gancho
+    ctx.strokeStyle = '#95a5a6';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(len + 5, 0, 5, Math.PI * 0.5, Math.PI * 1.5);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawArrow(x1, y1, x2, y2, color, label, showLabel) {
+    const dx = x2 - x1, dy = y2 - y1;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    if (len < 5) return;
+    const angle = Math.atan2(dy, dx);
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    // Punta
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.save();
+    ctx.translate(x2, y2);
+    ctx.rotate(angle);
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-12, -5);
+    ctx.lineTo(-12, 5);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    if (showLabel) {
+        ctx.fillStyle = color;
+        ctx.font = 'bold 11px Segoe UI';
+        ctx.fillText(label, x2 + 5, y2 - 5);
+    }
+}
+
+function drawAngleArc(cx, cy, angle, deg) {
+    ctx.strokeStyle = '#ff9800';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([3, 2]);
+
+    // Línea horizontal referencia
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + 60, cy);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Arco
+    ctx.beginPath();
+    ctx.arc(cx, cy, 35, -angle, 0);
+    ctx.strokeStyle = '#ff9800';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Label
+    ctx.fillStyle = '#ff9800';
+    ctx.font = 'bold 12px Segoe UI';
+    ctx.fillText('θ=' + deg + '°', cx + 40, cy - 10);
+}
+
+function drawWorkInfo(v, progress) {
+    const w = (v.work * progress).toFixed(3);
+    const boxX = 10, boxY = 10, boxW = 220, boxH = 90;
+
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(boxX, boxY, boxW, boxH, 10);
+    ctx.fill();
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.fillStyle = '#ffd700';
+    ctx.font = 'bold 13px Segoe UI';
+    ctx.fillText('W = F · Δx · cos θ', boxX + 10, boxY + 22);
+
+    ctx.fillStyle = '#fff';
+    ctx.font = '11px Segoe UI';
+    ctx.fillText('F = ' + v.force.toFixed(1) + ' N', boxX + 10, boxY + 40);
+    ctx.fillText('Δx = ' + (v.disp * progress).toFixed(2) + ' m  |  θ = ' + v.angle + '°', boxX + 10, boxY + 56);
+    ctx.fillText('cos θ = ' + v.cosA.toFixed(4), boxX + 10, boxY + 72);
+
+    ctx.fillStyle = '#e94560';
+    ctx.font = 'bold 14px Segoe UI';
+    ctx.fillText('W = ' + w + ' J', boxX + 10, boxY + 88);
+}
+
+// ==================== ANIMACIÓN ====================
+function startAnimation() {
+    if (animating) return;
+    animating = true;
+    animProgress = 0;
+
+    function animate() {
+        animProgress += 0.008;
+        if (animProgress >= 1) {
+            animProgress = 1;
+            animating = false;
+            drawScene(1);
+            return;
+        }
+        drawScene(animProgress);
+        animId = requestAnimationFrame(animate);
+    }
+    animate();
+}
+
+function resetAnimation() {
+    cancelAnimationFrame(animId);
+    animating = false;
+    animProgress = 0;
+    drawScene(0);
+}
+
+// ==================== REGISTRAR DATOS ====================
+function recordData() {
+    const v = getValues();
+    if (mode === 'parallel') {
+        tableAData.push({ disp: v.disp, force: v.force, work: v.work });
+        renderTableA();
+    } else {
+        tableBData.push({
+            n: tableBData.length + 1,
+            angle: v.angle,
+            cosA: v.cosA,
+            force: v.force,
+            fcos: v.fcos,
+            work: v.work
+        });
+        renderTableB();
+    }
+}
+
+function autoFillTableA() {
+    const displacements = [0.10, 0.15, 0.20, 0.25, 0.30];
+    const forces = [2, 4, 6, 8, 10];
+    tableAData = [];
+    displacements.forEach((d, i) => {
+        tableAData.push({
+            disp: d,
+            force: forces[i],
+            work: forces[i] * d
+        });
+    });
+    renderTableA();
+}
+
+function autoFillTableB() {
+    const angles = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+    const F = parseFloat(document.getElementById('force').value);
+    const disp = parseFloat(document.getElementById('displacement').value);
+    tableBData = angles.map((ang, i) => {
+        const cosA = Math.cos(ang * Math.PI / 180);
+        const fcos = F * cosA;
+        return {
+            n: i + 1,
+            angle: ang,
+            cosA: cosA,
+            force: F,
+            fcos: fcos,
+            work: fcos * disp
+        };
+    });
+    renderTableB();
+}
+
+function renderTableA() {
+    const tbody = document.getElementById('tableA-body');
+    if (tableAData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="color:#666; font-style:italic;">Sin datos</td></tr>';
+        return;
+    }
+    tbody.innerHTML = tableAData.map((r, i) => `
+        <tr class="${i === tableAData.length - 1 ? 'highlight' : ''}">
+            <td>${r.disp.toFixed(2)}</td>
+            <td>${r.force.toFixed(1)}</td>
+            <td>${r.work.toFixed(3)}</td>
+        </tr>
+    `).join('');
+}
+
+function renderTableB() {
+    const tbody = document.getElementById('tableB-body');
+    if (tableBData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="color:#666; font-style:italic;">Sin datos</td></tr>';
+        return;
+    }
+    tbody.innerHTML = tableBData.map((r, i) => `
+        <tr class="${r.angle === 90 ? 'highlight' : ''}">
+            <td>${r.n}</td>
+            <td>${r.angle}°</td>
+            <td>${r.cosA.toFixed(4)}</td>
+            <td>${r.force.toFixed(1)}</td>
+            <td>${r.fcos.toFixed(4)}</td>
+            <td>${r.work.toFixed(3)}</td>
+        </tr>
+    `).join('');
+}
+
+function clearTable(t) {
+    if (t === 'A') { tableAData = []; renderTableA(); }
+    else { tableBData = []; renderTableB(); }
+}
+
+// ==================== INIT ====================
+updateRealtime();
+drawScene(0);
+</script>
+</body>
+</html>
