@@ -338,7 +338,7 @@
             </div>
         </div>
 
-        <!-- Juego 1: Emparejar conceptos (sin drag, con clic para evitar fallos táctiles) -->
+        <!-- Juego 1: Emparejar conceptos (ALEATORIO) -->
         <div class="section open">
             <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
                 <span>🎮 Juego 1: Empareja los conceptos clave (8 min)</span>
@@ -347,18 +347,8 @@
                 <div class="game-area" id="matchGame1">
                     <p><strong>Instrucciones:</strong> Haz clic en un término y luego en su definición correcta.</p>
                     <div class="match-row">
-                        <div class="match-column" id="termsCol">
-                            <div class="match-item" data-id="locus">Locus</div>
-                            <div class="match-item" data-id="alelo">Alelo</div>
-                            <div class="match-item" data-id="poli">Polimorfismo</div>
-                            <div class="match-item" data-id="traduccion">Traducción</div>
-                        </div>
-                        <div class="match-column" id="defsCol">
-                            <div class="match-item" data-id="defLocus">Dirección del gen en el ADN</div>
-                            <div class="match-item" data-id="defAlelo">Versión de un gen</div>
-                            <div class="match-item" data-id="defPoli">Cambio en la secuencia de ADN</div>
-                            <div class="match-item" data-id="defTrad">Proceso ARN → proteína</div>
-                        </div>
+                        <div class="match-column" id="termsCol"></div>
+                        <div class="match-column" id="defsCol"></div>
                     </div>
                     <div id="matchFeedback1" class="feedback" style="display:none;"></div>
                     <button class="btn btn-warning btn-sm" onclick="resetMatch1()">🔄 Reiniciar</button>
@@ -469,7 +459,7 @@
             </div>
         </div>
 
-        <!-- Juego 3: Drag & Drop real -->
+        <!-- Juego 3: Drag & Drop (ALEATORIO) -->
         <div class="section open">
             <div class="section-header" onclick="this.parentElement.classList.toggle('open')">
                 <span>🏷️ Juego 3: Arrastra cada variante a su condición (10 min)</span>
@@ -477,18 +467,8 @@
             <div class="section-body">
                 <div class="game-area" id="dragGame">
                     <p><strong>Arrastra</strong> cada tarjeta de proteína hasta el cuadro que describe su efecto en los huesos.</p>
-                    <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin:1rem 0;" id="dragSources">
-                        <div class="match-item drag-source" draggable="true" data-variant="normal" id="dragNormal">200 aa (Normal)</div>
-                        <div class="match-item drag-source" draggable="true" data-variant="debil" id="dragDebil">150 aa (A²)</div>
-                        <div class="match-item drag-source" draggable="true" data-variant="resistente" id="dragResistente">250 aa (A³)</div>
-                        <div class="match-item drag-source" draggable="true" data-variant="debilMuscular" id="dragDebilMusc">300 aa (A⁴)</div>
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:500px; margin:0 auto;">
-                        <div class="drop-zone" data-accept="normal">Huesos sanos</div>
-                        <div class="drop-zone" data-accept="debil">Huesos débiles</div>
-                        <div class="drop-zone" data-accept="resistente">Huesos resistentes</div>
-                        <div class="drop-zone" data-accept="debilMuscular">Huesos y músculos débiles</div>
-                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin:1rem 0;" id="dragSources"></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:500px; margin:0 auto;" id="dropZonesContainer"></div>
                     <div id="dragFeedback" class="feedback" style="display:none;"></div>
                     <button class="btn btn-warning btn-sm" onclick="resetDragGame()" style="margin-top:1rem;">🔄 Reiniciar</button>
                 </div>
@@ -534,6 +514,16 @@
 
 <script>
     (function() {
+        // ========== FUNCIONES UTILITARIAS ==========
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
         // ========== PESTAÑAS PRINCIPALES ==========
         document.querySelectorAll('.main-tab').forEach(tab => {
             tab.addEventListener('click', function() {
@@ -568,14 +558,55 @@
         drawChain('proteinCResistente', 250);
         drawChain('proteinDDebilMusc', 300, true);
 
-        // ========== JUEGO 1: EMPAREJAR CONCEPTOS (CLIC) ==========
-        let selTerm = null, selDef = null;
+        // ========== JUEGO 1: EMPAREJAR CONCEPTOS (ALEATORIO) ==========
+        const termsData = [
+            { id: 'locus', text: 'Locus' },
+            { id: 'alelo', text: 'Alelo' },
+            { id: 'poli', text: 'Polimorfismo' },
+            { id: 'traduccion', text: 'Traducción' }
+        ];
+        
+        const defsData = [
+            { id: 'defLocus', text: 'Dirección del gen en el ADN', match: 'locus' },
+            { id: 'defAlelo', text: 'Versión de un gen', match: 'alelo' },
+            { id: 'defPoli', text: 'Cambio en la secuencia de ADN', match: 'poli' },
+            { id: 'defTrad', text: 'Proceso ARN → proteína', match: 'traduccion' }
+        ];
+
         const correctMatches1 = {
             locus: 'defLocus',
             alelo: 'defAlelo',
             poli: 'defPoli',
             traduccion: 'defTrad'
         };
+
+        function initMatchGame1() {
+            const termsCol = document.getElementById('termsCol');
+            const defsCol = document.getElementById('defsCol');
+            termsCol.innerHTML = '';
+            defsCol.innerHTML = '';
+
+            const shuffledTerms = shuffleArray(termsData);
+            const shuffledDefs = shuffleArray(defsData);
+
+            shuffledTerms.forEach(term => {
+                const div = document.createElement('div');
+                div.className = 'match-item';
+                div.dataset.id = term.id;
+                div.textContent = term.text;
+                termsCol.appendChild(div);
+            });
+
+            shuffledDefs.forEach(def => {
+                const div = document.createElement('div');
+                div.className = 'match-item';
+                div.dataset.id = def.id;
+                div.textContent = def.text;
+                defsCol.appendChild(div);
+            });
+        }
+
+        let selTerm = null, selDef = null;
         const matchedSet1 = new Set();
 
         document.getElementById('matchGame1').addEventListener('click', function(e) {
@@ -616,11 +647,13 @@
                 document.querySelectorAll('#matchGame1 .match-item.selected').forEach(el => el.classList.remove('selected'));
             }
         });
+
         window.resetMatch1 = function() {
             document.querySelectorAll('#matchGame1 .match-item').forEach(el => el.classList.remove('matched', 'selected'));
             matchedSet1.clear();
             selTerm = selDef = null;
             document.getElementById('matchFeedback1').style.display = 'none';
+            initMatchGame1();
         };
 
         // ========== JUEGO 2: CALCULADORA ==========
@@ -649,88 +682,106 @@
             }
         };
 
-        // ========== JUEGO 3: DRAG & DROP REAL ==========
-        const dragSources = document.querySelectorAll('.drag-source');
-        const dropZones = document.querySelectorAll('.drop-zone');
+        // ========== JUEGO 3: DRAG & DROP (ALEATORIO) ==========
+        const variantsData = [
+            { id: 'normal', text: '200 aa (Normal)', label: 'Huesos sanos' },
+            { id: 'debil', text: '150 aa (A²)', label: 'Huesos débiles' },
+            { id: 'resistente', text: '250 aa (A³)', label: 'Huesos resistentes' },
+            { id: 'debilMuscular', text: '300 aa (A⁴)', label: 'Huesos y músculos débiles' }
+        ];
+
         const matchedVariants = new Set();
 
-        dragSources.forEach(source => {
-            source.addEventListener('dragstart', function(e) {
-                if (this.classList.contains('matched')) {
-                    e.preventDefault();
-                    return;
-                }
-                e.dataTransfer.setData('text/plain', this.dataset.variant);
-                this.classList.add('dragging');
-            });
-            source.addEventListener('dragend', function(e) {
-                this.classList.remove('dragging');
-            });
-        });
+        function initDragGame() {
+            const dragSources = document.getElementById('dragSources');
+            const dropZonesContainer = document.getElementById('dropZonesContainer');
+            dragSources.innerHTML = '';
+            dropZonesContainer.innerHTML = '';
 
-        dropZones.forEach(zone => {
-            zone.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                if (!this.classList.contains('filled')) {
-                    this.classList.add('drag-over');
-                }
-            });
-            zone.addEventListener('dragleave', function(e) {
-                this.classList.remove('drag-over');
-            });
-            zone.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.classList.remove('drag-over');
-                const variant = e.dataTransfer.getData('text/plain');
-                const accept = this.dataset.accept;
-                const fb = document.getElementById('dragFeedback');
-                fb.style.display = 'block';
+            const shuffledVariants = shuffleArray(variantsData);
+            const shuffledZones = shuffleArray(variantsData);
 
-                if (this.classList.contains('filled')) {
-                    fb.className = 'feedback incorrect';
-                    fb.textContent = 'Ese cuadro ya está ocupado. Reinicia para intentar de nuevo.';
-                    return;
-                }
-                if (variant === accept && !matchedVariants.has(variant)) {
-                    const sourceEl = document.querySelector(`.drag-source[data-variant="${variant}"]`);
-                    if (sourceEl) {
-                        sourceEl.classList.add('matched');
-                        sourceEl.setAttribute('draggable', 'false');
+            shuffledVariants.forEach(variant => {
+                const div = document.createElement('div');
+                div.className = 'match-item drag-source';
+                div.draggable = true;
+                div.dataset.variant = variant.id;
+                div.textContent = variant.text;
+                dragSources.appendChild(div);
+            });
+
+            shuffledZones.forEach(zone => {
+                const div = document.createElement('div');
+                div.className = 'drop-zone';
+                div.dataset.accept = zone.id;
+                div.textContent = zone.label;
+                dropZonesContainer.appendChild(div);
+            });
+
+            // Re-add event listeners
+            document.querySelectorAll('.drag-source').forEach(source => {
+                source.addEventListener('dragstart', function(e) {
+                    if (this.classList.contains('matched')) {
+                        e.preventDefault();
+                        return;
                     }
-                    this.textContent = sourceEl ? sourceEl.textContent : variant;
-                    this.classList.add('filled');
-                    matchedVariants.add(variant);
-                    fb.className = 'feedback correct';
-                    fb.textContent = matchedVariants.size === 4 ? '🎉 ¡Clasificación completa! Muy bien.' : '✅ ¡Correcto!';
-                } else if (matchedVariants.has(variant)) {
-                    fb.className = 'feedback incorrect';
-                    fb.textContent = 'Esa variante ya fue colocada.';
-                } else {
-                    fb.className = 'feedback incorrect';
-                    fb.textContent = '❌ Esa no es la condición correcta.';
-                }
+                    e.dataTransfer.setData('text/plain', this.dataset.variant);
+                    this.classList.add('dragging');
+                });
+                source.addEventListener('dragend', function(e) {
+                    this.classList.remove('dragging');
+                });
             });
-        });
+
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    if (!this.classList.contains('filled')) {
+                        this.classList.add('drag-over');
+                    }
+                });
+                zone.addEventListener('dragleave', function(e) {
+                    this.classList.remove('drag-over');
+                });
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    const variant = e.dataTransfer.getData('text/plain');
+                    const accept = this.dataset.accept;
+                    const fb = document.getElementById('dragFeedback');
+                    fb.style.display = 'block';
+
+                    if (this.classList.contains('filled')) {
+                        fb.className = 'feedback incorrect';
+                        fb.textContent = 'Ese cuadro ya está ocupado. Reinicia para intentar de nuevo.';
+                        return;
+                    }
+                    if (variant === accept && !matchedVariants.has(variant)) {
+                        const sourceEl = document.querySelector(`.drag-source[data-variant="${variant}"]`);
+                        if (sourceEl) {
+                            sourceEl.classList.add('matched');
+                            sourceEl.setAttribute('draggable', 'false');
+                        }
+                        this.textContent = sourceEl ? sourceEl.textContent : variant;
+                        this.classList.add('filled');
+                        matchedVariants.add(variant);
+                        fb.className = 'feedback correct';
+                        fb.textContent = matchedVariants.size === 4 ? '🎉 ¡Clasificación completa! Muy bien.' : '✅ ¡Correcto!';
+                    } else if (matchedVariants.has(variant)) {
+                        fb.className = 'feedback incorrect';
+                        fb.textContent = 'Esa variante ya fue colocada.';
+                    } else {
+                        fb.className = 'feedback incorrect';
+                        fb.textContent = '❌ Esa no es la condición correcta.';
+                    }
+                });
+            });
+        }
 
         window.resetDragGame = function() {
-            dragSources.forEach(s => {
-                s.classList.remove('matched');
-                s.setAttribute('draggable', 'true');
-            });
-            dropZones.forEach(z => {
-                z.classList.remove('filled');
-                z.textContent = '';
-                // Restaurar texto original según data-accept
-                const labels = {
-                    normal: 'Huesos sanos',
-                    debil: 'Huesos débiles',
-                    resistente: 'Huesos resistentes',
-                    debilMuscular: 'Huesos y músculos débiles'
-                };
-                z.textContent = labels[z.dataset.accept] || '';
-            });
             matchedVariants.clear();
             document.getElementById('dragFeedback').style.display = 'none';
+            initDragGame();
         };
 
         // ========== SIMULADOR ==========
@@ -773,6 +824,10 @@
                 fb.textContent = '🟣 Excesivamente larga: disfunción severa';
             }
         };
+
+        // ========== INICIALIZACIÓN ==========
+        initMatchGame1();
+        initDragGame();
         window.updateSim();
     })();
 </script>
