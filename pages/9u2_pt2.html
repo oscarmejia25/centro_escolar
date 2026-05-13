@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ley de Charles - Ciencias Naturales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #04071B;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #054F8E 0%, #04071B 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: #D2E4FD;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #054F8E;
+        }
+
+        .navbar a {
+            color: #054F8E;
+            text-decoration: none;
+        }
+
+        .navbar span {
+            color: #054F8E;
+            margin: 0 0.5rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #054F8E;
+        }
+
+        .card h2 {
+            color: #054F8E;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .icon-p { background-color: #F5B7BC; color: #04071B; }
+        .icon-c { background-color: #054F8E; }
+
+        .step {
+            background: #FFF1CB;
+            border-left: 4px solid #054F8E;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #04071B;
+            margin-bottom: 0.5rem;
+        }
+
+        .formula-box {
+            background: white;
+            border: 2px solid #054F8E;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+
+        .tip-box {
+            background: #CDE9D6;
+            border-left: 4px solid #054F8E;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .experiment-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .experiment-box {
+            background: white;
+            border: 3px solid #D2E4FD;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .experiment-box.hot {
+            border-color: #F5B7BC;
+            background: linear-gradient(to bottom, #FFF1CB, white);
+        }
+
+        .experiment-box.cold {
+            border-color: #D2E4FD;
+            background: linear-gradient(to bottom, #D2E4FD, white);
+        }
+
+        .experiment-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .hot .experiment-title {
+            background: #F5B7BC;
+            color: #04071B;
+        }
+
+        .cold .experiment-title {
+            background: #D2E4FD;
+            color: #04071B;
+        }
+
+        .svg-container {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .molecules-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .molecule-box {
+            background: white;
+            border: 2px solid #D2E4FD;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .observation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .observation-table th {
+            background: #054F8E;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .observation-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .observation-table tr:nth-child(even) {
+            background: #F8F9FA;
+        }
+
+        .highlight {
+            background: #FFF1CB;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .conclusion-box {
+            background: linear-gradient(135deg, #CDE9D6, #D2E4FD);
+            border: 3px solid #054F8E;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .experiment-container,
+            .molecules-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Centro Escolar Cantón Los Prados</h1>
+    </header>
+
+    <nav class="navbar">
+        <a href="#">Inicio</a> <span>›</span> 
+        <a href="#">9° Grado</a> <span>›</span> 
+        <a href="#">Ciencias Naturales</a> <span>›</span> 
+        <a href="#">Unidad 2</a> <span>›</span> 
+        <span>Ley de Charles</span>
+    </nav>
+
+    <div class="container">
+        <!-- Introducción -->
+        <div class="card">
+            <h2><span class="icon icon-p">🔥</span> Ley de Charles</h2>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                La <strong>Ley de Charles</strong> describe cómo cambia el volumen de un gas cuando cambia su temperatura, manteniendo la presión constante.
+            </p>
+
+            <div class="formula-box" style="background: #FFF1CB;">
+                <strong>Fórmula:</strong><br><br>
+                <span style="font-size: 1.5rem;">V ∝ T</span><br><br>
+                o<br><br>
+                <span style="font-size: 1.5rem;">V₁/T₁ = V₂/T₂</span><br><br>
+                <em style="color: #666;">Donde V es volumen y T es temperatura (en Kelvin)</em>
+            </div>
+
+            <div class="tip-box">
+                <strong> En palabras simples:</strong><br>
+                Si calientas un gas, se expande (aumenta su volumen). Si lo enfrías, se contrae (disminuye su volumen).
+            </div>
+        </div>
+
+        <!-- Experimento -->
+        <div class="card">
+            <h2><span class="icon icon-c">🧪</span> Experimento: Globo en Agua Caliente vs Fría</h2>
+            
+            <div class="step">
+                <div class="step-title"> Materiales Necesarios</div>
+                <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                    <li>2 envases de plástico o vidrio (anchos, hondos y con tapadera)</li>
+                    <li>2 vejigas (globos)</li>
+                    <li>Agua caliente y agua fría (con hielo)</li>
+                    <li>Guantes de cocina</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <div class="step-title">📝 Procedimiento</div>
+                <ol style="margin-left: 2rem; margin-top: 0.5rem;">
+                    <li>Infla ambas vejigas del tamaño de tu puño. Procura que tengan el mismo diámetro.</li>
+                    <li>Coloca las vejigas dentro de cada envase.</li>
+                    <li>Intenta llenar los envases, uno con agua caliente y otro con agua fría, de modo que las vejigas queden sumergidas totalmente. Tapa los envases.</li>
+                    <li>Espera de 5 a 10 minutos.</li>
+                    <li>Observa los tamaños de las vejigas dentro de los envases con agua.</li>
+                    <li>Saca ambas vejigas y ponlas una al lado de la otra.</li>
+                </ol>
+            </div>
+
+            <h3 style="color: #054F8E; margin: 2rem 0 1rem 0; text-align: center;"> Representación Gráfica del Experimento</h3>
+            
+            <div class="experiment-container">
+                <div class="experiment-box hot">
+                    <div class="experiment-title">🔥 Agua Caliente</div>
+                    <div class="svg-container">
+                        <svg viewBox="0 0 300 400" width="100%" height="350">
+                            <!-- Container -->
+                            <rect x="50" y="100" width="200" height="250" fill="#f0f0f0" stroke="#054F8E" stroke-width="3" rx="10"/>
+                            
+                            <!-- Water -->
+                            <rect x="55" y="150" width="190" height="195" fill="#ff9999" opacity="0.6" rx="5"/>
+                            
+                            <!-- Water waves -->
+                            <path d="M 60 140 Q 80 130 100 140 Q 120 150 140 140 Q 160 130 180 140 Q 200 150 220 140 Q 240 130 240 140" fill="none" stroke="#ff6666" stroke-width="2" stroke-dasharray="5,5"/>
+                            
+                            <!-- Expanded balloon -->
+                            <ellipse cx="150" cy="220" rx="70" ry="80" fill="#FFD700" stroke="#FFA500" stroke-width="2" opacity="0.8">
+                                <animate attributeName="rx" values="60;75;60" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="ry" values="70;85;70" dur="3s" repeatCount="indefinite"/>
+                            </ellipse>
+                            
+                            <!-- Heat particles -->
+                            <circle cx="100" cy="200" r="4" fill="#ff4444" opacity="0.6">
+                                <animate attributeName="cy" values="200;150;200" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="200" cy="230" r="4" fill="#ff4444" opacity="0.6">
+                                <animate attributeName="cy" values="230;180;230" dur="2.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="130" cy="250" r="4" fill="#ff4444" opacity="0.6">
+                                <animate attributeName="cy" values="250;200;250" dur="1.8s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="180" cy="190" r="4" fill="#ff4444" opacity="0.6">
+                                <animate attributeName="cy" values="190;140;190" dur="2.2s" repeatCount="indefinite"/>
+                            </circle>
+                            
+                            <!-- Steam -->
+                            <path d="M 120 80 Q 130 60 120 40" fill="none" stroke="#999" stroke-width="2" opacity="0.5">
+                                <animate attributeName="d" values="M 120 80 Q 130 60 120 40;M 120 80 Q 110 60 120 40;M 120 80 Q 130 60 120 40" dur="3s" repeatCount="indefinite"/>
+                            </path>
+                            <path d="M 180 80 Q 190 60 180 40" fill="none" stroke="#999" stroke-width="2" opacity="0.5">
+                                <animate attributeName="d" values="M 180 80 Q 190 60 180 40;M 180 80 Q 170 60 180 40;M 180 80 Q 190 60 180 40" dur="3.5s" repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Labels -->
+                            <text x="150" y="220" text-anchor="middle" font-size="14" fill="#04071B" font-weight="bold">GLOBO</text>
+                            <text x="150" y="240" text-anchor="middle" font-size="12" fill="#04071B">EXPANDIDO</text>
+                            <text x="150" y="380" text-anchor="middle" font-size="12" fill="#ff6666" font-weight="bold">T↑ V↑</text>
+                        </svg>
+                    </div>
+                    <p style="font-weight: 600; color: #054F8E;">El globo se EXPANDE</p>
+                    <p style="color: #666; font-size: 0.9rem;">Las moléculas se mueven más rápido y ocupan más espacio</p>
+                </div>
+
+                <div class="experiment-box cold">
+                    <div class="experiment-title">❄️ Agua Fría (con Hielo)</div>
+                    <div class="svg-container">
+                        <svg viewBox="0 0 300 400" width="100%" height="350">
+                            <!-- Container -->
+                            <rect x="50" y="100" width="200" height="250" fill="#f0f0f0" stroke="#054F8E" stroke-width="3" rx="10"/>
+                            
+                            <!-- Cold water -->
+                            <rect x="55" y="150" width="190" height="195" fill="#99ccff" opacity="0.6" rx="5"/>
+                            
+                            <!-- Ice cubes -->
+                            <rect x="70" y="130" width="30" height="30" fill="white" stroke="#6699cc" stroke-width="2" rx="5" transform="rotate(15 85 145)"/>
+                            <rect x="200" y="140" width="25" height="25" fill="white" stroke="#6699cc" stroke-width="2" rx="4" transform="rotate(-10 212 152)"/>
+                            <rect x="120" y="125" width="20" height="20" fill="white" stroke="#6699cc" stroke-width="2" rx="3" transform="rotate(25 130 135)"/>
+                            
+                            <!-- Contracted balloon -->
+                            <ellipse cx="150" cy="220" rx="45" ry="50" fill="#FFD700" stroke="#FFA500" stroke-width="2" opacity="0.8">
+                                <animate attributeName="rx" values="50;40;50" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="ry" values="55;45;55" dur="3s" repeatCount="indefinite"/>
+                            </ellipse>
+                            
+                            <!-- Cold particles (slow) -->
+                            <circle cx="120" cy="210" r="4" fill="#6699cc" opacity="0.6">
+                                <animate attributeName="cy" values="210;205;210" dur="3s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="180" cy="230" r="4" fill="#6699cc" opacity="0.6">
+                                <animate attributeName="cy" values="230;225;230" dur="3.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="150" cy="250" r="4" fill="#6699cc" opacity="0.6">
+                                <animate attributeName="cy" values="250;245;250" dur="2.8s" repeatCount="indefinite"/>
+                            </circle>
+                            
+                            <!-- Labels -->
+                            <text x="150" y="220" text-anchor="middle" font-size="14" fill="#04071B" font-weight="bold">GLOBO</text>
+                            <text x="150" y="240" text-anchor="middle" font-size="12" fill="#04071B">CONTRAÍDO</text>
+                            <text x="150" y="380" text-anchor="middle" font-size="12" fill="#6699cc" font-weight="bold">T↓ V↓</text>
+                        </svg>
+                    </div>
+                    <p style="font-weight: 600; color: #054F8E;">El globo se CONTRAE</p>
+                    <p style="color: #666; font-size: 0.9rem;">Las moléculas se mueven más lento y ocupan menos espacio</p>
+                </div>
+            </div>
+
+            <!-- Molecular level explanation -->
+            <h3 style="color: #054F8E; margin: 2rem 0 1rem 0; text-align: center;">🔬 ¿Qué Sucede a Nivel Molecular?</h3>
+            
+            <div class="molecules-container">
+                <div class="molecule-box">
+                    <h4 style="color: #ff6666; margin-bottom: 1rem;">🔥 Temperatura Alta</h4>
+                    <div class="svg-container">
+                        <svg viewBox="0 0 200 200" width="100%" height="180">
+                            <!-- Container -->
+                            <rect x="20" y="20" width="160" height="160" fill="#fff9f9" stroke="#ff6666" stroke-width="2" rx="10"/>
+                            
+                            <!-- Fast moving molecules -->
+                            <circle cx="60" cy="60" r="8" fill="#ff4444">
+                                <animate attributeName="cx" values="60;140;60" dur="1s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="60;140;60" dur="1.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="100" cy="80" r="8" fill="#ff4444">
+                                <animate attributeName="cx" values="100;40;100" dur="0.8s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="80;160;80" dur="1.2s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="140" cy="120" r="8" fill="#ff4444">
+                                <animate attributeName="cx" values="140;80;140" dur="1.1s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="120;40;120" dur="0.9s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="80" cy="140" r="8" fill="#ff4444">
+                                <animate attributeName="cx" values="80;160;80" dur="0.7s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="140;60;140" dur="1.3s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="120" cy="100" r="8" fill="#ff4444">
+                                <animate attributeName="cx" values="120;50;120" dur="0.9s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="100;170;100" dur="1.1s" repeatCount="indefinite"/>
+                            </circle>
+                            
+                            <!-- Speed lines -->
+                            <line x1="40" y1="40" x2="60" y2="60" stroke="#ff4444" stroke-width="1" opacity="0.3"/>
+                            <line x1="160" y1="160" x2="140" y2="120" stroke="#ff4444" stroke-width="1" opacity="0.3"/>
+                        </svg>
+                    </div>
+                    <p style="font-weight: 600; color: #ff6666;">Moléculas rápidas</p>
+                    <p style="color: #666; font-size: 0.9rem;">Se mueven rápido, chocan más y se expanden</p>
+                </div>
+
+                <div class="molecule-box">
+                    <h4 style="color: #6699cc; margin-bottom: 1rem;">❄️ Temperatura Baja</h4>
+                    <div class="svg-container">
+                        <svg viewBox="0 0 200 200" width="100%" height="180">
+                            <!-- Container -->
+                            <rect x="20" y="20" width="160" height="160" fill="#f9f9ff" stroke="#6699cc" stroke-width="2" rx="10"/>
+                            
+                            <!-- Slow moving molecules -->
+                            <circle cx="80" cy="80" r="8" fill="#6699cc">
+                                <animate attributeName="cx" values="80;90;80" dur="3s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="80;70;80" dur="3.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="120" cy="100" r="8" fill="#6699cc">
+                                <animate attributeName="cx" values="120;110;120" dur="2.8s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="100;110;100" dur="3.2s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="100" cy="120" r="8" fill="#6699cc">
+                                <animate attributeName="cx" values="100;105;100" dur="3.1s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="120;115;120" dur="2.9s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="70" cy="140" r="8" fill="#6699cc">
+                                <animate attributeName="cx" values="70;75;70" dur="3.3s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="140;135;140" dur="3.1s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="130" cy="80" r="8" fill="#6699cc">
+                                <animate attributeName="cx" values="130;125;130" dur="2.7s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="80;85;80" dur="3.4s" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                    </div>
+                    <p style="font-weight: 600; color: #6699cc;">Moléculas lentas</p>
+                    <p style="color: #666; font-size: 0.9rem;">Se mueven lento, chocan menos y se contraen</p>
+                </div>
+            </div>
+
+            <!-- Observation table -->
+            <h3 style="color: #054F8E; margin: 2rem 0 1rem 0; text-align: center;">📊 Tabla de Observaciones</h3>
+            
+            <table class="observation-table">
+                <tr>
+                    <th>Condiciones</th>
+                    <th>Temperatura</th>
+                    <th>Volumen del Globo</th>
+                    <th>Movimiento Molecular</th>
+                </tr>
+                <tr>
+                    <td><strong>Agua Caliente</strong></td>
+                    <td style="color: #ff6666;">Aumenta ↑</td>
+                    <td style="color: #ff6666;">Aumenta ↑</td>
+                    <td>Rápido y energético</td>
+                </tr>
+                <tr>
+                    <td><strong>Agua Fría</strong></td>
+                    <td style="color: #6699cc;">Disminuye ↓</td>
+                    <td style="color: #6699cc;">Disminuye ↓</td>
+                    <td>Lento y poco energético</td>
+                </tr>
+            </table>
+
+            <div class="tip-box">
+                <strong> Recuerda:</strong> La masa del aire dentro de cada vejiga es constante (no cambia), pero el volumen sí cambia con la temperatura.
+            </div>
+        </div>
+
+        <!-- Preguntas -->
+        <div class="card">
+            <h2><span class="icon icon-c">❓</span> Preguntas de Análisis</h2>
+            
+            <div class="step">
+                <div class="step-title">a) En términos de volumen, ¿qué observaste en las dos vejigas?</div>
+                <p style="margin-top: 0.5rem;">
+                    <strong>Respuesta:</strong> La vejiga en agua caliente aumentó su volumen (se infló más), mientras que la vejiga en agua fría disminuyó su volumen (se encogió).
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">b) ¿Indica si la temperatura del aire interior guarda alguna relación de proporcionalidad directa o inversa con el volumen interior de las vejigas?</div>
+                <p style="margin-top: 0.5rem;">
+                    <strong>Respuesta:</strong> Guarda una relación de <span class="highlight">proporcionalidad directa</span>: cuando la temperatura aumenta, el volumen aumenta; cuando la temperatura disminuye, el volumen disminuye.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">c) Especifica si la masa del aire dentro de cada vejiga es un valor variable o un valor constante en el experimento.</div>
+                <p style="margin-top: 0.5rem;">
+                    <strong>Respuesta:</strong> La masa del aire es un <span class="highlight">valor constante</span>. No entra ni sale aire de las vejigas, solo cambia su volumen por el efecto de la temperatura.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-title">d) Esquematiza el paso 3 y etiqueta el sistema y su frontera real.</div>
+                <p style="margin-top: 0.5rem;">
+                    <strong>Respuesta:</strong> El sistema es el aire dentro de la vejiga. La frontera real es la superficie de la vejiga (el látex). El entorno es el agua que rodea la vejiga.
+                </p>
+            </div>
+        </div>
+
+        <!-- Conclusión -->
+        <div class="conclusion-box">
+            <h2 style="color: #054F8E; margin-bottom: 1rem; text-align: center;"> Conclusión</h2>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                La <strong>Ley de Charles</strong> se cumple si la presión es constante, mientras que la ley de Gay-Lussac se cumple si el volumen no varía durante el proceso. Cada ley describe cómo la temperatura afecta a una propiedad diferente del gas.
+            </p>
+
+            <div class="formula-box">
+                <strong>Resumen de la Ley de Charles:</strong><br><br>
+                <span style="font-size: 1.3rem;">V₁/T₁ = V₂/T₂</span><br><br>
+                <em style="color: #666;">A presión constante, el volumen de un gas es directamente proporcional a su temperatura absoluta</em>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Aplicaciones en la vida real:</strong>
+                <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                    <li>Globos aerostáticos que ascienden al calentarse</li>
+                    <li>Neumáticos que se inflan más en días calurosos</li>
+                    <li>Desodorantes en aerosol que explotan si se exponen al calor</li>
+                    <li>Pollitos que rompen el cascarón al nacer (el gas dentro del huevo se expande)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
