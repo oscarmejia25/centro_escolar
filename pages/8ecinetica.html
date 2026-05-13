@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energía Cinética - Clase de 45 minutos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #04071B;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #054F8E 0%, #04071B 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: #D2E4FD;
+            padding: 1rem;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #054F8E;
+        }
+
+        .navbar a {
+            color: #054F8E;
+            text-decoration: none;
+        }
+
+        .navbar span {
+            color: #054F8E;
+            margin: 0 0.5rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .lesson-overview {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #FFD700;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .time-block {
+            background: linear-gradient(135deg, #FFF1CB, #FFE4A8);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #FFD700;
+        }
+
+        .time-block h4 {
+            color: #054F8E;
+            margin-bottom: 0.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid #054F8E;
+        }
+
+        .card h2 {
+            color: #054F8E;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .icon-time { background-color: #FFD700; color: #04071B; }
+        .icon-concept { background-color: #054F8E; }
+        .icon-practice { background-color: #F5B7BC; color: #04071B; }
+
+        .phase-section {
+            background: linear-gradient(to right, #F8F0FA, white);
+            border: 2px solid #D4B8E0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .phase-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.3rem;
+            color: #054F8E;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .time-badge {
+            background: #054F8E;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, #FFF9E6, #FFF0CC);
+            border: 3px solid #FFD700;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .formula-box .main-formula {
+            font-size: 2rem;
+            color: #054F8E;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .interactive-container {
+            background: white;
+            border: 2px solid #D2E4FD;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .simulation-box {
+            background: #F8F9FA;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .control-group {
+            margin: 1rem 0;
+        }
+
+        .control-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #054F8E;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #D2E4FD;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #054F8E;
+            cursor: pointer;
+        }
+
+        .value-display {
+            display: inline-block;
+            background: #054F8E;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #CDE9D6, #D2E4FD);
+            border: 2px solid #054F8E;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .diagram-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .diagram-box {
+            background: white;
+            border: 2px solid #D2E4FD;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .btn {
+            background: #054F8E;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #04071B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-correct {
+            background: #2E7D32;
+        }
+
+        .btn-incorrect {
+            background: #C62828;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #D4B8E0;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            background: #F8F0FA;
+            border-color: #054F8E;
+        }
+
+        .highlight {
+            background: #FFF1CB;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tip-box {
+            background: #E3F2FD;
+            border-left: 4px solid #1976D2;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .diagram-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Centro Escolar Cantón Los Prados</h1>
+    </header>
+
+    <nav class="navbar">
+        <a href="#">Inicio</a> <span>›</span> 
+        <a href="#">9° Grado</a> <span>›</span> 
+        <a href="#">Física</a> <span>›</span> 
+        <a href="#">Unidad 2</a> <span>›</span> 
+        <span>Energía Cinética</span>
+    </nav>
+
+    <div class="container">
+        <!-- Overview -->
+        <div class="lesson-overview">
+            <h2 style="color: #054F8E; margin-bottom: 1rem;">📚 Plan de Clase: Energía Cinética</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+                <strong>Tiempo total:</strong> 45 minutos<br>
+                <strong>Objetivo:</strong> Comprender el concepto de energía cinética y su relación con el trabajo y la fuerza.
+            </p>
+            
+            <div class="time-grid">
+                <div class="time-block">
+                    <h4>⏰ 10 min</h4>
+                    <p>Introducción y conceptos</p>
+                </div>
+                <div class="time-block">
+                    <h4>⏰ 15 min</h4>
+                    <p>Desarrollo teórico</p>
+                </div>
+                <div class="time-block">
+                    <h4>⏰ 10 min</h4>
+                    <p>Simulación interactiva</p>
+                </div>
+                <div class="time-block">
+                    <h4>⏰ 10 min</h4>
+                    <p>Práctica y evaluación</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fase 1: Introducción -->
+        <div class="card">
+            <h2><span class="icon icon-time">1</span> Fase 1: Introducción y Motivación</h2>
+            
+            <div class="phase-section">
+                <div class="phase-title">
+                    <span>⏱️</span>
+                    <span>Actividad Inicial</span>
+                    <span class="time-badge">10 minutos</span>
+                </div>
+
+                <h3 style="color: #054F8E; margin: 1rem 0;">🎯 Pregunta Generadora</h3>
+                <div class="tip-box">
+                    <strong>💭 Reflexiona:</strong> ¿Por qué es más peligroso que te golpee una pelota lanzada rápidamente que una que cae lentamente? ¿Qué tiene que ver la velocidad con la energía?
+                </div>
+
+                <h3 style="color: #054F8E; margin: 1.5rem 0 1rem 0;">📖 Conceptos Clave</h3>
+                
+                <div class="step" style="background: #FFF1CB; padding: 1rem; margin: 1rem 0; border-radius: 8px; border-left: 4px solid #054F8E;">
+                    <strong>Energía Cinética:</strong> Es la energía que posee un cuerpo debido a su movimiento. Depende de la masa y la velocidad del objeto.
+                </div>
+
+                <div class="formula-box">
+                    <div style="margin-bottom: 0.5rem;">Fórmula de la Energía Cinética:</div>
+                    <div class="main-formula">K = ½mv²</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        Donde:<br>
+                        K = Energía cinética (Joules)<br>
+                        m = masa (kg)<br>
+                        v = velocidad (m/s)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fase 2: Desarrollo Teórico -->
+        <div class="card">
+            <h2><span class="icon icon-concept">2</span> Fase 2: Desarrollo Teórico</h2>
+            
+            <div class="phase-section">
+                <div class="phase-title">
+                    <span>⏱️</span>
+                    <span>Trabajo y Energía</span>
+                    <span class="time-badge">15 minutos</span>
+                </div>
+
+                <h3 style="color: #054F8E; margin: 1rem 0;">📊 Diagramas de Cuerpo Libre</h3>
+                <p style="margin-bottom: 1rem;">
+                    Analicemos el movimiento de una taza cuando aplicamos una fuerza constante:
+                </p>
+
+                <div class="diagram-container">
+                    <div class="diagram-box">
+                        <h4 style="color: #054F8E; margin-bottom: 1rem;">Fuerza a Favor del Movimiento</h4>
+                        <svg viewBox="0 0 300 200" width="100%" height="180">
+                            <!-- Surface -->
+                            <line x1="50" y1="150" x2="250" y2="150" stroke="#04071B" stroke-width="2"/>
+                            
+                            <!-- Cup -->
+                            <rect x="120" y="100" width="60" height="50" fill="#F5B7BC" stroke="#04071B" stroke-width="2" rx="5"/>
+                            <rect x="135" y="90" width="30" height="10" fill="#F5B7BC" stroke="#04071B" stroke-width="2"/>
+                            
+                            <!-- Force arrow -->
+                            <line x1="180" y1="125" x2="260" y2="125" stroke="#054F8E" stroke-width="3" marker-end="url(#arrowhead)"/>
+                            <text x="220" y="115" font-size="12" fill="#054F8E">F</text>
+                            
+                            <!-- Displacement arrow -->
+                            <line x1="50" y1="180" x2="250" y2="180" stroke="#2E7D32" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                            <text x="150" y="175" font-size="12" fill="#2E7D32">Δx (desplazamiento)</text>
+                            
+                            <defs>
+                                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#054F8E"/>
+                                </marker>
+                                <marker id="arrowhead2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#2E7D32"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>Trabajo POSITIVO</strong><br>W = F × Δx</p>
+                    </div>
+
+                    <div class="diagram-box">
+                        <h4 style="color: #054F8E; margin-bottom: 1rem;">Fuerza en Contra del Movimiento</h4>
+                        <svg viewBox="0 0 300 200" width="100%" height="180">
+                            <!-- Surface -->
+                            <line x1="50" y1="150" x2="250" y2="150" stroke="#04071B" stroke-width="2"/>
+                            
+                            <!-- Cup -->
+                            <rect x="120" y="100" width="60" height="50" fill="#F5B7BC" stroke="#04071B" stroke-width="2" rx="5"/>
+                            <rect x="135" y="90" width="30" height="10" fill="#F5B7BC" stroke="#04071B" stroke-width="2"/>
+                            
+                            <!-- Force arrow (opposite) -->
+                            <line x1="120" y1="125" x2="40" y2="125" stroke="#C62828" stroke-width="3" marker-end="url(#arrowhead3)"/>
+                            <text x="70" y="115" font-size="12" fill="#C62828">F</text>
+                            
+                            <!-- Displacement arrow -->
+                            <line x1="50" y1="180" x2="250" y2="180" stroke="#2E7D32" stroke-width="2" marker-end="url(#arrowhead4)"/>
+                            <text x="150" y="175" font-size="12" fill="#2E7D32">Δx (desplazamiento)</text>
+                            
+                            <defs>
+                                <marker id="arrowhead3" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#C62828"/>
+                                </marker>
+                                <marker id="arrowhead4" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                    <polygon points="0 0, 10 3, 0 6" fill="#2E7D32"/>
+                                </marker>
+                            </defs>
+                        </svg>
+                        <p style="margin-top: 0.5rem; font-size: 0.9rem;"><strong>Trabajo NEGATIVO</strong><br>W = -F × Δx</p>
+                    </div>
+                </div>
+
+                <div class="formula-box">
+                    <div style="margin-bottom: 1rem;">Relación entre Trabajo y Energía Cinética:</div>
+                    <div class="main-formula">W = ΔK = ½mv₂² - ½mv₁²</div>
+                    <div style="font-size: 0.9rem; color: #666;">
+                        El trabajo realizado sobre un objeto es igual al cambio en su energía cinética
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Importante:</strong> 
+                    <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                        <li>Si la fuerza va en la misma dirección del movimiento → Trabajo positivo → Aumenta la energía cinética</li>
+                        <li>Si la fuerza va en dirección opuesta → Trabajo negativo → Disminuye la energía cinética</li>
+                        <li>Si no hay desplazamiento → Trabajo = 0</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fase 3: Simulación Interactiva -->
+        <div class="card">
+            <h2><span class="icon icon-practice">3</span> Fase 3: Simulación Interactiva</h2>
+            
+            <div class="phase-section">
+                <div class="phase-title">
+                    <span>⏱️</span>
+                    <span>Calculadora de Energía Cinética</span>
+                    <span class="time-badge">10 minutos</span>
+                </div>
+
+                <div class="interactive-container">
+                    <h3 style="color: #054F8E; margin-bottom: 1rem;">🎮 Calcula la Energía Cinética</h3>
+                    
+                    <div class="simulation-box">
+                        <div class="control-group">
+                            <label class="control-label">
+                                Masa (m): <span class="value-display" id="massValue">2 kg</span>
+                            </label>
+                            <input type="range" id="massSlider" min="0.5" max="10" step="0.5" value="2">
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label">
+                                Velocidad (v): <span class="value-display" id="velocityValue">5 m/s</span>
+                            </label>
+                            <input type="range" id="velocitySlider" min="1" max="20" step="1" value="5">
+                        </div>
+
+                        <div class="result-box" id="kineticResult">
+                            K = ½ × 2 × 5² = <strong>25 J</strong>
+                        </div>
+
+                        <div style="margin-top: 1rem; padding: 1rem; background: white; border-radius: 8px;">
+                            <strong>Visualización:</strong>
+                            <div style="margin-top: 0.5rem; height: 60px; background: #F8F9FA; border-radius: 8px; position: relative; overflow: hidden;">
+                                <div id="energyBar" style="position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(90deg, #054F8E, #4facfe); width: 25%; transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                    25 J
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <strong>🔍 Observa:</strong> Nota cómo al duplicar la velocidad, la energía cinética se cuadruplica (porque v está al cuadrado en la fórmula).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fase 4: Práctica -->
+        <div class="card">
+            <h2><span class="icon icon-practice">4</span> Fase 4: Práctica y Evaluación</h2>
+            
+            <div class="phase-section">
+                <div class="phase-title">
+                    <span>⏱️</span>
+                    <span>Ejercicios y Quiz</span>
+                    <span class="time-badge">10 minutos</span>
+                </div>
+
+                <h3 style="color: #054F8E; margin: 1rem 0;">📝 Ejercicio Guiado</h3>
+                <div style="background: #FFF1CB; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="margin-bottom: 1rem;"><strong>Problema:</strong> Una taza de 0.3 kg se mueve a 4 m/s. Calcula su energía cinética.</p>
+                    
+                    <div style="background: white; padding: 1rem; border-radius: 6px; margin: 0.5rem 0;">
+                        <strong>Datos:</strong><br>
+                        m = 0.3 kg<br>
+                        v = 4 m/s
+                    </div>
+                    
+                    <div style="background: white; padding: 1rem; border-radius: 6px; margin: 0.5rem 0;">
+                        <strong>Fórmula:</strong><br>
+                        K = ½mv²
+                    </div>
+                    
+                    <div style="background: white; padding: 1rem; border-radius: 6px; margin: 0.5rem 0;">
+                        <strong>Sustitución:</strong><br>
+                        K = ½ × 0.3 × 4²<br>
+                        K = 0.5 × 0.3 × 16<br>
+                        <strong style="color: #054F8E; font-size: 1.2rem;">K = 2.4 J</strong>
+                    </div>
+                </div>
+
+                <h3 style="color: #054F8E; margin: 1.5rem 0 1rem 0;">❓ Quiz Rápido</h3>
+                
+                <div id="quiz1">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">1. ¿Qué sucede con la energía cinética si duplicamos la masa?</p>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">
+                        a) Se duplica
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">
+                        b) Se duplica (correcto)
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">
+                        c) Se cuadruplica
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">
+                        d) Permanece igual
+                    </div>
+                </div>
+
+                <div id="quiz2" style="margin-top: 1.5rem;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">2. Si un objeto tiene velocidad cero, su energía cinética es:</p>
+                    <div class="quiz-option" onclick="checkAnswer2(this, false)">
+                        a) Máxima
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer2(this, true)">
+                        b) Cero (correcto)
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer2(this, false)">
+                        c) Infinita
+                    </div>
+                </div>
+
+                <div id="quiz3" style="margin-top: 1.5rem;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">3. Calcula: Un carro de 1000 kg se mueve a 10 m/s. ¿Cuál es su energía cinética?</p>
+                    <div class="quiz-option" onclick="checkAnswer3(this, false)">
+                        a) 10,000 J
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer3(this, false)">
+                        b) 5,000 J
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer3(this, true)">
+                        c) 50,000 J (correcto)
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer3(this, false)">
+                        d) 100,000 J
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn" onclick="showResults()">Ver Resultados</button>
+                    <button class="btn" onclick="resetQuiz()" style="background: #666;">Reiniciar Quiz</button>
+                </div>
+
+                <div id="resultsDiv" style="display: none; margin-top: 1rem; padding: 1rem; background: #CDE9D6; border-radius: 8px; text-align: center; font-size: 1.2rem; font-weight: 600;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Cierre -->
+        <div class="card" style="border-left-color: #FFD700;">
+            <h2 style="color: #054F8E;">📌 Resumen de la Clase</h2>
+            
+            <div class="formula-box" style="margin: 1rem 0;">
+                <div style="font-size: 1.5rem; color: #054F8E; font-weight: bold;">
+                    K = ½mv²
+                </div>
+                <p style="margin-top: 0.5rem; color: #666;">
+                    La energía cinética depende de la masa y del cuadrado de la velocidad
+                </p>
+            </div>
+
+            <div class="tip-box">
+                <strong>🎯 Puntos Clave:</strong>
+                <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                    <li>La energía cinética es la energía del movimiento</li>
+                    <li>Es proporcional a la masa</li>
+                    <li>Es proporcional al CUADRADO de la velocidad (¡muy importante!)</li>
+                    <li>El trabajo realizado cambia la energía cinética</li>
+                    <li>Siempre es positiva o cero (nunca negativa)</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #FFF1CB; border-radius: 8px; text-align: center;">
+                <strong style="color: #054F8E; font-size: 1.1rem;">📚 Tarea:</strong>
+                <p style="margin-top: 0.5rem;">Resuelve los ejercicios 1-5 de la página 49 del libro de texto.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulación interactiva
+        const massSlider = document.getElementById('massSlider');
+        const velocitySlider = document.getElementById('velocitySlider');
+        const massValue = document.getElementById('massValue');
+        const velocityValue = document.getElementById('velocityValue');
+        const kineticResult = document.getElementById('kineticResult');
+        const energyBar = document.getElementById('energyBar');
+
+        function updateSimulation() {
+            const mass = parseFloat(massSlider.value);
+            const velocity = parseFloat(velocitySlider.value);
+            const kinetic = 0.5 * mass * Math.pow(velocity, 2);
+
+            massValue.textContent = mass + ' kg';
+            velocityValue.textContent = velocity + ' m/s';
+            
+            kineticResult.innerHTML = `K = ½ × ${mass} × ${velocity}² = <strong>${kinetic.toFixed(1)} J</strong>`;
+            
+            // Actualizar barra (máximo 200 J para visualización)
+            const percentage = Math.min((kinetic / 200) * 100, 100);
+            energyBar.style.width = percentage + '%';
+            energyBar.textContent = kinetic.toFixed(1) + ' J';
+        }
+
+        massSlider.addEventListener('input', updateSimulation);
+        velocitySlider.addEventListener('input', updateSimulation);
+
+        // Quiz
+        let correctAnswers = 0;
+        let answeredQuestions = 0;
+
+        function checkAnswer(element, isCorrect) {
+            const parent = element.parentElement;
+            const options = parent.querySelectorAll('.quiz-option');
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                opt.style.opacity = '0.6';
+            });
+
+            if (isCorrect) {
+                element.classList.add('btn-correct');
+                element.style.opacity = '1';
+                element.innerHTML += ' ✓';
+                correctAnswers++;
+            } else {
+                element.classList.add('btn-incorrect');
+                element.style.opacity = '1';
+                element.innerHTML += ' ✗';
+                
+                // Mostrar la correcta
+                options.forEach(opt => {
+                    if (opt.getAttribute('onclick').includes('true')) {
+                        opt.classList.add('btn-correct');
+                        opt.style.opacity = '1';
+                    }
+                });
+            }
+            
+            answeredQuestions++;
+        }
+
+        function checkAnswer2(element, isCorrect) {
+            checkAnswer(element, isCorrect);
+        }
+
+        function checkAnswer3(element, isCorrect) {
+            checkAnswer(element, isCorrect);
+        }
+
+        function showResults() {
+            const resultsDiv = document.getElementById('resultsDiv');
+            if (answeredQuestions === 0) {
+                resultsDiv.style.display = 'block';
+                resultsDiv.style.background = '#FFF1CB';
+                resultsDiv.innerHTML = '⚠️ Por favor responde al menos una pregunta';
+                return;
+            }
+            
+            const percentage = Math.round((correctAnswers / 3) * 100);
+            let message = '';
+            
+            if (percentage === 100) {
+                message = '🌟 ¡Excelente! Todas correctas';
+                resultsDiv.style.background = '#CDE9D6';
+            } else if (percentage >= 66) {
+                message = '👍 ¡Muy bien! Sigue así';
+                resultsDiv.style.background = '#D2E4FD';
+            } else {
+                message = '📚 Necesitas repasar un poco más';
+                resultsDiv.style.background = '#FFF1CB';
+            }
+            
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `${message}<br><strong>${correctAnswers} de 3 correctas (${percentage}%)</strong>`;
+        }
+
+        function resetQuiz() {
+            correctAnswers = 0;
+            answeredQuestions = 0;
+            document.getElementById('resultsDiv').style.display = 'none';
+            
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('btn-correct', 'btn-incorrect');
+                opt.style.pointerEvents = 'auto';
+                opt.style.opacity = '1';
+                opt.innerHTML = opt.innerHTML.replace(/ [✓✗]/, '');
+            });
+        }
+
+        // Inicializar
+        updateSimulation();
+    </script>
+</body>
+</html>
